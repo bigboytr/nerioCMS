@@ -1,0 +1,32 @@
+/* =================================================================================
+Header
+================================================================================= */
+header {
+  background: $header;
+  color: $black;
+  width: 100%;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  border-bottom: 1px $logo solid;
+
+  .logo {
+    background: $logo;
+    color: $white;
+    font-size: 20px;
+    padding: 5px;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    -o-transition: all 0.7s;
+    transition: all 0.7s;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $logoHover;
+    }
+  }
+
+  .turnOff {
+    padding: 9px 15px;
+  }
+}

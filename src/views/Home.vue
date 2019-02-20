@@ -1,18 +1,18 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <h1>Dashboard</h1>
+            <h3>Welcome to Nerio CMS</h3>
+
+        </div>
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
 
-export default {
-  name: 'home',
-  components: {
-    HelloWorld,
-  },
-};
+  export default {
+    name: 'Dashboard',
+  };
 </script>
