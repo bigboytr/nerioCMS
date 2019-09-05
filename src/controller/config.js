@@ -3,11 +3,11 @@ import store from '@/store/index'
 
 export default {
 
-  getAll() {
+  getNerioMeu() {
 
     return new Promise((res, rej) => {
 
-      firebase.database().ref('/navigation/').once('value').then(function (response) {
+      firebase.database().ref('/menu/').once('value').then(function (response) {
 
         res(response.val());
 

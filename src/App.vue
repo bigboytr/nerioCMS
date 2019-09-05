@@ -4,13 +4,16 @@
         <Header v-if="token"></Header>
         <Sidebar v-if="token"></Sidebar>
 
-        <div class="content col-md-10 col-md-push-2 margin-t-50">
+        <div class="col-md-12 margin-t-50" v-if="!token">
+            <router-view/>
+        </div>
+        <div class="content col-md-10 col-md-push-2 margin-t-50" v-if="token">
             <router-view/>
         </div>
     </div>
 </template>
 
-<script>/*eslint-disable*/
+<script>
 import store from '@/store/index';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';

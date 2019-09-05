@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-md-6 col-md-push-2 margin-t-100">
+        <div class="col-md-4 col-md-push-4 margin-t-50">
 
             <div class="panel panel-default login-panel-shadow">
                 <div class="panel-body">

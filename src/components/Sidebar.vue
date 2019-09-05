@@ -5,7 +5,9 @@
 
             <ul class="nav">
                 <li v-for="(item, key) in list">
-                    <router-link tag="a" :to="item.path"><i class="fas" :class="item.icon"></i> {{item.title}}</router-link>
+                    <router-link tag="a" :to="item.path">
+                        <i class="fas" :class="item.icon"></i> {{item.title}}
+                    </router-link>
 
                 </li>
             </ul>
@@ -17,7 +19,7 @@
 
 <script>
 import auth from '@/controller/authentication'
-import controller from '@/controller/navigation'
+import controller from '@/controller/config'
 
 
 export default {
@@ -29,7 +31,7 @@ export default {
   },
   mounted() {
     const self = this;
-    controller.getAll().then(function (response) {
+    controller.getNerioMeu().then(function (response) {
 
       self.list = response;
     });
