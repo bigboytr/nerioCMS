@@ -42,39 +42,39 @@
         </div>
 
         <modal :title="'Test'" :id="'modal'" :cssClass="'modal-lg'">
-            <div>
-                HELLO FORM
-            </div>
+            <navigationForm></navigationForm>
         </modal>
     </div>
 </template>
 
 <script>
-  import controller from '@/controller/navigation'
-  import modal from '@/components/Modal'
+    import controller from '@/controller/navigation'
+    import modal from '@/components/Modal'
+    import navigationForm from '@/components/NavigationForm'
 
-  export default {
-    name: 'Dashboard',
-    data() {
-      return {
-        list: {}
-      }
-    },
-    components: {
-      modal
-    },
-    mounted() {
-      const self = this;
-      controller.getAll().then(function (response) {
+    export default {
+        name: 'Dashboard',
+        data() {
+            return {
+                list: {}
+            }
+        },
+        components: {
+            modal,
+            navigationForm
+        },
+        mounted() {
+            const self = this;
+            controller.getAll().then(function (response) {
 
-        self.list = response;
-      });
-    },
-    methods: {
-      openModal() {
+                self.list = response;
+            });
+        },
+        methods: {
+            openModal() {
 
-        $("#modal").modal("show");
-      }
-    }
-  };
+                $("#modal").modal("show");
+            }
+        }
+    };
 </script>
