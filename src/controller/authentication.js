@@ -8,71 +8,91 @@ firebase.initializeApp(config);
 
 export default {
 
-  login(email, pass) {
+    login(email, pass) {
+
+        let self = this;
 
         firebase.auth().signInWithEmailAndPassword(email, pass)
-          .then(function (user) {
-            //localStorage.token = true;
-            store.dispatch('setAuthUser', user);
-            //store.dispatch('setToken', true);
+            .then(function (user) {
 
-            router.push('/site-selection');
-          })
-          .catch(function (error) {
-            // Handle Errors here.
-            //var errorCode = error.code;
-            //var errorMessage = error.message;
-            localStorage.token = false;
-            store.dispatch('setAuthUser', {});
-            store.dispatch('setToken', false);
-          });
-  },
+                store.dispatch('setAuthUser', user.user);
+                router.push('/site-selection');
+            })
+            .catch(function (error) {
+                // Handle Errors here.
+                //var errorCode = error.code;
+                //var errorMessage = error.message;
 
-  logout() {
+                self.setAuthentication({}, false, null);
+            });
+    },
 
-    firebase.auth().signOut().then(() => {
-      // Sign-out successful.
-      store.dispatch('setToken', false);
-      store.dispatch('setAuthUser', {});
-      store.dispatch('setSelectedSite', null);
+    logout() {
 
-      router.push('/login');
+        let self = this;
 
-    }).catch((errors) => {
+        firebase.auth().signOut().then(() => {
+            // Sign-out successful.
+            self.setAuthentication({}, false, null);
+            router.push('/login');
 
-      console.log(errors);
+        }).catch((errors) => {
 
-    });
+            console.log(errors);
 
-  },
+        });
 
-  isLogged() {
+    },
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    isLogged() {
 
-      if (!user) {
+        // refresh page function
+        let self = this;
 
-        localStorage.token = false;
-        store.dispatch('setAuthUser', {});
-        store.dispatch('setToken', false);
-        store.dispatch('setSelectedSite', null);
+        firebase.auth().onAuthStateChanged(function (user) {
 
-        router.push('/login');
+            if (!user) {
 
-      } else {
+                self.setAuthentication({}, false, null);
+                router.push('/login');
 
-        //localStorage.token = true;
+            } else {
+
+                store.dispatch('setAuthUser', user);
+
+                if (store.getters.getSelectedSite !== null) {
+
+                    localStorage.token = true;
+                    store.dispatch('setToken', true);
+
+                    router.push('/');
+                } else {
+
+                    localStorage.token = false;
+                    store.dispatch('setToken', false);
+                    router.push('/site-selection');
+                }
+
+            }
+
+        });
+
+    },
+
+    setAuthentication(user, token, site) {
+
+        /*
+        * parameters values should be
+        *
+            user => object
+            token => boolean
+            site => null / key (string)
+         */
+
+        localStorage.token = token;
         store.dispatch('setAuthUser', user);
-        //store.dispatch('setToken', true);
+        store.dispatch('setToken', token);
+        store.dispatch('setSelectedSite', site);
 
-        if (store.getters.getSelectedSite !== null)
-            router.push('/');
-        else
-            router.push('/site-selection');
-
-      }
-
-    });
-
-  }
+    }
 }

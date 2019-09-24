@@ -14,6 +14,7 @@ const store = new Vuex.Store({
                 storageBucket: 'neriocms.appspot.com',
                 messagingSenderId: '355445654956',
             },
+            refCMS: "nerioCMS"
         },
         token: false,
         authUser: {},
@@ -55,6 +56,12 @@ const store = new Vuex.Store({
         },
         getConfig(state) {
             return state.firebase.config;
+        },
+        getRefCMS(state) {
+            return state.firebase.refCMS;
+        },
+        getAuthUser(state) {
+            return state.authUser;
         },
         getMainTitle(state) {
             return state.mainTitle;

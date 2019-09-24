@@ -8,7 +8,7 @@ import './assets/css/_style.scss';
 
 Vue.config.productionTip = false;
 
-new Vue({
+let vm = new Vue({
   store,
   router,
   render: h => h(App),
