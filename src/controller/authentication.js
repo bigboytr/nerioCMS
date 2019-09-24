@@ -12,11 +12,11 @@ export default {
 
         firebase.auth().signInWithEmailAndPassword(email, pass)
           .then(function (user) {
-            localStorage.token = true;
+            //localStorage.token = true;
             store.dispatch('setAuthUser', user);
-            store.dispatch('setToken', true);
+            //store.dispatch('setToken', true);
 
-            router.push('/');
+            router.push('/site-selection');
           })
           .catch(function (error) {
             // Handle Errors here.
@@ -33,9 +33,11 @@ export default {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
       store.dispatch('setToken', false);
-      store.dispatch('setAuthUser', null);
+      store.dispatch('setAuthUser', {});
+      store.dispatch('setSelectedSite', null);
 
       router.push('/login');
+
     }).catch((errors) => {
 
       console.log(errors);
@@ -53,17 +55,23 @@ export default {
         localStorage.token = false;
         store.dispatch('setAuthUser', {});
         store.dispatch('setToken', false);
+        store.dispatch('setSelectedSite', null);
 
         router.push('/login');
 
       } else {
 
-        localStorage.token = true;
+        //localStorage.token = true;
         store.dispatch('setAuthUser', user);
-        store.dispatch('setToken', true);
+        //store.dispatch('setToken', true);
 
-        router.push('/');
+        if (store.getters.getSelectedSite !== null)
+            router.push('/');
+        else
+            router.push('/site-selection');
+
       }
+
     });
 
   }
