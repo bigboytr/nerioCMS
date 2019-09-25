@@ -44,8 +44,8 @@ export default new Router({
       {path: '/login', component: Login, beforeEnter: auth.isLogged()},
       {path: '/site-selection', component: SiteSelection },
       {path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("Navigasyon"); next() } },
-      {path: '/content', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("İçerik") } },
-      {path: '/slider', component: Navigation, beforeEnter: (to, from, next) => { routerSetter("Slider") }}
+      {path: '/content', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("İçerik"); next() } },
+      {path: '/slider', component: Navigation, beforeEnter: (to, from, next) => { routerSetter("Slider"); next() }}
 
       /*{path: '/', component: Home },
       {path: '/login', component: Login, beforeEnter: auth.isLogged()},
