@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-md-4 col-md-push-4 margin-t-50">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-md-4 col-md-push-4 margin-t-50">
 
             <div class="panel panel-default login-panel-shadow">
                 <div class="panel-body">
@@ -11,43 +11,57 @@
                         <h5>Powered by FX Yazılım</h5>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xs-8 col-sm-7 col-md-8">
+                            <h4>Hoşgeldiniz !</h4>
+                        </div>
+                        <div class="col-xs-4 col-sm-5 col-md-4 text-right">
+                            <button class="btn btn-primary" title="Profile oluştur"
+                                    data-toggle="collapse"
+                                    data-target="profile">
+                                <i class="fas fa-plus"></i>
+                            </button>
+
+                            <button class="btn btn-danger" @click="logout()" title="Çıkış yap !">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="alert alert-info">
-                        Hoşgeldiniz ! <br/>
                         Yönetmek istediğiniz sitenizi seçiniz.
                     </div>
-                    <table class="table">
-                        <tr v-for="(title, key) in list">
-                            <td>{{title}}</td>
-                            <td>
-                                <button class="btn btn-default">
-                                    <i class="far fa-arrow-alt-circle-right"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
 
-                    <div class="alert alert-info">
-                        Yeni bir profil yaratmak için alttaki kutuyu kullanabilirsiniz.
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control input-sm" v-model="dto.title">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success btn-block" @click="createProfile()">
-                            <i class="fas fa-check"></i> Profil oluştur
-                        </button>
+                    <div class="row" v-for="(title, key) in list">
+                        <div class="col-xs-8 col-sm-8 col-md-8">
+                            <i class="fas fa-arrow-right"></i> {{title}}
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <button class="btn btn-default btn-sm" @click="selectProfile(key, title)">
+                                <i class="far fa-arrow-alt-circle-right"></i>
+                            </button>
+                        </div>
+                        <hr>
                     </div>
 
 
-                    <div class="alert alert-danger">
-                        Çıkmak isterseniz aşağıdaki kırmızı butonu kullanabilirsiniz.
+                    <div class="collapse" id="profile">
+
+                        <div class="alert alert-info">
+                            Yeni bir profil yaratmak için alttaki kutuyu kullanabilirsiniz.
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm" v-model="dto.title">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block" @click="createProfile()">
+                                <i class="fas fa-check"></i> Profil oluştur
+                            </button>
+                        </div>
+
                     </div>
 
-                    <button type="button" class="btn btn-danger btn-block" @click="logout()">
-                        <i class="fas fa-times"></i>
-                        Çıkış
-                    </button>
                 </div>
 
                 <div class="panel-footer text-center">
@@ -95,6 +109,11 @@
                         alert("Site seçilmedi.");
                     })
                 });
+            },
+            selectProfile(key, title) {
+                siteSelection.siteSelected(key, title).then(() => {
+                    router.push('/')
+                })
             },
             logout() {
                 auth.logout();

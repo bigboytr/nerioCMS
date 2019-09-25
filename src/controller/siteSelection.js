@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import store from '@/store/index';
+import auth from '@/controller/authentication';
 
 export default {
 
@@ -20,13 +21,20 @@ export default {
 
     },
 
-    siteSelected(selected) {
+    siteSelected(key, title) {
+
+        let authId = store.getters.getAuthUser.uid;
 
         return new Promise((res, rej) => {
 
-            if (selected) {
+            if (key) {
 
-                store.dispatch("setSelectedSite", selected);
+                if (authId) {
+
+                    localStorage.token = true;
+                    store.dispatch('setToken', true);
+                    store.dispatch("setSelectedSite", {key, title});
+                }
 
                 res(true);
             } else {

@@ -18,7 +18,10 @@ const store = new Vuex.Store({
         },
         token: false,
         authUser: {},
-        selectedSite: "",
+        selectedSite: {
+            key: undefined,
+            title: undefined
+        },
         mainTitle: "Dashboard"
     },
     mutations: {
@@ -28,8 +31,9 @@ const store = new Vuex.Store({
         SET_TOKEN(state, value) {
             state.token = value;
         },
-        SET_SELECTED_SITE(state, value) {
-            state.selectedSite = value;
+        SET_SELECTED_SITE(state, payload) {
+            state.selectedSite.key = payload.key;
+            state.selectedSite.title = payload.title;
         },
         SET_MAIN_TITLE(state, value) {
             state.mainTitle = value;
@@ -42,8 +46,8 @@ const store = new Vuex.Store({
         setToken({commit}, value) {
             commit('SET_TOKEN', value);
         },
-        setSelectedSite({commit}, value) {
-            commit('SET_SELECTED_SITE', value);
+        setSelectedSite({commit}, payload) {
+            commit('SET_SELECTED_SITE', payload);
         },
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)

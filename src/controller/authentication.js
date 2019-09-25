@@ -23,7 +23,7 @@ export default {
                 //var errorCode = error.code;
                 //var errorMessage = error.message;
 
-                self.setAuthentication({}, false, null);
+                self.setAuthentication({}, false, {});
             });
     },
 
@@ -33,7 +33,7 @@ export default {
 
         firebase.auth().signOut().then(() => {
             // Sign-out successful.
-            self.setAuthentication({}, false, null);
+            self.setAuthentication({}, false, {});
             router.push('/login');
 
         }).catch((errors) => {
@@ -53,14 +53,14 @@ export default {
 
             if (!user) {
 
-                self.setAuthentication({}, false, null);
+                self.setAuthentication({}, false, {});
                 router.push('/login');
 
             } else {
 
                 store.dispatch('setAuthUser', user);
 
-                if (store.getters.getSelectedSite !== null) {
+                if (store.getters.getSelectedSite.key !== undefined) {
 
                     localStorage.token = true;
                     store.dispatch('setToken', true);
@@ -89,8 +89,8 @@ export default {
             site => null / key (string)
          */
 
-        localStorage.token = token;
         store.dispatch('setAuthUser', user);
+        localStorage.token = token;
         store.dispatch('setToken', token);
         store.dispatch('setSelectedSite', site);
 
