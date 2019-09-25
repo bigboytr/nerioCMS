@@ -18,24 +18,24 @@
 </template>
 
 <script>
-import auth from '@/controller/authentication'
-import controller from '@/controller/config'
+    //import auth from '@/controller/authentication'
+    import controller from '@/controller/config'
 
 
-export default {
-  name: 'Sidebar',
-  data() {
-    return {
-      list: {}
-    }
-  },
-  mounted() {
-    const self = this;
-    controller.getNerioMeu().then(function (response) {
+    export default {
+        name: 'Sidebar',
+        data() {
+            return {
+                list: {}
+            }
+        },
+        mounted() {
+            const self = this;
+            controller.getNerioMeu().then(function (response) {
 
-      self.list = response;
-    });
+                self.list = response;
+            });
 
-  }
-};
+        }
+    };
 </script>
