@@ -3,8 +3,7 @@
         <div class="col-md-12">
 
             <div class="alert alert-info">
-                Web sitenizin linklerini yönetebileceğiniz işlemleri gerçekleştirebilirsiniz.
-                Yeni bir link eklemek için sağ taraftaki butona tıklayınız.
+                İçerik sayfalarınızı yönetebilirsiniz.
             </div>
 
 
@@ -52,20 +51,19 @@
             </div>
         </div>
 
-        <modal :title="'Link'" :id="'modal'" :item="item" :cssClass="'modal-md'">
+        <modal :title="'İçerik'" :id="'modal'" :item="item" :cssClass="'modal-md'">
             <navigationForm></navigationForm>
         </modal>
     </div>
 </template>
 
 <script>
-    import controller from '@/controller/navigation'
-    import contents from '@/controller/contents'
+    import controller from '@/controller/contents'
     import modal from '@/components/Modal'
-    import navigationForm from '@/components/NavigationForm'
+    import contentForm from '@/components/ContentForm'
 
     export default {
-        name: 'Navigation',
+        name: 'Contents',
         data() {
             return {
                 list: null,
@@ -74,16 +72,11 @@
         },
         components: {
             modal,
-            navigationForm
+            contentForm
         },
         mounted() {
-            const self = this;
-            controller.getAll().then(function (response) {
 
-                self.list = response;
-            });
-
-            contents.getAll(); // get content list from firebase
+            controller.getAll(); // get content list from firebase
 
         },
         methods: {
@@ -94,15 +87,6 @@
             editMe(item) {
                 this.item = item;
                 $("#modal").modal("show");
-            },
-            typeOfLink(type) {
-
-                switch (type) {
-                    case 0: return "Sayfa"; break;
-                    case 1: return "Ürün"; break;
-                    case 2: return "İletişim"; break;
-                    default: return "Sayfa"; break;
-                }
             }
         }
     };

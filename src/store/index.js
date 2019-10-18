@@ -22,7 +22,11 @@ const store = new Vuex.Store({
             key: undefined,
             title: undefined
         },
-        mainTitle: "Dashboard"
+        mainTitle: "Dashboard",
+        navigation: {
+            urlTypes: ["Sayfa", "Link", "Ürün","İletişim"]
+        },
+        contents: {}
     },
     mutations: {
         SET_AUTHUSER(state, obj) {
@@ -37,6 +41,9 @@ const store = new Vuex.Store({
         },
         SET_MAIN_TITLE(state, value) {
             state.mainTitle = value;
+        },
+        SET_CONTENTS(state, value) {
+            state.contents = value;
         }
     },
     actions: {
@@ -51,6 +58,9 @@ const store = new Vuex.Store({
         },
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
+        },
+        setContentList({commit}, value) {
+            commit('SET_CONTENTS', value)
         }
     },
 
@@ -72,7 +82,20 @@ const store = new Vuex.Store({
         },
         getSelectedSite(state) {
             return state.selectedSite;
+        },
+        getUrlTypes(state) {
+            return state.navigation.urlTypes
+        },
+        getContentList(state) {
+            return state.contents;
         }
+        /*getUrlTypes: (state) => (i) => {
+            if (i) {
+                return state.navigation.urlTypes[i];
+            } else {
+                return state.navigation.urlTypes;
+            }
+        }*/
     },
 });
 

@@ -5,9 +5,14 @@ export default {
 
     getAll() {
 
+        let user = store.getters.getAuthUser;
+        let selectedSites = store.getters.getSelectedSite;
+
+        let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/navigation/`;
+
         return new Promise((res, rej) => {
 
-            firebase.database().ref('/navigation/').once('value').then(function (response) {
+            firebase.database().ref(reference).once('value').then(function (response) {
 
                 res(response.val());
 
@@ -23,9 +28,14 @@ export default {
 
     save(dto) {
 
+        let user = store.getters.getAuthUser;
+        let selectedSites = store.getters.getSelectedSite;
+
+        let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/navigation/`;
+
         return new Promise((res, rej) => {
 
-            firebase.database().ref('/navigation/').push({
+            firebase.database().ref(reference).push({
                 parent: dto.parent,
                 title: dto.title,
                 target: dto.target,

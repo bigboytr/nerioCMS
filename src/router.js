@@ -7,6 +7,7 @@ import store from '@/store/index'
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Navigation from './views/Navigation'
+import Contents from './views/Contents'
 import SiteSelection from './views/SiteSelection'
 
 Vue.use(Router);
@@ -44,7 +45,7 @@ export default new Router({
       {path: '/login', component: Login, beforeEnter: auth.isLogged()},
       {path: '/site-selection', component: SiteSelection },
       {path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("Navigasyon"); next() } },
-      {path: '/content', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("İçerik"); next() } },
+      {path: '/content', component: Contents, beforeEnter: (to, form, next) => { routerSetter("İçerik"); next() } },
       {path: '/slider', component: Navigation, beforeEnter: (to, from, next) => { routerSetter("Slider"); next() }}
 
       /*{path: '/', component: Home },
