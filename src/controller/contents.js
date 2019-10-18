@@ -19,5 +19,9 @@ export default {
 
             throw(errors);
         })
+    },
+
+    save() {
+        return true;
     }
 }

@@ -8,6 +8,7 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Navigation from './views/Navigation'
 import Contents from './views/Contents'
+import ContentForm from './views/ContentForm'
 import SiteSelection from './views/SiteSelection'
 
 Vue.use(Router);
@@ -46,6 +47,7 @@ export default new Router({
       {path: '/site-selection', component: SiteSelection },
       {path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => { routerSetter("Navigasyon"); next() } },
       {path: '/content', component: Contents, beforeEnter: (to, form, next) => { routerSetter("İçerik"); next() } },
+      {path: '/content-form', component: ContentForm, beforeEnter: (to, form, next) => { routerSetter("İçerik Ekle"); next() } },
       {path: '/slider', component: Navigation, beforeEnter: (to, from, next) => { routerSetter("Slider"); next() }}
 
       /*{path: '/', component: Home },

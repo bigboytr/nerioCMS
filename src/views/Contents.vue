@@ -11,10 +11,10 @@
                 <div class="panel-heading">
                     <div class="panel-title">
                         Liste
-                        <button class="btn btn-sm btn-default pull-right" @click="openModal()">
-                            <i class="fas fa-plus"></i>
-                            Ekle
-                        </button>
+
+                        <router-link tag="button" class="btn btn-sm btn-default pull-right" to="/content-form">
+                            <i class="fas fa-plus"></i> Ekle
+                        </router-link>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -51,16 +51,12 @@
             </div>
         </div>
 
-        <modal :title="'İçerik'" :id="'modal'" :item="item" :cssClass="'modal-md'">
-            <navigationForm></navigationForm>
-        </modal>
     </div>
 </template>
 
 <script>
     import controller from '@/controller/contents'
     import modal from '@/components/Modal'
-    import contentForm from '@/components/ContentForm'
 
     export default {
         name: 'Contents',
@@ -72,7 +68,7 @@
         },
         components: {
             modal,
-            contentForm
+
         },
         mounted() {
 
