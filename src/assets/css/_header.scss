@@ -10,7 +10,7 @@ header {
   top: 0;
   border-bottom: 1px $logo solid;
 
-  .logo {
+  /*.logo {
     background: $logo;
     color: $white;
     font-size: 20px;
@@ -24,9 +24,5 @@ header {
     &:hover {
       background-color: $logoHover;
     }
-  }
-
-  .turnOff {
-    padding: 9px 15px;
-  }
+  }*/
 }

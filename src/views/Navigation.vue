@@ -8,17 +8,18 @@
             </div>
 
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        Liste
-                        <button class="btn btn-sm btn-default pull-right" @click="openModal()">
-                            <i class="fas fa-plus"></i>
-                            Ekle
-                        </button>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+
+                    Liste
+
+                    <router-link to="/navigation-form" tag="button" class="btn btn-sm btn-dark offset-right">
+                        <i class="fas fa-plus"></i>
+                        Ekle
+                    </router-link>
+
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <table class="table table-hover" v-show="list">
                         <thead class="thead-dark">
                         <tr>
@@ -52,17 +53,13 @@
             </div>
         </div>
 
-        <modal :title="'Link'" :id="'modal'" :item="item" :cssClass="'modal-md'">
-            <navigationForm></navigationForm>
-        </modal>
     </div>
 </template>
 
 <script>
     import controller from '@/controller/navigation'
-    import contents from '@/controller/contents'
+    //import contents from '@/controller/contents'
     import modal from '@/components/Modal'
-    import navigationForm from '@/components/NavigationForm'
 
     export default {
         name: 'Navigation',
@@ -73,8 +70,7 @@
             }
         },
         components: {
-            modal,
-            navigationForm
+            modal
         },
         mounted() {
             const self = this;
@@ -83,7 +79,7 @@
                 self.list = response;
             });
 
-            contents.getAll(); // get content list from firebase
+            //contents.getAll(); // get content list from firebase
 
         },
         methods: {

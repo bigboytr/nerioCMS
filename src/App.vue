@@ -1,13 +1,12 @@
 <template>
     <div id="app" class="container-fluid">
 
-        <Header v-if="token"></Header>
         <Sidebar v-if="token"></Sidebar>
 
         <div class="col-md-12 margin-t-50" v-if="!token">
             <router-view/>
         </div>
-        <div class="content col-md-10 col-md-push-2 margin-t-50" v-if="token">
+        <div class="content col-10 offset-2 mt-3" v-if="token">
             <router-view/>
         </div>
     </div>

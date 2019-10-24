@@ -14,7 +14,7 @@ const store = new Vuex.Store({
                 storageBucket: 'neriocms.appspot.com',
                 messagingSenderId: '355445654956',
             },
-            refCMS: "nerioCMS"
+            refCMS: "nerioCMS" // unused
         },
         token: false,
         authUser: {},

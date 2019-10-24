@@ -7,17 +7,16 @@
             </div>
 
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        Liste
+            <div class="card">
+                <div class="card-header">
 
-                        <router-link tag="button" class="btn btn-sm btn-default pull-right" to="/content-form">
-                            <i class="fas fa-plus"></i> Ekle
-                        </router-link>
-                    </div>
+                    Liste
+                    <router-link tag="button" class="btn btn-sm btn-default pull-right" to="/content-form">
+                        <i class="fas fa-plus"></i> Ekle
+                    </router-link>
+
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <table class="table table-hover" v-show="list">
                         <thead class="thead-dark">
                         <tr>

@@ -1,9 +1,9 @@
 <template>
     <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-md-4 col-md-push-4 margin-t-50">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-md-4 offset-md-4 margin-t-50">
 
-            <div class="panel panel-default login-panel-shadow">
-                <div class="panel-body">
+            <div class="card card-default login-panel-shadow">
+                <div class="card-body">
 
                     <div class="logo margin-t-10 margin-b-20 text-center">
                         <img src="../assets/images/nerio.png" width="70">
@@ -11,7 +11,7 @@
                         <h5>Powered by FX Yazılım</h5>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-1">
                         <div class="col-xs-8 col-sm-7 col-md-8">
                             <h4>Hoşgeldiniz !</h4>
                         </div>
@@ -33,12 +33,10 @@
                     </div>
 
                     <div class="row" v-for="(title, key) in list">
-                        <div class="col-xs-8 col-sm-8 col-md-8">
-                            <i class="fas fa-arrow-right"></i> {{title}}
-                        </div>
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <button class="btn btn-default btn-sm" @click="selectProfile(key, title)">
-                                <i class="far fa-arrow-alt-circle-right"></i>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <button class="btn btn-block btn-light text-l" @click="selectProfile(key, title)">
+                                <i class="fas fa-arrow-right"></i>
+                                {{title}}
                             </button>
                         </div>
                         <hr>
@@ -64,7 +62,7 @@
 
                 </div>
 
-                <div class="panel-footer text-center">
+                <div class="card-footer text-center">
                     {{thisYear}} - &copy; FX Yazılım
                 </div>
             </div>
