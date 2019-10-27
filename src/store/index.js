@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import firebase from 'firebase';
 
 Vue.use(Vuex);
 
@@ -24,9 +25,12 @@ const store = new Vuex.Store({
         },
         mainTitle: "Dashboard",
         navigation: {
+            list: {},
             urlTypes: ["Sayfa", "Link", "Ürün","İletişim"]
         },
-        contents: {}
+        contents: {
+            list: {}
+        }
     },
     mutations: {
         SET_AUTHUSER(state, obj) {
@@ -44,6 +48,12 @@ const store = new Vuex.Store({
         },
         SET_CONTENTS(state, value) {
             state.contents = value;
+        },
+        SET_NAVIGATION_LIST(state, value) {
+            state.navigation.list = value;
+        },
+        SET_LIST(state, payload) {
+            state[payload.path].list = payload.value
         }
     },
     actions: {
@@ -61,6 +71,30 @@ const store = new Vuex.Store({
         },
         setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
+        },
+        setList({commit}, path) {
+
+            let user = this.getters.getAuthUser;
+            let selectedSites = this.getters.getSelectedSite;
+
+            let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/${path}/`;
+
+            const setLoad = {
+                path: path
+            };
+
+            firebase.database().ref(reference).once('value').then(function (response) {
+
+                setLoad.value = response.val();
+
+                commit('SET_LIST', setLoad);
+
+            }).catch((errors) => {
+
+                setLoad.value = errors;
+                commit('SET_LIST', setLoad);
+
+            })
         }
     },
 
@@ -83,19 +117,25 @@ const store = new Vuex.Store({
         getSelectedSite(state) {
             return state.selectedSite;
         },
-        getUrlTypes(state) {
+        /*getUrlTypes(state) {
             return state.navigation.urlTypes
-        },
+        },*/
         getContentList(state) {
             return state.contents;
-        }
-        /*getUrlTypes: (state) => (i) => {
-            if (i) {
+        },
+        getNavList(state) {
+            return state.navigation.list;
+        },
+        getList: (state) => (id) => {
+            return state[id].list
+        },
+        getUrlTypes: (state) => (i) => {
+            if (!isNaN(i) && i !== undefined) {
                 return state.navigation.urlTypes[i];
             } else {
                 return state.navigation.urlTypes;
             }
-        }*/
+        }
     },
 });
 

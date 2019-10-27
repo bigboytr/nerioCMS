@@ -11,9 +11,9 @@
             <div class="card">
                 <div class="card-header">
 
-                    Liste
+                    <MainTitle></MainTitle>
 
-                    <router-link to="/navigation-form" tag="button" class="btn btn-sm btn-dark offset-right">
+                    <router-link to="/navigation-form" tag="button" class="btn btn-sm btn-dark">
                         <i class="fas fa-plus"></i>
                         Ekle
                     </router-link>
@@ -58,47 +58,54 @@
 
 <script>
     import controller from '@/controller/navigation'
-    //import contents from '@/controller/contents'
+    import store from '@/store/index'
     import modal from '@/components/Modal'
+    import MainTitle from '@/components/MainTitle'
 
     export default {
         name: 'Navigation',
         data() {
             return {
-                list: null,
                 item: null
             }
         },
         components: {
+            MainTitle,
             modal
         },
         mounted() {
-            const self = this;
+            /*const self = this;
             controller.getAll().then(function (response) {
 
                 self.list = response;
-            });
+            });*/
+
 
             //contents.getAll(); // get content list from firebase
 
         },
         methods: {
-            openModal() {
+            /*openModal() {
 
                 $("#modal").modal("show");
-            },
+            },*/
             editMe(item) {
                 this.item = item;
-                $("#modal").modal("show");
+                //$("#modal").modal("show");
             },
             typeOfLink(type) {
-
-                switch (type) {
+                return store.getters.getUrlTypes(type);
+                /*switch (type) {
                     case 0: return "Sayfa"; break;
                     case 1: return "Ürün"; break;
                     case 2: return "İletişim"; break;
                     default: return "Sayfa"; break;
-                }
+                }*/
+            }
+        },
+        computed: {
+            list() {
+                return store.getters.getList('navigation');
             }
         }
     };

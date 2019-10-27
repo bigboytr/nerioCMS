@@ -5,7 +5,7 @@ export default {
 
     getAll() {
 
-        let user = store.getters.getAuthUser;
+        /*let user = store.getters.getAuthUser;
         let selectedSites = store.getters.getSelectedSite;
 
         let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/navigation/`;
@@ -22,7 +22,7 @@ export default {
             })
 
 
-        });
+        });*/
 
     },
 
@@ -35,17 +35,14 @@ export default {
 
         return new Promise((res, rej) => {
 
-            firebase.database().ref(reference).push({
-                parent: dto.parent,
-                title: dto.title,
-                target: dto.target,
-                type: 0,
-                url: dto.url
-            }).then(function (result) {
+            firebase.database().ref(reference).push(dto).then(function (result) {
+                console.log(result);
 
-                res(result);
+                store.dispatch('setList', 'navigation');
+
+            }).catch((err) => {
+                console.log(err);
             });
         });
     }
-
 }

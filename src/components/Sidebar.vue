@@ -1,15 +1,10 @@
 <template>
     <div class="row">
-
-
-
         <div class="col-md-2 sidebar padding-l-0 padding-r-0">
 
-
-                <router-link to="/" tag="a" class="btn btn-block logo">
-                    Nerio CMS
-                </router-link>
-
+            <router-link to="/" tag="a" class="btn btn-block logo">
+                Nerio CMS
+            </router-link>
 
             <ul class="nav flex-column">
                 <li class="nav-item" v-for="(item, key) in list">

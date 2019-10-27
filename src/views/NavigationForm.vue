@@ -17,14 +17,14 @@
                             <div class="form-group">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                     <label class="btn btn-primary" :class="(index === 0) ? 'active' : ''"
-                                           v-for="(type, index) in urlTypes">
+                                           v-for="(type, index) in urlTypes" @click="setUrlType(index)">
                                         <input type="radio" :value="index" v-model="dto.type"> {{type}}
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group col-8">
+                        <div class="form-group col-12">
                             <div class="form-group">
                                 <label class="form-label">Başlık</label>
                                 <input type="text" class="form-control" v-model="dto.title">
@@ -33,11 +33,12 @@
 
                         <div class="form-group col-6">
                             <label class="form-label">URL</label>
-                            <input type="text" class="form-control" v-model="dto.url">
+                            <input type="text" class="form-control" v-model="dto.url" v-if="dto.type == 1">
+                            <input type="text" class="form-control" v-model="dto.url" v-else disabled>
                         </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-label">Sayfalar</label>
+                        <div class="form-group col-6" v-show="dto.type != 1">
+                            <label class="form-label">Referans</label>
                             <select class="form-control" v-model="dto.page">
                                 <option value="0" selected>----</option>
                             </select>
@@ -47,12 +48,23 @@
                             <label class="form-label">Üst Öğe</label>
                             <select size="7" class="form-control" v-model="dto.parent">
                                 <option value="0" selected>Üst öğe yok</option>
+                                <option v-for="(n, k) in navList" :value="k">{{n.title}}</option>
                             </select>
                         </div>
 
-                        <div class="form-check col-4">
-                            <input class="form-check-input" type="checkbox" id="yeni_p" v-model="targetInput">
-                            <label class="form-check-label" for="yeni_p">
+                        <div class="form-group col-6">
+                            <label class="form-label">Meta Tanım</label>
+                            <input type="text" class="form-control" v-model="dto.metaDesc">
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label">Meta Kelimeler</label>
+                            <input type="text" class="form-control" v-model="dto.metaKeyw">
+                        </div>
+
+                        <div class="form-group col-4">
+                            <input class="form-control" type="checkbox" id="yeni_p" v-model="targetInput">
+                            <label class="form-label" for="yeni_p">
                                 Yeni pencerede açılsın
                             </label>
                         </div>
@@ -63,8 +75,14 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <button type="button" class="btn btn-warning">Close</button>
-                        <button type="button" class="btn btn-primary" @click="save()">Save changes</button>
+                        <button type="button" class="btn btn-warning">
+                            <i class="fas fa-times fa-fw"></i>
+                            Vazgeç
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="save()">
+                            <i class="fas fa-arrow-circle-right fa-fw"></i>
+                            Kaydet
+                        </button>
                     </div>
                 </div>
 
@@ -97,9 +115,11 @@
                     title: "",
                     url: "",
                     page: "",
-                    target: this.targetInputF,
+                    target: "_self",
                     parent: 0,
-                    type: 0
+                    type: 0,
+                    metaDesc: '',
+                    metaKeyw: ''
                 }
 
             }
@@ -108,15 +128,28 @@
             save() {
                 controller.save(this.dto).then(function () {
                     alert("başarılı");
+
+                }).catch((error) => {
+                    console.log(error);
                 });
+            },
+            setUrlType(type) {
+                this.dto.type = type;
             }
         },
         computed: {
+            navList() {
+                // üst öğe seçerken kullanılacak
+                return store.getters.getList('navigation')
+            },
+            contentList() {
+                return store.getters.getList('contents')
+            },
             targetInputF() {
                 this.dto.target = this.targetInput ? "_blank" : "_self"
             },
             urlTypes() {
-                return store.getters.getUrlTypes
+                return store.getters.getUrlTypes(undefined)
             }
         }
     };

@@ -34,6 +34,10 @@ export default {
                     localStorage.token = true;
                     store.dispatch('setToken', true);
                     store.dispatch("setSelectedSite", {key, title});
+
+                    // Fill the lists
+                    store.dispatch('setList', 'navigation');
+
                 }
 
                 res(true);
