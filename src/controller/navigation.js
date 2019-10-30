@@ -36,11 +36,12 @@ export default {
         return new Promise((res, rej) => {
 
             firebase.database().ref(reference).push(dto).then(function (result) {
-                console.log(result);
+                //console.log(result);
 
                 store.dispatch('setList', 'navigation');
-
+                res(true);
             }).catch((err) => {
+                rej(err);
                 console.log(err);
             });
         });

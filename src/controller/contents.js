@@ -21,7 +21,25 @@ export default {
         })
     },
 
-    save() {
-        return true;
+    save(dto) {
+
+        let user = store.getters.getAuthUser;
+        let selectedSites = store.getters.getSelectedSite;
+
+        let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/contents/`;
+
+        return new Promise((res, rej) => {
+
+            firebase.database().ref(reference).push(dto).then(function (result) {
+                //console.log(result);
+
+                store.dispatch('setList', 'contents');
+                res(true);
+
+            }).catch((err) => {
+                rej(err);
+                console.log(err);
+            });
+        });
     }
 }

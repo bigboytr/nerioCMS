@@ -9,10 +9,11 @@
 
             <div class="card">
                 <div class="card-header">
+                    <MainTitle></MainTitle>
 
-                    Liste
-                    <router-link tag="button" class="btn btn-sm btn-default pull-right" to="/content-form">
-                        <i class="fas fa-plus"></i> Ekle
+                    <router-link to="/contet-form" tag="button" class="btn btn-sm btn-dark">
+                        <i class="fas fa-plus"></i>
+                        Ekle
                     </router-link>
 
                 </div>
@@ -56,6 +57,7 @@
 <script>
     import controller from '@/controller/contents'
     import modal from '@/components/Modal'
+    import MainTitle from '@/components/MainTitle'
 
     export default {
         name: 'Contents',
@@ -67,7 +69,7 @@
         },
         components: {
             modal,
-
+            MainTitle
         },
         mounted() {
 
