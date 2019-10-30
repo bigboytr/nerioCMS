@@ -47,8 +47,7 @@
 </template>
 
 <script>
-    import controller from '@/controller/contents'
-    import store from '@/store/index'
+    import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
     import {VueEditor} from "vue2-editor";
 
@@ -63,6 +62,7 @@
             return {
                 targetInput: false,
                 dto: {
+                    id: '', // sefLinks
                     title: '',
                     content: '',
                     metaDesc: '',
@@ -73,7 +73,7 @@
         },
         methods: {
             save() {
-                controller.save(this.dto).then(function () {
+                controller.save(this.dto, 'contents').then(function () {
                     alert("başarılı");
 
                 }).catch((error) => {
@@ -81,6 +81,11 @@
                 });
             }
         },
-        computed: {}
+        computed: {
+            sefTitle() {
+                // this will use for sef links
+                this.dto.id = controller.sefTitleCreator(this.dto.title);
+            }
+        }
     };
 </script>

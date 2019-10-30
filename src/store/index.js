@@ -69,9 +69,9 @@ const store = new Vuex.Store({
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
         },
-        setContentList({commit}, value) {
+        /*setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
-        },
+        },*/
         setList({commit}, path) {
 
             let user = this.getters.getAuthUser;

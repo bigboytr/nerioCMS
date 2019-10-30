@@ -37,6 +37,7 @@ export default {
 
                     // Fill the lists
                     store.dispatch('setList', 'navigation');
+                    store.dispatch('setList', 'contents');
 
                 }
 

@@ -6,7 +6,7 @@ const moduleName = "/contents/";
 export default {
 
     getAll() {
-        let user = store.getters.getAuthUser;
+        /*let user = store.getters.getAuthUser;
         let selectedSites = store.getters.getSelectedSite;
 
         let reference = `/profiles/${user.uid}/sites/${selectedSites.key}${moduleName}`;
@@ -18,7 +18,7 @@ export default {
         }).catch((errors) => {
 
             throw(errors);
-        })
+        })*/
     },
 
     save(dto) {

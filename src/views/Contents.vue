@@ -23,7 +23,7 @@
                         <tr>
                             <th width="10%"></th>
                             <th width="20%">Başlık</th>
-                            <th width="20%">URL</th>
+                            <th width="20%">Kelimeler</th>
                             <th width="20%">Hedef</th>
                             <th width="10%">Link Tip</th>
                         </tr>
@@ -58,12 +58,13 @@
     import controller from '@/controller/contents'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
+    import store from '@/store/index'
 
     export default {
         name: 'Contents',
         data() {
             return {
-                list: null,
+                //list: null,
                 item: null
             }
         },
@@ -73,17 +74,18 @@
         },
         mounted() {
 
-            controller.getAll(); // get content list from firebase
+            //controller.getAll(); // get content list from firebase
 
         },
         methods: {
-            openModal() {
-
-                $("#modal").modal("show");
-            },
             editMe(item) {
                 this.item = item;
                 $("#modal").modal("show");
+            }
+        },
+        computed: {
+            list() {
+                return store.getters.getList('contents')
             }
         }
     };
