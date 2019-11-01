@@ -11,7 +11,7 @@
                 <div class="card-header">
                     <MainTitle></MainTitle>
 
-                    <router-link to="/contet-form" tag="button" class="btn btn-sm btn-dark">
+                    <router-link to="/content-form" tag="button" class="btn btn-sm btn-dark">
                         <i class="fas fa-plus"></i>
                         Ekle
                     </router-link>
@@ -25,7 +25,8 @@
                             <th width="20%">Başlık</th>
                             <th width="20%">Kelimeler</th>
                             <th width="20%">Hedef</th>
-                            <th width="10%">Link Tip</th>
+                            <!--<th width="10%">Son İşlem</th>-->
+                            <th width="10%">Aktif</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,9 +41,13 @@
                                     {{item.title}}
                                 </a>
                             </td>
-                            <td>{{item.url}}</td>
+                            <td>{{item.metaKeyw}}</td>
                             <td>{{item.target}}</td>
-                            <td>{{typeOfLink(item.type)}}</td>
+                            <!--<td>{{item.modified}}</td>-->
+                            <td>
+                                <Status :param="item.active"></Status>
+                            </td>
+
                         </tr>
                         </tbody>
                     </table>
@@ -59,6 +64,7 @@
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
+    import Status from '@/components/Status'
 
     export default {
         name: 'Contents',
@@ -70,7 +76,8 @@
         },
         components: {
             modal,
-            MainTitle
+            MainTitle,
+            Status
         },
         mounted() {
 

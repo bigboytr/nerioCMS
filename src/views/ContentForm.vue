@@ -62,7 +62,7 @@
             return {
                 targetInput: false,
                 dto: {
-                    id: '', // sefLinks
+                    sefLink: '',
                     title: '',
                     content: '',
                     metaDesc: '',
@@ -84,7 +84,7 @@
         computed: {
             sefTitle() {
                 // this will use for sef links
-                this.dto.id = controller.sefTitleCreator(this.dto.title);
+                this.dto.sefLink = controller.sefTitleCreator(this.dto.title);
             }
         }
     };

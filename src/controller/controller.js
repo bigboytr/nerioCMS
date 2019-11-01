@@ -16,10 +16,17 @@ export default {
 
         let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/${module}/`;
 
+        let defs = {
+            modified: new Date().toLocaleString(),
+            modifyBy: user.uid,
+            active: true
+        };
+
+        let obj = {...dto, ...defs};
+
         return new Promise((res, rej) => {
 
-            firebase.database().ref(reference).push(dto).then(function (result) {
-                //console.log(result);
+            firebase.database().ref(reference).push(obj).then(function (result) {
 
                 store.dispatch('setList', module); // re-fetch the list then store to vuex
 
