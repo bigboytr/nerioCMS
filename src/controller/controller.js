@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import store from '@/store/index'
+import axios from 'axios'
 
 export default {
 
@@ -61,5 +62,24 @@ export default {
             .replace(/[-]+/gi, "-") // trim repeated dashes
             .toLowerCase();
 
+    },
+
+    deneme() {
+
+        axios({
+            method: 'post',
+            data: {
+                id: 1000,
+                table: "sliders"
+            },
+            url: './nerio/slim/api/activate',
+
+        }).then((response) => {
+
+            console.log(response);
+
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 }

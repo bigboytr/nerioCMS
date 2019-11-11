@@ -6,7 +6,7 @@
         <div class="col-md-12 margin-t-50" v-if="!token">
             <router-view/>
         </div>
-        <div class="content col-10 offset-2 mt-3" v-if="token">
+        <div class="content col-10 offset-2 mt-3 mb-3" v-if="token">
             <router-view/>
         </div>
     </div>

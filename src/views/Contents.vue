@@ -16,6 +16,10 @@
                         Ekle
                     </router-link>
 
+                    <button class="btn btn-sm btn-primary" @click="dene()">
+                        TEST API
+                    </button>
+
                 </div>
                 <div class="card-body">
                     <table class="table table-hover" v-show="list">
@@ -60,11 +64,12 @@
 </template>
 
 <script>
-    import controller from '@/controller/contents'
+    import controller from '@/controller/controller'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
     import Status from '@/components/Status'
+    import axios from 'axios'
 
     export default {
         name: 'Contents',
@@ -88,6 +93,9 @@
             editMe(item) {
                 this.item = item;
                 $("#modal").modal("show");
+            },
+            dene() {
+                controller.deneme();
             }
         },
         computed: {

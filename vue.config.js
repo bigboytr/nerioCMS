@@ -1,12 +1,10 @@
 module.exports = {
     lintOnSave: false,
+    baseUrl: '/nerio',
     outputDir: undefined,
     assetsDir: undefined,
-    runtimeCompiler: true,
+    runtimeCompiler: undefined,
     productionSourceMap: undefined,
     parallel: undefined,
-    css: undefined,
-    devServer: {
-        host: 'localhost'
-    }
+    css: undefined
 }
