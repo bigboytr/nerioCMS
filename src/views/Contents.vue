@@ -20,6 +20,10 @@
                         TEST API
                     </button>
 
+                    <button class="btn btn-sm btn-primary" @click="getAll()">
+                        TEST API getAll
+                    </button>
+
                 </div>
                 <div class="card-body">
                     <table class="table table-hover" v-show="list">
@@ -49,6 +53,9 @@
                             <td>{{item.target}}</td>
                             <!--<td>{{item.modified}}</td>-->
                             <td>
+                                <button type="button" class="btn btn-xs btn-primary" @click="activate(1)">
+                                    Active Toggle
+                                </button>
                                 <Status :param="item.active"></Status>
                             </td>
 
@@ -94,13 +101,35 @@
                 this.item = item;
                 $("#modal").modal("show");
             },
+            activate(id) {
+
+                controller.activate(id, "table_pages").then((resp) => {
+                    console.log(resp);
+                    alert("Başarılı");
+                }).catch((e) => {
+                    console.log(e);
+                    alert("Başarısız");
+                })
+            },
             dene() {
                 controller.deneme();
+            },
+            getAll() {
+                controller.getAll({}, "table_pages").then((resp) => {
+                    console.log(resp);
+                    //alert("Başarılı");
+                    store.dispatch('setContentList', resp.data);
+                }).catch((e) => {
+                    console.log(e);
+                    alert("Başarısız");
+                });
             }
         },
         computed: {
             list() {
-                return store.getters.getList('contents')
+                let a = store.getters.getList('contents');
+                console.log(a);
+                return a;
             }
         }
     };

@@ -17,6 +17,7 @@ const store = new Vuex.Store({
             },
             refCMS: "nerioCMS" // unused
         },
+        apiPath: 'http://gencpro.com/nerio/slim/',
         token: false,
         authUser: {},
         selectedSite: {
@@ -69,9 +70,9 @@ const store = new Vuex.Store({
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
         },
-        /*setContentList({commit}, value) {
+        setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
-        },*/
+        },
         setList({commit}, path) {
 
             let user = this.getters.getAuthUser;
@@ -99,6 +100,9 @@ const store = new Vuex.Store({
     },
 
     getters: {
+        getApiPath(state) {
+           return state.apiPath;
+        },
         getToken(state) {
             return state.token;
         },

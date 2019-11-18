@@ -33,9 +33,24 @@ $app = new \Slim\App;
 
 
 
-$app->group('/api', function (App $app, $basic) {
+$app->group('/api', function (App $app) use ($basic) {
 
-    $app->post('/activate', function (Request $request, Response $response, $basic) {
+    $app->post('/getAll', function(Request $request, Response $response) use ($basic) {
+
+        // request params
+        $params = json_decode($request->getBody());
+
+        // view kullanmak gerekebilir.
+
+        // find the item which will update
+        $list = ORM::for_table($basic->resolveTableName($params->table))->find_array();
+
+        // Response
+        return $response->withJson($list);
+
+    });
+
+    $app->post('/save', function (Request $request, Response $response) use ($basic) {
 
         // request params
         $params = json_decode($request->getBody());
@@ -48,6 +63,30 @@ $app->group('/api', function (App $app, $basic) {
 
         // set the new value of selected row from DB
         $item->set("active",$act);
+
+        /*// ORM CRUD action will affect in this inner function
+        $result = $basic->ormAction($item);
+
+        // Response
+        $response->withJson($result);*/
+
+    });
+
+    $app->post('/activate', function (Request $request, Response $response) use ($basic) {
+
+        // request params
+        $params = json_decode($request->getBody());
+
+        // find the item which will update
+        $item = ORM::for_table($basic->resolveTableName($params->table))->find_one($params->id);
+
+        // toggle the active column
+        $act = intval($item->active) == 1 ? 0 : 1;
+
+        // set the new value of selected row from DB
+        $item->set("active",$act);
+        $item->set("modifiedDate", $params->modifiedDate);
+        $item->set("modifiedBy", $params->modifiedBy);
 
         // ORM CRUD action will affect in this inner function
         $result = $basic->ormAction($item);

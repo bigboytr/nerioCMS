@@ -10,7 +10,7 @@ export default {
     Object dto = each record structure
     @return - if there isn't error returns true otherwise returns error structure
      */
-    save(dto, module) {
+    /*save(dto, module) {
 
         let user = store.getters.getAuthUser;
         let selectedSites = store.getters.getSelectedSite;
@@ -38,6 +38,108 @@ export default {
                 console.log(err);
             });
         });
+    },*/
+
+    getAll(dto, module) {
+
+        const apiPath = store.getters.getApiPath;
+
+        return new Promise((res, rej) => {
+            axios({
+                method: 'post',
+                data: {
+                    dto: dto,
+                    table: module
+                },
+                url: `${apiPath}/api/getAll`,
+
+            }).then((response) => {
+
+                //console.log(response);
+                res(response);
+
+            }).catch((err) => {
+                console.log(err);
+                rej(err);
+            });
+        })
+    },
+
+    save(dto, module) {
+
+        const apiPath = store.getters.getApiPath;
+
+        const user = store.getters.getAuthUser;
+        const selectedSites = store.getters.getSelectedSite;
+
+        let createdDefs = {
+            createdDate: new Date().toLocaleString(),
+            createdBy: user.uid,
+            active: true,
+            deleted: false
+        };
+
+        let modifiedDefs = {
+            modifiedDate: new Date().toLocaleString(),
+            modifiedBy: user.uid
+        };
+
+        let obj = (dto.updated) ? {...dto, ...modifiedDefs} : {...dto, ...createdDefs};
+
+        axios({
+            method: 'post',
+            data: {
+                dto: dto,
+                table: module
+            },
+            url: `${apiPath}/api/save`,
+
+        }).then((response) => {
+
+            console.log(response);
+
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    },
+
+    activate(id, module) {
+
+        const apiPath = store.getters.getApiPath;
+
+        const user = store.getters.getAuthUser;
+        const selectedSites = store.getters.getSelectedSite;
+
+        console.log(user);
+
+        let dto = {
+            id: id,
+            modifiedDate: new Date().toLocaleString(),
+            modifiedBy: user.uid
+        };
+
+        return new Promise((res, rej) => {
+            axios({
+                method: 'post',
+                data: {
+                    dto: dto,
+                    table: module
+                },
+                url: `${apiPath}/api/activate`,
+
+            }).then((response) => {
+
+                res(response);
+
+            }).catch((err) => {
+
+                rej(err);
+            });
+        })
+
+
+
     },
 
     /*

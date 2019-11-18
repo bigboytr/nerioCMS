@@ -66,14 +66,15 @@
                     title: '',
                     content: '',
                     metaDesc: '',
-                    metaKeyw: ''
+                    metaKeyw: '',
+                    update: false
                 }
 
             }
         },
         methods: {
             save() {
-                controller.save(this.dto, 'contents').then(function () {
+                controller.save(this.dto, 'table_pages').then(function () {
                     alert("başarılı");
 
                 }).catch((error) => {

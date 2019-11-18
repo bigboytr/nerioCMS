@@ -38,12 +38,40 @@ class basic
         define("table_videosCategories", "videos_categories", true);
         define("table_boxes", "boxes", true);
 
+        define("TABLES", [
+           "table_pages" => "pages"
+        ]);
         // constant vars
         //define("upload_target", "./uploads", true);
     }
 
+    public function resolveTableName($name) {
+
+        $tables = [
+            "table_pages" => "pages",
+            "table_navigation" => "navigation",
+            "table_productsCategories" => "products_categories",
+            "table_productsMedia" => "products_media",
+            "table_productsContents" => "products_contents",
+            "table_productsPricing" => "products_pricing",
+            "table_contacts" => "contacts",
+            "table_contactDetails" => "contact_details",
+            "table_contactForm" => "contact_form",
+            "table_configs" => "configs",
+            "table_sliders" => "sliders",
+            "table_slidersCategories" => "sliders_categories",
+            "table_videos" => "videos",
+            "table_videosCategories" => "videos_categories",
+            "table_boxes" => "boxes"
+        ];
+
+        return $tables[$name];
+
+    }
+
     /*
     İçerik gösterim alanı tanımlamaları
+    unused
     */
     public function contentAreaDefinitions($key = NULL) {
 
@@ -62,6 +90,7 @@ class basic
 
     /*
     Site configs listesi
+    unused
     */
     public function siteConfigs($key = NULL) {
 
@@ -125,6 +154,7 @@ class basic
 
     /*
     Kullanıcı yetkileri tanımlamaları
+    unused
     */
     public function userPermissions($key = NULL) {
 
