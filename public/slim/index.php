@@ -43,7 +43,9 @@ $app->group('/api', function (App $app) use ($basic) {
         // view kullanmak gerekebilir.
 
         // find the item which will update
-        $list = ORM::for_table($basic->resolveTableName($params->table))->find_array();
+        $list = ORM::for_table($basic->resolveTableName($params->table))
+            ->where_equal('silindi', 0)
+            ->find_array();
 
         // Response
         return $response->withJson($list);
