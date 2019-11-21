@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -17,7 +18,7 @@ const store = new Vuex.Store({
             },
             refCMS: "nerioCMS" // unused
         },
-        apiPath: 'http://gencpro.com/nerio/slim/',
+        apiPath: 'http://gencpro.com/nerio/slim',
         token: false,
         authUser: {},
         selectedSite: {
@@ -48,7 +49,7 @@ const store = new Vuex.Store({
             state.mainTitle = value;
         },
         SET_CONTENTS(state, value) {
-            state.contents = value;
+            state.contents.list = value;
         },
         SET_NAVIGATION_LIST(state, value) {
             state.navigation.list = value;
@@ -96,6 +97,34 @@ const store = new Vuex.Store({
                 commit('SET_LIST', setLoad);
 
             })
+        },
+
+        setListMysql({commit}, payload) {
+
+            const apiPath = store.getters.getApiPath;
+
+            axios({
+                method: 'POST',
+                data: {
+                    dto: payload.dto,
+                    table: payload.table
+                },
+                url: `${apiPath}/api/getAll`,
+
+            }).then((response) => {
+
+                commit('SET_LIST', {
+                    path: payload.path,
+                    value: response.data
+                });
+
+            }).catch((err) => {
+
+                commit('SET_LIST', {
+                    path: payload.path,
+                    value: err
+                });
+            });
         }
     },
 
@@ -120,15 +149,6 @@ const store = new Vuex.Store({
         },
         getSelectedSite(state) {
             return state.selectedSite;
-        },
-        /*getUrlTypes(state) {
-            return state.navigation.urlTypes
-        },*/
-        getContentList(state) {
-            return state.contents;
-        },
-        getNavList(state) {
-            return state.navigation.list;
         },
         getList: (state) => (id) => {
             return state[id].list

@@ -15,6 +15,10 @@
                 </li>
             </ul>
 
+            <button class="btn btn-block btn-light" @click="siteSel()">
+                <i class="fas fa-change"></i>
+                Site Değiştir
+            </button>
             <button class="btn btn-block btn-danger logout" @click="logout()">
                 <i class="fas fa-times"></i>
                 Çıkış
@@ -27,7 +31,8 @@
 <script>
     import auth from '@/controller/authentication'
     import controller from '@/controller/config'
-
+    import router from '@/router';
+    import store from '@/store/index'
 
     export default {
         name: 'Sidebar',
@@ -47,6 +52,10 @@
             logout() {
                 auth.logout();
             },
+            siteSel() {
+                store.dispatch('setSelectedSite', {});
+                router.push('/site-selection');
+            }
         }
     };
 </script>

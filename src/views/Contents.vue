@@ -2,11 +2,6 @@
     <div class="row">
         <div class="col-md-12">
 
-            <div class="alert alert-info">
-                İçerik sayfalarınızı yönetebilirsiniz.
-            </div>
-
-
             <div class="card">
                 <div class="card-header">
                     <MainTitle></MainTitle>
@@ -16,12 +11,14 @@
                         Ekle
                     </router-link>
 
-                    <button class="btn btn-sm btn-primary" @click="dene()">
-                        TEST API
+                    <button class="btn btn-sm btn-danger ml-1" @click="trash()">
+                        <i class="fas fa-trash"></i>
+                        Çöpe At
                     </button>
 
-                    <button class="btn btn-sm btn-primary" @click="getAll()">
-                        TEST API getAll
+                    <button class="btn btn-sm btn-primary ml-1" @click="getAll()">
+                        <i class="fas fa-check-circle"></i>
+                        Aktif
                     </button>
 
                 </div>
@@ -53,9 +50,6 @@
                             <td>{{item.target}}</td>
                             <!--<td>{{item.modified}}</td>-->
                             <td>
-                                <button type="button" class="btn btn-xs btn-primary" @click="activate(1)">
-                                    Active Toggle
-                                </button>
                                 <Status :param="item.active"></Status>
                             </td>
 
@@ -76,7 +70,6 @@
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
     import Status from '@/components/Status'
-    import axios from 'axios'
 
     export default {
         name: 'Contents',
@@ -91,16 +84,11 @@
             MainTitle,
             Status
         },
-        mounted() {
-
-            //controller.getAll(); // get content list from firebase
-
-        },
         methods: {
-            editMe(item) {
+            /*editMe(item) {
                 this.item = item;
                 $("#modal").modal("show");
-            },
+            },*/
             activate(id) {
 
                 controller.activate(id, "table_pages").then((resp) => {
@@ -110,26 +98,11 @@
                     console.log(e);
                     alert("Başarısız");
                 })
-            },
-            dene() {
-                controller.deneme();
-            },
-            getAll() {
-                controller.getAll({}, "table_pages").then((resp) => {
-                    console.log(resp);
-                    //alert("Başarılı");
-                    store.dispatch('setContentList', resp.data);
-                }).catch((e) => {
-                    console.log(e);
-                    alert("Başarısız");
-                });
             }
         },
         computed: {
             list() {
-                let a = store.getters.getList('contents');
-                console.log(a);
-                return a;
+                return store.getters.getList('contents');
             }
         }
     };

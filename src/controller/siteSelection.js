@@ -36,9 +36,12 @@ export default {
                     store.dispatch("setSelectedSite", {key, title});
 
                     // Fill the lists
-                    store.dispatch('setList', 'navigation');
-                    store.dispatch('setList', 'contents');
-
+                    //store.dispatch('setList', 'navigation');
+                    //store.dispatch('setList', 'contents');
+                    store.dispatch('setListMysql', {
+                        path: "contents",
+                        table: "table_pages"
+                    });
                 }
 
                 res(true);

@@ -40,13 +40,13 @@ export default {
         });
     },*/
 
-    getAll(dto, module) {
+    /*getAll(dto, module) {
 
         const apiPath = store.getters.getApiPath;
 
-        return new Promise((res, rej) => {
+        //return new Promise((res, rej) => {
             axios({
-                method: 'post',
+                method: 'POST',
                 data: {
                     dto: dto,
                     table: module
@@ -55,15 +55,15 @@ export default {
 
             }).then((response) => {
 
-                //console.log(response);
-                res(response);
+                store.dispatch('setContentList', response.data);
+                res(true);
 
             }).catch((err) => {
                 console.log(err);
                 rej(err);
             });
-        })
-    },
+        //})
+    },*/
 
     save(dto, module) {
 
