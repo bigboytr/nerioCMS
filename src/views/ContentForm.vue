@@ -15,17 +15,17 @@
                         </div>
 
                         <div class="form-group col-12">
-                            <vue-editor v-model="dto.content"></vue-editor>
+                            <vue-editor v-model="dto.contents"></vue-editor>
                         </div>
 
                         <div class="form-group col-12">
                             <label class="form-label">Sayfa Tanımı</label>
-                            <input type="text" class="form-control" v-model="dto.metaDesc">
+                            <input type="text" class="form-control" v-model="dto.desci">
                         </div>
 
                         <div class="form-group col-12">
                             <label class="form-label">Anahtar Kelimeler</label>
-                            <input type="text" class="form-control" v-model="dto.metaKeyw">
+                            <input type="text" class="form-control" v-model="dto.keyw">
                         </div>
                     </div>
                 </div>
@@ -62,13 +62,21 @@
             return {
                 targetInput: false,
                 dto: {
+                    title: '',
+                    contents: '',
+                    desci: '',
+                    keyw: '',
+                    area: 1,
+                    update: false
+                }
+                /*dto: {
                     sefLink: '',
                     title: '',
                     content: '',
                     metaDesc: '',
                     metaKeyw: '',
                     update: false
-                }
+                }*/
 
             }
         },
@@ -85,7 +93,7 @@
         computed: {
             sefTitle() {
                 // this will use for sef links
-                this.dto.sefLink = controller.sefTitleCreator(this.dto.title);
+                //this.dto.sefLink = controller.sefTitleCreator(this.dto.title);
             }
         }
     };

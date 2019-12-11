@@ -4,7 +4,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <MainTitle></MainTitle>
+                    <MainTitle class="mb-2"></MainTitle>
 
                     <router-link to="/content-form" tag="button" class="btn btn-sm btn-dark">
                         <i class="fas fa-plus"></i>
@@ -26,32 +26,33 @@
                     <table class="table table-hover" v-show="list">
                         <thead class="thead-dark">
                         <tr>
-                            <th width="10%"></th>
+                            <th width="5%"></th>
+                            <th width="5%">Aktif</th>
                             <th width="20%">Başlık</th>
-                            <th width="20%">Kelimeler</th>
-                            <th width="20%">Hedef</th>
-                            <!--<th width="10%">Son İşlem</th>-->
-                            <th width="10%">Aktif</th>
+                            <th width="30%">Kelimeler</th>
+                            <th width="15%">Son İşlem</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(item, key) in list" :for="'chk_+(key)'">
+                        <tr v-for="(item, key) in list" @click="selectRow(item.id)">
                             <td>
 
-                                <input type="checkbox" :id="'chk_'+(key)" :value="key">
+                                <input type="checkbox" :value="item.id" v-model="selectedItems">
 
                             </td>
                             <td>
+                                <Status :param="item.active"></Status>
+                            </td>
+                            <td>
+                                <!--<router-link to="/content-form" tag="a" class="btn btn-sm btn-link">
+                                    {{item.title}}
+                                </router-link>-->
                                 <a href="javascript:void(0)" @click="editMe(item)">
                                     {{item.title}}
                                 </a>
                             </td>
-                            <td>{{item.metaKeyw}}</td>
-                            <td>{{item.target}}</td>
-                            <!--<td>{{item.modified}}</td>-->
-                            <td>
-                                <Status :param="item.active"></Status>
-                            </td>
+                            <td>{{item.keyw}}</td>
+                            <td>{{item.modifiedDate}}</td>
 
                         </tr>
                         </tbody>
@@ -70,13 +71,15 @@
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
     import Status from '@/components/Status'
+    import router from '@/router'
 
     export default {
         name: 'Contents',
         data() {
             return {
                 //list: null,
-                item: null
+                item: null,
+                selectedItems: []
             }
         },
         components: {
@@ -85,10 +88,36 @@
             Status
         },
         methods: {
-            /*editMe(item) {
+            editMe(item) {
+                event.stopPropagation();
+                alert('link');
                 this.item = item;
-                $("#modal").modal("show");
-            },*/
+                router.push('/content-form');
+                //$("#modal").modal("show");
+            },
+            selectRow(id) {
+
+
+                if (this.selectedItems.indexOf(id)) {
+                    // delete
+                } else {
+                    this.selectedItems.push(id);
+                    console.log(id);
+                }
+
+                //if (this.selectedItems.length === 0)
+                    //this.selectedItems.push(id);
+
+                /*this.selectedItems.filter((v, i) => {
+
+                    if (v === id) {
+                        delete this.selectedItems[i]
+                    } else {
+                        this.selectedItems.push(id);
+                    }
+                })*/
+                //this.selectedItems.push(id)
+            },
             activate(id) {
 
                 controller.activate(id, "table_pages").then((resp) => {
