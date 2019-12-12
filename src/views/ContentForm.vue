@@ -31,10 +31,14 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <button type="button" class="btn btn-warning">
+                        <!--<button type="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
                             Vazgeç
-                        </button>
+                        </button>-->
+                        <router-link to="/content" tag="button" class="btn btn-warning">
+                            <i class="fas fa-times fa-fw"></i>
+                            Vazgeç
+                        </router-link>
                         <button type="button" class="btn btn-primary" @click="save()">
                             <i class="fas fa-arrow-circle-right fa-fw"></i>
                             Kaydet
@@ -49,6 +53,7 @@
 <script>
     import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
+    import router from '@/router'
     import {VueEditor} from "vue2-editor";
 
     export default {
@@ -61,15 +66,18 @@
         data() {
             return {
                 targetInput: false,
+                update: false,
                 dto: {
+                    // this should only handle form elements which want to add to db
                     title: '',
                     contents: '',
                     desci: '',
                     keyw: '',
                     area: 1,
-                    update: false
                 }
-                /*dto: {
+                /*
+                Firebase structure
+                dto: {
                     sefLink: '',
                     title: '',
                     content: '',
@@ -82,9 +90,10 @@
         },
         methods: {
             save() {
-                controller.save(this.dto, 'table_pages').then(function () {
-                    alert("başarılı");
-
+                controller.save(this.dto, 'table_contents').then(function (response) {
+                    console.log(response);
+                    alert(response.data.msg);
+                    router.push("/content")
                 }).catch((error) => {
                     console.log(error);
                 });

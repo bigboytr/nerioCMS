@@ -74,7 +74,7 @@ const store = new Vuex.Store({
         setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
         },
-        setList({commit}, path) {
+        setLisetst({commit}, path) {
 
             let user = this.getters.getAuthUser;
             let selectedSites = this.getters.getSelectedSite;

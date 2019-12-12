@@ -120,7 +120,7 @@
             },
             activate(id) {
 
-                controller.activate(id, "table_pages").then((resp) => {
+                controller.activate(id, "table_contents").then((resp) => {
                     console.log(resp);
                     alert("Başarılı");
                 }).catch((e) => {

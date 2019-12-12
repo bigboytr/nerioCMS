@@ -67,40 +67,50 @@ export default {
 
     save(dto, module) {
 
-        const apiPath = store.getters.getApiPath;
+        return new Promise((res, rej) => {
 
-        const user = store.getters.getAuthUser;
-        const selectedSites = store.getters.getSelectedSite;
+            const apiPath = store.getters.getApiPath;
 
-        let createdDefs = {
-            createdDate: new Date().toLocaleString(),
-            createdBy: user.uid,
-            active: true,
-            deleted: false
-        };
+            const user = store.getters.getAuthUser;
+            const selectedSites = store.getters.getSelectedSite;
 
-        let modifiedDefs = {
-            modifiedDate: new Date().toLocaleString(),
-            modifiedBy: user.uid
-        };
+            let createdDefs = {
+                createdDate: new Date().toLocaleString(),
+                createdBy: user.uid,
+                active: true,
+                deleted: false
+            };
 
-        let obj = (dto.updated) ? {...dto, ...modifiedDefs} : {...dto, ...createdDefs};
+            let modifiedDefs = {
+                modifiedDate: new Date().toLocaleString(),
+                modifiedBy: user.uid
+            };
 
-        axios({
-            method: 'post',
-            data: {
-                dto: dto,
-                table: module
-            },
-            url: `${apiPath}/api/save`,
+            let obj = (dto.updated) ? {...dto, ...modifiedDefs} : {...dto, ...createdDefs};
 
-        }).then((response) => {
+            axios({
+                method: 'post',
+                data: {
+                    dto: obj,
+                    table: module,
+                    update: dto.updated
+                },
+                url: `${apiPath}/api/save`,
 
-            console.log(response);
+            }).then((response) => {
 
-        }).catch((err) => {
-            console.log(err);
-        });
+                store.dispatch('setListMysql', {
+                    path: module.substr(module.indexOf('_') + 1),
+                    table: module
+                });
+                res(response)
+
+            }).catch((err) => {
+
+                rej(err)
+            });
+
+        })
 
     },
 
@@ -146,7 +156,7 @@ export default {
     String test = string phrase
     @return - returns sef title for links
      */
-    sefTitleCreator(text) {
+    /*sefTitleCreator(text) {
 
         let trMap = {
             'çÇ':'c',
@@ -164,24 +174,5 @@ export default {
             .replace(/[-]+/gi, "-") // trim repeated dashes
             .toLowerCase();
 
-    },
-
-    deneme() {
-
-        axios({
-            method: 'post',
-            data: {
-                id: 1000,
-                table: "sliders"
-            },
-            url: './nerio/slim/api/activate',
-
-        }).then((response) => {
-
-            console.log(response);
-
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
+    }*/
 }

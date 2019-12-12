@@ -35,6 +35,19 @@ $app = new \Slim\App;
 
 $app->group('/api', function (App $app) use ($basic) {
 
+    $app->options('/{routes:.+}', function ($request, $response, $args) {
+        return $response;
+    });
+
+    $app->add(function ($req, $res, $next) {
+        $response = $next($req, $res);
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+        //->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    });
+
     $app->post('/getAll', function(Request $request, Response $response) use ($basic) {
 
         // request params
@@ -57,20 +70,27 @@ $app->group('/api', function (App $app) use ($basic) {
         // request params
         $params = json_decode($request->getBody());
 
-        // find the item which will update
-        $item = ORM::for_table($params->table)->find_one(intval($params->id));
+        print_r($params);
+        $item = ORM::for_table($basic->resolveTableName($params->table))->create();
 
-        // toggle the active column
-        $act = intval($item->active) == 1 ? 0 : 1;
+        if ($params->update) {
+            // find the item which will update
+            $item = ORM::for_table($params->table)->find_one(intval($params->id));
+        }
 
-        // set the new value of selected row from DB
-        $item->set("active",$act);
+        foreach ($params->dto as $key => $value){
 
-        /*// ORM CRUD action will affect in this inner function
+            if ($key === "createdDate" || $key === "modifiedDate") {
+                $value = date("Y-m-d H:i:s");
+            }
+            $item[$key] = $value;
+        }
+
+        // ORM CRUD action will affect in this inner function
         $result = $basic->ormAction($item);
 
         // Response
-        $response->withJson($result);*/
+        $response->withJson($result);
 
     });
 

@@ -40,7 +40,7 @@ export default {
                     //store.dispatch('setList', 'contents');
                     store.dispatch('setListMysql', {
                         path: "contents",
-                        table: "table_pages"
+                        table: "table_contents"
                     });
                 }
 

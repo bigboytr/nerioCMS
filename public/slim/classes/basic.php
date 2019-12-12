@@ -29,7 +29,7 @@ class basic
     public function resolveTableName($name) {
 
         $tables = [
-            "table_pages" => "pages",
+            "table_contents" => "contents",
             "table_navigation" => "navigation",
             "table_productsCategories" => "products_categories",
             "table_productsMedia" => "products_media",
