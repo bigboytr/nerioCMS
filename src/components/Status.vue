@@ -10,7 +10,7 @@
         props: ['param'],
         methods: {
             statusColor() {
-                console.log(this.$props.param);
+                //console.log(this.$props.param);
                 return this.$props.param ? 'text-success' : 'text-danger'
                 /*let css = '';
                 switch (this.$props.param) {
