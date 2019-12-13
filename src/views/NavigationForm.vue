@@ -24,24 +24,28 @@
                             </div>
                         </div>
 
+                        <div class="form-group col-6" v-show="dto.type != 1">
+                            <label class="form-label">Referans</label>
+                            <select class="form-control" v-model="reference" @change="updateURL()">
+                                <option value="0" selected>----</option>
+                                <option v-show="dto.type == 0"
+                                        v-for="i in contentList" :value="i">{{i.title}}</option>
+                                <!--<option v-show="dto.type == 2"
+                                        v-for="i in productList" :value="i.id">{{i.title}}</option>-->
+                            </select>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label">URL</label>
+                            <input type="text" class="form-control" v-model="dto.href" v-if="dto.type == 1">
+                            <input type="text" class="form-control" v-model="dto.href" v-else disabled>
+                        </div>
+
                         <div class="form-group col-12">
                             <div class="form-group">
                                 <label class="form-label">Başlık</label>
                                 <input type="text" class="form-control" v-model="dto.title">
                             </div>
-                        </div>
-
-                        <div class="form-group col-6">
-                            <label class="form-label">URL</label>
-                            <input type="text" class="form-control" v-model="dto.url" v-if="dto.type == 1">
-                            <input type="text" class="form-control" v-model="dto.url" v-else disabled>
-                        </div>
-
-                        <div class="form-group col-6" v-show="dto.type != 1">
-                            <label class="form-label">Referans</label>
-                            <select class="form-control" v-model="dto.page">
-                                <option value="0" selected>----</option>
-                            </select>
                         </div>
 
                         <div class="form-group col-12">
@@ -54,12 +58,12 @@
 
                         <div class="form-group col-6">
                             <label class="form-label">Meta Tanım</label>
-                            <input type="text" class="form-control" v-model="dto.metaDesc">
+                            <input type="text" class="form-control" v-model="dto.desci">
                         </div>
 
                         <div class="form-group col-6">
                             <label class="form-label">Meta Kelimeler</label>
-                            <input type="text" class="form-control" v-model="dto.metaKeyw">
+                            <input type="text" class="form-control" v-model="dto.keyw">
                         </div>
 
                         <div class="form-group col-4">
@@ -75,10 +79,10 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <button type="button" class="btn btn-warning">
+                        <router-link to="/navigation" tag="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
                             Vazgeç
-                        </button>
+                        </router-link>
                         <button type="button" class="btn btn-primary" @click="save()">
                             <i class="fas fa-arrow-circle-right fa-fw"></i>
                             Kaydet
@@ -98,9 +102,12 @@
 </template>
 
 <script>
-    import controller from '@/controller/navigation'
+    import controller from '@/controller/controller'
     import store from '@/store/index'
+    import router from '@/router'
     import MainTitle from '@/components/MainTitle'
+
+    const module = "table_navigation";
 
     export default {
         name: 'NavigationForm',
@@ -112,29 +119,39 @@
             return {
                 targetInput: false,
                 dto: {
+                    // it's only has db table fields
                     title: "",
-                    url: "",
-                    page: "",
+                    href: "",
                     target: "_self",
                     parent: 0,
                     type: 0,
-                    metaDesc: '',
-                    metaKeyw: ''
-                }
-
+                    desci: '',
+                    keyw: ''
+                },
+                update: false,
+                reference: 0
             }
         },
         methods: {
             save() {
-                controller.save(this.dto).then(function () {
-                    alert("başarılı");
 
+                controller.save(this.dto, module).then(function (response) {
+                    console.log(response);
+                    alert(response.data.msg);
+                    router.push("/navigation")
                 }).catch((error) => {
                     console.log(error);
                 });
             },
             setUrlType(type) {
                 this.dto.type = type;
+            },
+            updateURL(){
+                this.dto.title = this.reference.title;
+                const t = controller.sefTitleCreator(this.dto.title)
+                const id = this.reference.id;
+
+                this.dto.href = `/${t}/${id}`;
             }
         },
         computed: {

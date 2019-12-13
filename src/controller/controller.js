@@ -121,8 +121,6 @@ export default {
         const user = store.getters.getAuthUser;
         const selectedSites = store.getters.getSelectedSite;
 
-        console.log(user);
-
         let dto = {
             id: id,
             modifiedDate: new Date().toLocaleString(),
@@ -149,30 +147,29 @@ export default {
         })
 
 
-
     },
 
     /*
     String test = string phrase
     @return - returns sef title for links
      */
-    /*sefTitleCreator(text) {
+    sefTitleCreator(text) {
 
         let trMap = {
-            'çÇ':'c',
-            'ğĞ':'g',
-            'şŞ':'s',
-            'üÜ':'u',
-            'ıİ':'i',
-            'öÖ':'o'
+            'çÇ': 'c',
+            'ğĞ': 'g',
+            'şŞ': 's',
+            'üÜ': 'u',
+            'ıİ': 'i',
+            'öÖ': 'o'
         };
-        for(var key in trMap) {
-            text = text.replace(new RegExp('['+key+']','g'), trMap[key]);
+        for (var key in trMap) {
+            text = text.replace(new RegExp('[' + key + ']', 'g'), trMap[key]);
         }
-        return  text.replace(/[^-a-zA-Z0-9\s]+/ig, '') // remove non-alphanumeric chars
+        return text.replace(/[^-a-zA-Z0-9\s]+/ig, '') // remove non-alphanumeric chars
             .replace(/\s/gi, "-") // convert spaces to dashes
             .replace(/[-]+/gi, "-") // trim repeated dashes
             .toLowerCase();
 
-    }*/
+    }
 }

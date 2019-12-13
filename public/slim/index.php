@@ -70,7 +70,6 @@ $app->group('/api', function (App $app) use ($basic) {
         // request params
         $params = json_decode($request->getBody());
 
-        print_r($params);
         $item = ORM::for_table($basic->resolveTableName($params->table))->create();
 
         if ($params->update) {
@@ -90,7 +89,25 @@ $app->group('/api', function (App $app) use ($basic) {
         $result = $basic->ormAction($item);
 
         // Response
-        $response->withJson($result);
+        return $response->withJson($result);
+
+    });
+
+    $app->delete("/delete", function(Request $request, Response $response) use ($basic) {
+
+        // request params
+        $params = json_decode($request->getBody());
+
+        $item = ORM::for_table($params->table)->find_one(intval($params->id));
+
+        $item->set("modifiedDate", date("Y-m-d H:i:s"));
+        $item->set("deleted", 1);
+
+        // ORM CRUD action will affect in this inner function
+        $result = $basic->ormAction($item);
+
+        // Response
+        return $response->withJson($result);
 
     });
 
@@ -114,7 +131,7 @@ $app->group('/api', function (App $app) use ($basic) {
         $result = $basic->ormAction($item);
 
         // Response
-        $response->withJson($result);
+        return $response->withJson($result);
 
     });
 

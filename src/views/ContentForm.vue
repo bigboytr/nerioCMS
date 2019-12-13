@@ -56,6 +56,8 @@
     import router from '@/router'
     import {VueEditor} from "vue2-editor";
 
+    const module = "table_contents";
+
     export default {
         name: 'ContentForm',
         props: ['item'],
