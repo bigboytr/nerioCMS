@@ -2,16 +2,10 @@
     <div class="row">
         <div class="col-md-12">
 
-            <div class="alert alert-info">
-                Web sitenizin linklerini yönetebileceğiniz işlemleri gerçekleştirebilirsiniz.
-                Yeni bir link eklemek için sağ taraftaki butona tıklayınız.
-            </div>
-
-
             <div class="card">
                 <div class="card-header">
 
-                    <MainTitle></MainTitle>
+                    <MainTitle class="mb-2"></MainTitle>
 
                     <router-link to="/navigation-form" tag="button" class="btn btn-sm btn-dark">
                         <i class="fas fa-plus"></i>
@@ -20,7 +14,7 @@
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover" v-show="list">
+                    <table class="table table-hover" v-if="showTable">
                         <thead class="thead-dark">
                         <tr>
                             <th width="10%"></th>
@@ -48,7 +42,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <h3 v-show="!list">Henüz eklenmiş veri bulunamadı !</h3>
+                    <EmptyList :list="list"></EmptyList>
                 </div>
             </div>
         </div>
@@ -61,6 +55,7 @@
     import store from '@/store/index'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
+    import EmptyList from '@/components/EmptyList'
 
     export default {
         name: 'Navigation',
@@ -71,6 +66,7 @@
         },
         components: {
             MainTitle,
+            EmptyList,
             modal
         },
         mounted() {
@@ -106,6 +102,9 @@
         computed: {
             list() {
                 return store.getters.getList('navigation');
+            },
+            showTable() {
+                return this.list.length > 0
             }
         }
     };

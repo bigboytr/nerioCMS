@@ -23,7 +23,7 @@
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover" v-show="list">
+                    <table class="table table-hover" v-if="showTable">
                         <thead class="thead-dark">
                         <tr>
                             <th width="5%"></th>
@@ -57,7 +57,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <h3 v-show="!list">Henüz eklenmiş veri bulunamadı !</h3>
+                    <EmptyList :list="list"></EmptyList>
                 </div>
             </div>
         </div>
@@ -72,6 +72,7 @@
     import store from '@/store/index'
     import Status from '@/components/Status'
     import router from '@/router'
+    import EmptyList from '@/components/EmptyList'
 
     export default {
         name: 'Contents',
@@ -85,6 +86,7 @@
         components: {
             modal,
             MainTitle,
+            EmptyList,
             Status
         },
         methods: {
@@ -132,6 +134,9 @@
         computed: {
             list() {
                 return store.getters.getList('contents');
+            },
+            showTable() {
+                return this.list.length > 0
             }
         }
     };
