@@ -114,6 +114,45 @@ export default {
 
     },
 
+    async moveToTrash (ids, module) {
+
+        const res = await swal({
+            title: 'Are you sure ?',
+            text: 'Items will be deleted !',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
+        }).then(async function (response) {
+            return response;
+        });
+
+        if (res === true) {
+            return await this.moveToTrashProcess(ids, module);
+        }
+    },
+
+    moveToTrashProcess(ids, module) {
+
+        const apiPath = store.getters.getApiPath;
+        let countS = 0;
+
+        return Promise.all(ids.map((id) => (
+            axios({
+                method: "DELETE",
+                url: `${apiPath}/api/move-to-trash`,
+                data: {
+                    id: id,
+                    table: module
+                },
+            }).then((response) => {
+
+                if (response)
+                    countS++;
+            })
+        )))
+            .then(() => countS);
+    },
+
     activate(id, module) {
 
         const apiPath = store.getters.getApiPath;

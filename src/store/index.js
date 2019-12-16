@@ -74,7 +74,7 @@ const store = new Vuex.Store({
         setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
         },
-        setLisetst({commit}, path) {
+        setList({commit}, path) {
 
             let user = this.getters.getAuthUser;
             let selectedSites = this.getters.getSelectedSite;
@@ -149,6 +149,24 @@ const store = new Vuex.Store({
         },
         getSelectedSite(state) {
             return state.selectedSite;
+        },
+        getNavigationList: (state) => (parent) => {
+
+            //const obj = Object.assign({}, ...state.navigation.list);
+            const obj = Object.values(state.navigation.list);
+
+            return obj.filter((item) => {
+                return parseInt(item.parent, 10) === parent
+            })
+
+            /*return Object.keys(state.navigation.list).filter((idx) => {
+                idx = parseInt(idx, 10);
+                const item = state.navigation.list[idx];
+
+                return parseInt(item.parent, 10) === parent
+                ? item : continue
+
+            })*/
         },
         getList: (state) => (id) => {
             return state[id].list

@@ -42,6 +42,11 @@ export default {
                         path: "contents",
                         table: "table_contents"
                     });
+
+                    store.dispatch('setListMysql', {
+                        path: "navigation",
+                        table: "table_navigation"
+                    });
                 }
 
                 res(true);

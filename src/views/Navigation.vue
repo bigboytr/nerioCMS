@@ -37,7 +37,7 @@
                         <tr v-for="(item, key) in list" :for="'chk_+(key)'">
                             <td>
 
-                                <input type="checkbox" :id="'chk_'+(key)" :value="key">
+                                <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
 
                             </td>
                             <td>
@@ -45,7 +45,7 @@
                                     {{item.title}}
                                 </a>
                             </td>
-                            <td>{{item.url}}</td>
+                            <td>{{item.href}}</td>
                             <td>{{item.target}}</td>
                             <td>{{typeOfLink(item.type)}}</td>
                         </tr>
@@ -66,10 +66,13 @@
     import MainTitle from '@/components/MainTitle'
     import EmptyList from '@/components/EmptyList'
 
+    const module = "table_navigation";
+
     export default {
         name: 'Navigation',
         data() {
             return {
+                selectedRows: [],
                 item: null
             }
         },
@@ -100,17 +103,25 @@
             },
             typeOfLink(type) {
                 return store.getters.getUrlTypes(type);
-                /*switch (type) {
-                    case 0: return "Sayfa"; break;
-                    case 1: return "Ürün"; break;
-                    case 2: return "İletişim"; break;
-                    default: return "Sayfa"; break;
-                }*/
-            }
+            },
+            trash() {
+
+                controller.moveToTrash(this.selectedRows, module).then(function (res) {
+                    this.selectedRows = [];
+                    if (res !== undefined) {
+
+                    }
+                }).bind(this);
+            },
         },
         computed: {
             list() {
-                return store.getters.getList('navigation');
+                const fullList = store.getters.getList('navigation'); // full list
+                const topLevel = store.getters.getNavigationList(0); // level 0
+
+                return topLevel
+
+                //return
             },
             showTable() {
                 return this.list.length > 0

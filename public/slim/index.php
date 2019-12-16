@@ -93,7 +93,7 @@ $app->group('/api', function (App $app) use ($basic) {
 
     });
 
-    $app->delete("/delete", function(Request $request, Response $response) use ($basic) {
+    $app->delete("/move-to-trash", function(Request $request, Response $response) use ($basic) {
 
         // request params
         $params = json_decode($request->getBody());
@@ -106,8 +106,9 @@ $app->group('/api', function (App $app) use ($basic) {
         // ORM CRUD action will affect in this inner function
         $result = $basic->ormAction($item);
 
+        return ($result->type === "error") ? false : true;
         // Response
-        return $response->withJson($result);
+        //return $response->withJson($result);
 
     });
 
