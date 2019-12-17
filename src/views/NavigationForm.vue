@@ -66,11 +66,16 @@
                             <input type="text" class="form-control" v-model="dto.keyw">
                         </div>
 
-                        <div class="form-group col-4">
+                        <div class="form-group col-2">
                             <input class="form-control" type="checkbox" id="yeni_p" v-model="targetInput">
                             <label class="form-label" for="yeni_p">
                                 Yeni pencerede açılsın
                             </label>
+                        </div>
+
+                        <div class="form-group col-1">
+                            <label class="form-label">Sıra</label>
+                            <input type="number" class="form-control" v-model="dto.menuOrder">
                         </div>
 
 
@@ -106,6 +111,7 @@
     import store from '@/store/index'
     import router from '@/router'
     import MainTitle from '@/components/MainTitle'
+    import NotifyMe from '@/controller/notifier'
 
     const module = "table_navigation";
 
@@ -126,7 +132,8 @@
                     parent: 0,
                     type: 0,
                     desci: '',
-                    keyw: ''
+                    keyw: '',
+                    menuOrder: 0
                 },
                 update: false,
                 reference: 0
@@ -136,11 +143,10 @@
             save() {
 
                 controller.save(this.dto, module).then(function (response) {
-                    console.log(response);
-                    alert(response.data.msg);
                     router.push("/navigation")
                 }).catch((error) => {
                     console.log(error);
+                    NotifyMe.notifier('error', `Hata oluştu !`);
                 });
             },
             setUrlType(type) {

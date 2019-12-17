@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+//@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 @import "colors";
 @import 'sidebar';
@@ -24,3 +24,40 @@ body {
 .btn {
   @include no-radius;
 }
+
+/*
+* Customize Div Table
+*/
+.div-table {
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  &.dark {
+    .div-thead {
+      background-color: $div-table-header-dark;
+      color: $white;
+    }
+  }
+
+  .div-thead {
+    position: relative;
+    width: 100%;
+    padding: 12px;
+
+  }
+
+  .div-tr {
+    padding: 10px;
+    border-bottom: 1px #ddd solid;
+
+    &:hover {
+      background-color: $div-tr-hover;
+      color: $div-tr-hover-txt;
+    }
+  }
+}
+/*
+* Div Table End
+*/

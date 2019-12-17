@@ -22,35 +22,37 @@
                     </button>
 
                 </div>
-                <div class="card-body">
-                    <table class="table table-hover" v-if="showTable">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th width="10%"></th>
-                            <th width="20%">Başlık</th>
-                            <th width="20%">URL</th>
-                            <th width="20%">Hedef</th>
-                            <th width="10%">Link Tip</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(item, key) in list" :for="'chk_+(key)'">
-                            <td>
+                <div class="card-body div-table dark">
 
-                                <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
 
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" @click="editMe(item)">
-                                    {{item.title}}
-                                </a>
-                            </td>
-                            <td>{{item.href}}</td>
-                            <td>{{item.target}}</td>
-                            <td>{{typeOfLink(item.type)}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="row div-thead" v-if="showTable">
+                        <div class="col-1"></div>
+                        <div class="col-1"></div>
+                        <div class="col-8 col-sm-3">Başlık</div>
+                        <div class="col-3 d-none d-sm-block">URL</div>
+                        <div class="col-2 d-none d-sm-block">Hedef</div>
+                        <div class="col-2 d-none d-sm-block">Link Tip</div>
+                    </div>
+
+                    <div class="row div-tr"
+                         v-if="showTable"
+                         v-for="(item, key) in list" :for="'chk_+(key)'">
+                        <div class="col-1">
+                            <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
+                        </div>
+                        <div class="col-1">
+                            <Status :param="item.active"></Status>
+                        </div>
+                        <div class="col-8 col-sm-3">
+                            <a href="javascript:void(0)" @click="editMe(item)">
+                                {{item.title}}
+                            </a>
+                        </div>
+                        <div class="col-3 d-none d-sm-block">{{item.href}}</div>
+                        <div class="col-2 d-none d-sm-block">{{item.target}}</div>
+                        <div class="col-2 d-none d-sm-block">{{typeOfLink(item.type)}}</div>
+                    </div>
+
                     <EmptyList :list="list"></EmptyList>
                 </div>
             </div>
@@ -65,6 +67,7 @@
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
     import EmptyList from '@/components/EmptyList'
+    import Status from '@/components/Status'
     import NotifyMe from '@/controller/notifier'
 
     const module = "table_navigation";
@@ -79,6 +82,7 @@
         },
         components: {
             MainTitle,
+            Status,
             EmptyList,
             modal
         },
