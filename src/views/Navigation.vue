@@ -16,7 +16,7 @@
                         Çöpe At
                     </button>
 
-                    <button class="btn btn-sm btn-primary ml-1" @click="getAll()">
+                    <button class="btn btn-sm btn-primary ml-1" @click="activeToggle()">
                         <i class="fas fa-check-circle"></i>
                         Aktif
                     </button>
@@ -87,30 +87,36 @@
             modal
         },
         mounted() {
-            /*const self = this;
-            controller.getAll().then(function (response) {
-
-                self.list = response;
-            });*/
-
-
             //contents.getAll(); // get content list from firebase
-            store.dispatch('setListMysql', {
-                path: "navigation",
-                table: "table_navigation"
-            });
+            this.fetchData();
         },
         methods: {
             /*openModal() {
 
                 $("#modal").modal("show");
             },*/
+            fetchData() {
+                store.dispatch('setListMysql', {
+                    path: "navigation",
+                    table: "table_navigation"
+                });
+            },
             editMe(item) {
                 this.item = item;
                 //$("#modal").modal("show");
             },
             typeOfLink(type) {
                 return store.getters.getUrlTypes(type);
+            },
+            activeToggle() {
+                controller.toggleActive(this.selectedRows, module).then((res) => {
+                    this.selectedRows = [];
+                    if (res !== undefined) {
+                        NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
+
+                        this.fetchData();
+                    }
+                });
             },
             trash() {
 
@@ -119,10 +125,7 @@
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
-                        store.dispatch('setListMysql', {
-                            path: "navigation",
-                            table: "table_navigation"
-                        });
+                        this.fetchData();
                     }
                 });
             },

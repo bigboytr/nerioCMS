@@ -11,7 +11,7 @@
         methods: {
             statusColor() {
                 //console.log(this.$props.param);
-                return this.$props.param ? 'text-success' : 'text-danger'
+                return parseInt(this.$props.param, 10) === 1 ? 'text-success' : 'text-danger'
                 /*let css = '';
                 switch (this.$props.param) {
                     case 1: css = 'text-success'; break;

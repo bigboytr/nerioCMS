@@ -161,20 +161,56 @@ export default {
             .then(() => countS);
     },
 
-    activate(id, module) {
+    async toggleActive(ids, module) {
+        const res = await swal.fire({
+            title: 'Emin misiniz ?',
+            text: 'Seçilen öğelerin durumu değiştirilecek...',
+            icon: 'warning',
+            buttonsStyling: false,
+            reverseButtons: true,
+            showCancelButton: true,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-warning mr-3'
+            },
+            confirmButtonText: 'Değiştir !',
+            cancelButtonText: 'Vazgeç'
+        }).then(async function (response) {
+            return response.value;
+        });
+
+        if (res === true) {
+            return await this.activateProcess(ids, module);
+        }
+    },
+
+    activateProcess(ids, module) {
 
         const apiPath = store.getters.getApiPath;
 
+        let countS = 0;
         const user = store.getters.getAuthUser;
-        const selectedSites = store.getters.getSelectedSite;
+        //const selectedSites = store.getters.getSelectedSite;
 
-        let dto = {
-            id: id,
-            modifiedDate: new Date().toLocaleString(),
-            modifiedBy: user.uid
-        };
+        return Promise.all(ids.map((id) => (
 
-        return new Promise((res, rej) => {
+            axios({
+                method: "POST",
+                url: `${apiPath}/api/activate`,
+                data: {
+                    id: id,
+                    modifiedBy: user.id,
+                    table: module
+                },
+            }).then((response) => {
+
+                if (response)
+                    countS++;
+            })
+        )))
+            .then(() => countS);
+
+        /*return new Promise((res, rej) => {
             axios({
                 method: 'post',
                 data: {
@@ -191,7 +227,7 @@ export default {
 
                 rej(err);
             });
-        })
+        })*/
 
 
     },
