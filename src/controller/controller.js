@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import store from '@/store/index'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
 
@@ -116,14 +117,21 @@ export default {
 
     async moveToTrash (ids, module) {
 
-        const res = await swal({
-            title: 'Are you sure ?',
-            text: 'Items will be deleted !',
+        const res = await swal.fire({
+            title: 'Emin misiniz ?',
+            text: 'Seçilenler çöpe atılacak !',
             icon: 'warning',
-            buttons: true,
-            dangerMode: true
+            buttonsStyling: false,
+            reverseButtons: true,
+            showCancelButton: true,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-warning mr-3'
+            },
+            confirmButtonText: 'Çöpe at !',
+            cancelButtonText: 'Vazgeç'
         }).then(async function (response) {
-            return response;
+            return response.value;
         });
 
         if (res === true) {
@@ -139,7 +147,7 @@ export default {
         return Promise.all(ids.map((id) => (
             axios({
                 method: "DELETE",
-                url: `${apiPath}/api/move-to-trash`,
+                url: `${apiPath}/api/delete`,
                 data: {
                     id: id,
                     table: module

@@ -60,11 +60,12 @@
 </template>
 
 <script>
-    import controller from '@/controller/navigation'
-    import store from '@/store/index'
+    import controller from '@/controller/controller'
+    import store from '@/store'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
     import EmptyList from '@/components/EmptyList'
+    import NotifyMe from '@/controller/notifier'
 
     const module = "table_navigation";
 
@@ -90,7 +91,10 @@
 
 
             //contents.getAll(); // get content list from firebase
-
+            store.dispatch('setListMysql', {
+                path: "navigation",
+                table: "table_navigation"
+            });
         },
         methods: {
             /*openModal() {
@@ -106,12 +110,20 @@
             },
             trash() {
 
-                controller.moveToTrash(this.selectedRows, module).then(function (res) {
+                controller.moveToTrash(this.selectedRows, module).then((res) => {
                     this.selectedRows = [];
-                    if (res !== undefined) {
+                    NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
+                    alert(`${res} adet öğe çöpe atıldı !`);
 
+                    if (res !== undefined) {
+                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
+
+                        store.dispatch('setListMysql', {
+                            path: "navigation",
+                            table: "table_navigation"
+                        });
                     }
-                }).bind(this);
+                });
             },
         },
         computed: {

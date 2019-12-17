@@ -57,7 +57,7 @@ $app->group('/api', function (App $app) use ($basic) {
 
         // find the item which will update
         $list = ORM::for_table($basic->resolveTableName($params->table))
-            ->where_equal('silindi', 0)
+            ->where_equal('deleted', 0)
             ->find_array();
 
         // Response
@@ -98,7 +98,7 @@ $app->group('/api', function (App $app) use ($basic) {
         // request params
         $params = json_decode($request->getBody());
 
-        $item = ORM::for_table($params->table)->find_one(intval($params->id));
+        $item = ORM::for_table($basic->resolveTableName($params->table))->find_one(intval($params->id));
 
         $item->set("modifiedDate", date("Y-m-d H:i:s"));
         $item->set("deleted", 1);
