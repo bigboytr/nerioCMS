@@ -9,6 +9,9 @@
         <div class="content col-10 offset-2 mt-3 mb-3" v-if="token">
             <router-view/>
         </div>
+
+        <!--Notify plugin template-->
+        <notifications position="right bottom"/>
     </div>
 </template>
 

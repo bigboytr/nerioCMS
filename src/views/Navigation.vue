@@ -112,9 +112,6 @@
 
                 controller.moveToTrash(this.selectedRows, module).then((res) => {
                     this.selectedRows = [];
-                    NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
-                    alert(`${res} adet öğe çöpe atıldı !`);
-
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
