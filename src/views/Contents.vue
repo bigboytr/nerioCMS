@@ -10,41 +10,33 @@
                                    @trash="trash"
                                    @activeToggle="activeToggle"></ActionButtons>
                 </div>
-                <div class="card-body">
-                    <table class="table table-hover" v-if="showTable">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th width="5%"></th>
-                            <th width="5%">Erişilebilir</th>
-                            <th width="20%">Başlık</th>
-                            <th width="30%">Kelimeler</th>
-                            <th width="15%">Son İşlem</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(item, key) in list" @click="selectRow(item.id)">
-                            <td>
+                <div class="card-body div-table dark">
 
-                                <input type="checkbox" :value="item.id" v-model="selectedRows">
+                    <div class="row div-thead" v-if="showTable">
+                        <div class="col-1"></div>
+                        <div class="col-1">Erişilebilir</div>
+                        <div class="col-8 col-sm-4">Başlık</div>
+                        <div class="col-3 col-sm-4 d-none d-sm-block">Kelimeler</div>
+                        <div class="col-2 d-none d-sm-block">Son İşlem</div>
+                    </div>
 
-                            </td>
-                            <td>
-                                <Status :param="item.active"></Status>
-                            </td>
-                            <td>
-                                <!--<router-link to="/content-form" tag="a" class="btn btn-sm btn-link">
-                                    {{item.title}}
-                                </router-link>-->
-                                <a href="javascript:void(0)" @click="editMe(item)">
-                                    {{item.title}}
-                                </a>
-                            </td>
-                            <td>{{item.keyw}}</td>
-                            <td>{{item.modifiedDate}}</td>
-
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="row div-tr"
+                         v-if="showTable"
+                         v-for="(item, key) in list" :for="'chk_+(key)'">
+                        <div class="col-1">
+                            <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
+                        </div>
+                        <div class="col-1">
+                            <Status :param="item.active"></Status>
+                        </div>
+                        <div class="col-8 col-sm-4">
+                            <a href="javascript:void(0)" @click="editMe(item)">
+                                {{item.title}}
+                            </a>
+                        </div>
+                        <div class="col-3 col-sm-4 d-none d-sm-block">{{item.keyw}}</div>
+                        <div class="col-2 d-none d-sm-block">{{item.modifiedDate}}</div>
+                    </div>
                     <EmptyList :list="list"></EmptyList>
                 </div>
             </div>
