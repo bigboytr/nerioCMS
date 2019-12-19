@@ -6,28 +6,16 @@
                 <div class="card-header">
                     <MainTitle class="mb-2"></MainTitle>
 
-                    <router-link to="/content-form" tag="button" class="btn btn-sm btn-dark">
-                        <i class="fas fa-plus"></i>
-                        Ekle
-                    </router-link>
-
-                    <button class="btn btn-sm btn-danger ml-1" @click="trash()">
-                        <i class="fas fa-trash"></i>
-                        Çöpe At
-                    </button>
-
-                    <button class="btn btn-sm btn-primary ml-1" @click="getAll()">
-                        <i class="fas fa-check-circle"></i>
-                        Aktif
-                    </button>
-
+                    <ActionButtons :url="'/content-form'"
+                                   @trash="trash"
+                                   @activeToggle="activeToggle"></ActionButtons>
                 </div>
                 <div class="card-body">
                     <table class="table table-hover" v-if="showTable">
                         <thead class="thead-dark">
                         <tr>
                             <th width="5%"></th>
-                            <th width="5%">Aktif</th>
+                            <th width="5%">Erişilebilir</th>
                             <th width="20%">Başlık</th>
                             <th width="30%">Kelimeler</th>
                             <th width="15%">Son İşlem</th>
@@ -37,7 +25,7 @@
                         <tr v-for="(item, key) in list" @click="selectRow(item.id)">
                             <td>
 
-                                <input type="checkbox" :value="item.id" v-model="selectedItems">
+                                <input type="checkbox" :value="item.id" v-model="selectedRows">
 
                             </td>
                             <td>
@@ -73,6 +61,11 @@
     import Status from '@/components/Status'
     import router from '@/router'
     import EmptyList from '@/components/EmptyList'
+    import ActionButtons from '@/components/ActionButtons'
+    import NotifyMe from '@/controller/notifier'
+
+    const module = "table_contents";
+
 
     export default {
         name: 'Contents',
@@ -80,14 +73,19 @@
             return {
                 //list: null,
                 item: null,
-                selectedItems: []
+                selectedRows: []
             }
         },
         components: {
             modal,
             MainTitle,
             EmptyList,
-            Status
+            Status,
+            ActionButtons
+        },
+        mounted() {
+            //contents.getAll(); // get content list from firebase
+            controller.fetchData('contents', module);
         },
         methods: {
             editMe(item) {
@@ -97,38 +95,49 @@
                 router.push('/content-form');
                 //$("#modal").modal("show");
             },
+
             selectRow(id) {
 
 
-                if (this.selectedItems.indexOf(id)) {
+                if (this.selectedRows.indexOf(id)) {
                     // delete
                 } else {
-                    this.selectedItems.push(id);
+                    this.selectedRows.push(id);
                     console.log(id);
                 }
-
-                //if (this.selectedItems.length === 0)
-                    //this.selectedItems.push(id);
-
-                /*this.selectedItems.filter((v, i) => {
-
-                    if (v === id) {
-                        delete this.selectedItems[i]
-                    } else {
-                        this.selectedItems.push(id);
-                    }
-                })*/
-                //this.selectedItems.push(id)
             },
-            activate(id) {
 
-                controller.activate(id, "table_contents").then((resp) => {
-                    console.log(resp);
-                    alert("Başarılı");
-                }).catch((e) => {
-                    console.log(e);
-                    alert("Başarısız");
-                })
+            activeToggle() {
+                if (this.selectedRows.length === 0) {
+                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
+                    return;
+                }
+
+                controller.toggleActive(this.selectedRows, module).then((res) => {
+                    this.selectedRows = [];
+                    if (res !== undefined) {
+                        NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
+
+                        controller.fetchData('contents', module);
+                    }
+                });
+            },
+
+            trash() {
+                if (this.selectedRows.length === 0) {
+                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
+                    return;
+                }
+
+                controller.moveToTrash(this.selectedRows, module).then((res) => {
+                    this.selectedRows = [];
+                    if (res !== undefined) {
+                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
+
+                        controller.fetchData('contents', module);
+                    }
+                });
+
             }
         },
         computed: {

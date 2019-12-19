@@ -66,6 +66,14 @@ export default {
         //})
     },*/
 
+    fetchData(path, module) {
+
+        store.dispatch('setListMysql', {
+            path: path,
+            table: module
+        });
+    },
+
     save(dto, module) {
 
         return new Promise((res, rej) => {

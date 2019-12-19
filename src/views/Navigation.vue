@@ -6,28 +6,16 @@
                 <div class="card-header">
                     <MainTitle class="mb-2"></MainTitle>
 
-                    <router-link to="/navigation-form" tag="button" class="btn btn-sm btn-dark">
-                        <i class="fas fa-plus"></i>
-                        Ekle
-                    </router-link>
-
-                    <button class="btn btn-sm btn-danger ml-1" @click="trash()">
-                        <i class="fas fa-trash"></i>
-                        Çöpe At
-                    </button>
-
-                    <button class="btn btn-sm btn-primary ml-1" @click="activeToggle()">
-                        <i class="fas fa-check-circle"></i>
-                        Aktif
-                    </button>
-
+                    <ActionButtons :url="'/navigation-form'"
+                                   @trash="trash"
+                                   @activeToggle="activeToggle"></ActionButtons>
                 </div>
                 <div class="card-body div-table dark">
 
 
                     <div class="row div-thead" v-if="showTable">
                         <div class="col-1"></div>
-                        <div class="col-1"></div>
+                        <div class="col-1">Erişilebilir</div>
                         <div class="col-8 col-sm-3">Başlık</div>
                         <div class="col-3 d-none d-sm-block">URL</div>
                         <div class="col-2 d-none d-sm-block">Hedef</div>
@@ -69,7 +57,7 @@
     import EmptyList from '@/components/EmptyList'
     import Status from '@/components/Status'
     import NotifyMe from '@/controller/notifier'
-
+    import ActionButtons from '@/components/ActionButtons'
     const module = "table_navigation";
 
     export default {
@@ -84,23 +72,15 @@
             MainTitle,
             Status,
             EmptyList,
+            ActionButtons,
             modal
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            this.fetchData();
+            controller.fetchData('navigation', module);
         },
         methods: {
-            /*openModal() {
 
-                $("#modal").modal("show");
-            },*/
-            fetchData() {
-                store.dispatch('setListMysql', {
-                    path: "navigation",
-                    table: "table_navigation"
-                });
-            },
             editMe(item) {
                 this.item = item;
                 //$("#modal").modal("show");
@@ -109,23 +89,32 @@
                 return store.getters.getUrlTypes(type);
             },
             activeToggle() {
+                if (this.selectedRows.length === 0) {
+                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
+                    return;
+                }
+
                 controller.toggleActive(this.selectedRows, module).then((res) => {
                     this.selectedRows = [];
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
 
-                        this.fetchData();
+                        controller.fetchData('navigation', module);
                     }
                 });
             },
             trash() {
+                if (this.selectedRows.length === 0) {
+                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
+                    return;
+                }
 
                 controller.moveToTrash(this.selectedRows, module).then((res) => {
                     this.selectedRows = [];
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
-                        this.fetchData();
+                        controller.fetchData('navigation', module);
                     }
                 });
             },
