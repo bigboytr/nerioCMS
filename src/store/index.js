@@ -34,8 +34,10 @@ const store = new Vuex.Store({
             list: {}
         },
         sliders: {
-            list: {},
-            categories: {}
+            list: {}
+        },
+        slidersCategories: {
+            list: {}
         }
     },
     mutations: {

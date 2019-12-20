@@ -42,6 +42,8 @@
             </div>
         </div>
 
+        <SliderCategories></SliderCategories>
+
     </div>
 </template>
 
@@ -54,6 +56,7 @@
     import EmptyList from '@/components/EmptyList'
     import ActionButtons from '@/components/ActionButtons'
     import NotifyMe from '@/controller/notifier'
+    import SliderCategories from '@/components/SliderCategories'
 
     const module = "table_sliders";
 
@@ -71,7 +74,8 @@
             MainTitle,
             EmptyList,
             Status,
-            ActionButtons
+            ActionButtons,
+            SliderCategories
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
