@@ -123,6 +123,18 @@ export default {
 
     },
 
+    uploadFile() {
+        return new Promise((res, rej) => {
+
+            let formData = new FormData();
+            formData.append('file', file);
+            axios({
+                method: 'POST'
+            })
+
+        });
+    },
+
     async moveToTrash (ids, module) {
 
         const res = await swal.fire({
@@ -217,27 +229,6 @@ export default {
             })
         )))
             .then(() => countS);
-
-        /*return new Promise((res, rej) => {
-            axios({
-                method: 'post',
-                data: {
-                    dto: dto,
-                    table: module
-                },
-                url: `${apiPath}/api/activate`,
-
-            }).then((response) => {
-
-                res(response);
-
-            }).catch((err) => {
-
-                rej(err);
-            });
-        })*/
-
-
     },
 
     /*

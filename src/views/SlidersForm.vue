@@ -9,32 +9,60 @@
 
                 <div class="card-body">
                     <div class="row">
+                        <div class="form-group col-3">
+                            <label class="form-label">Kategori</label>
+                            <select class="form-control" v-model="dto.categoryID">
+                                <option value="0" selected>----</option>
+                                <option v-for="i in categories" :value="i.id">{{i.title}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-2">
+                            <label class="form-label">Slider Sırası</label>
+                            <input type="number" class="form-control" v-model="dto.queue">
+                        </div>
+
+                        <div class="form-group col-7">
+                            <label class="form-label">Link</label>
+                            <input type="text" class="form-control" v-model="dto.href">
+                        </div>
+
+
                         <div class="form-group col-12">
-                            <label class="form-label">Başlık</label>
+                            <label class="form-label">Başlık (opsiyonel)</label>
                             <input type="text" class="form-control" v-model="dto.title">
                         </div>
 
                         <div class="form-group col-12">
-                            <vue-editor v-model="dto.contents"></vue-editor>
+                            <label class="form-label">Alt Yazı (opsiyonel)</label>
+                            <input type="text" class="form-control" v-model="dto.caption">
                         </div>
 
                         <div class="form-group col-12">
-                            <label class="form-label">Sayfa Tanımı</label>
-                            <input type="text" class="form-control" v-model="dto.desci">
-                        </div>
+                            <label class="form-label">Slider Resmi</label><br>
+                            <label class="btn btn-sm btn-secondary" v-show="!file" for="file">
+                                <i class="fas fa-image mr-3"></i>
+                                Slider resmi seç
+                            </label>
 
-                        <div class="form-group col-12">
-                            <label class="form-label">Anahtar Kelimeler</label>
-                            <input type="text" class="form-control" v-model="dto.keyw">
+                            <div v-if="file">
+                                <button class="btn btn-sm btn-danger"
+                                        @click="removeSelectedFile()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                {{file.name}}
+                                <div class="btn-group pull-right">
+
+                                </div>
+                            </div>
+
+                            <input type="file" id="file" accept="application/png, application/jpeg" class="hidden"
+                                   ref="file" v-on:change="handleFileUpload()"/>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <!--<button type="button" class="btn btn-warning">
-                            <i class="fas fa-times fa-fw"></i>
-                            Vazgeç
-                        </button>-->
                         <router-link to="/content" tag="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
                             Vazgeç
@@ -54,8 +82,11 @@
     import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
     import router from '@/router'
+    import store from '@/store'
 
     const module = "table_sliders";
+    const path = 'sliders';
+    const path_categories = "slidersCategories";
 
     export default {
         name: 'SlidersForm',
@@ -65,44 +96,58 @@
         },
         data() {
             return {
-                targetInput: false,
+                file: false,
                 update: false,
                 dto: {
                     // this should only handle form elements which want to add to db
+                    categoryID: 0,
                     title: '',
-                    contents: '',
-                    desci: '',
-                    keyw: '',
-                    area: 1,
+                    caption: '',
+                    queue: 1,
+                    href: ''
                 }
-                /*
-                Firebase structure
-                dto: {
-                    sefLink: '',
-                    title: '',
-                    content: '',
-                    metaDesc: '',
-                    metaKeyw: '',
-                    update: false
-                }*/
-
             }
         },
         methods: {
             save() {
-                controller.save(this.dto, 'table_contents').then(function (response) {
-                    console.log(response);
-                    alert(response.data.msg);
-                    router.push("/content")
+
+                if (this.file !== null) {
+
+                    controller.uploadFile(this.file).then((response) => {
+                        this.uploadedFileName = response;
+                        this.dto.fileName = response;
+                        alertMe.successNotify(response, true);
+                    }).catch((errors) => {
+                        alertMe.errorNotify(errors, true);
+                    });
+                }
+
+                controller.save(this.dto, module).then(function (response) {
+
+                    router.push(path.substring(-1))
+
                 }).catch((error) => {
                     console.log(error);
                 });
+            },
+            removeSelectedFile() {
+                this.file = null;
+                this.$refs.file.value = '';
+            },
+            handleFileUpload() {
+                if (this.$refs &&
+                    this.$refs.file &&
+                    this.$refs.file.files.length &&
+                    this.$refs.file.files[0]) {
+                    this.file = this.$refs.file.files[0];
+                } else {
+                    this.file = null;
+                }
             }
         },
         computed: {
-            sefTitle() {
-                // this will use for sef links
-                //this.dto.sefLink = controller.sefTitleCreator(this.dto.title);
+            categories() {
+                return store.getters.getList(path_categories)
             }
         }
     };
