@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="form-group col-7">
-                            <label class="form-label">Link</label>
+                            <label class="form-label">Link (opsiyonel)</label>
                             <input type="text" class="form-control" v-model="dto.href">
                         </div>
 
@@ -83,6 +83,8 @@
     import MainTitle from '@/components/MainTitle'
     import router from '@/router'
     import store from '@/store'
+    import NotifyMe from '@/controller/notifier'
+
 
     const module = "table_sliders";
     const path = 'sliders';
@@ -116,19 +118,21 @@
                     controller.uploadFile(this.file).then((response) => {
                         this.uploadedFileName = response;
                         this.dto.fileName = response;
-                        alertMe.successNotify(response, true);
+                        NotifyMe.notifier("success", "Dosya yüklendi...")
+
                     }).catch((errors) => {
-                        alertMe.errorNotify(errors, true);
+                        NotifyMe.notifier("error", errors)
+
                     });
                 }
 
-                controller.save(this.dto, module).then(function (response) {
+                /*controller.save(this.dto, module).then(function (response) {
 
                     router.push(path.substring(-1))
 
                 }).catch((error) => {
                     console.log(error);
-                });
+                });*/
             },
             removeSelectedFile() {
                 this.file = null;

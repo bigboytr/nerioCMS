@@ -123,15 +123,26 @@ export default {
 
     },
 
-    uploadFile() {
+    uploadFile(file) {
+        console.log(file);
         return new Promise((res, rej) => {
 
             let formData = new FormData();
             formData.append('file', file);
             axios({
-                method: 'POST'
+                method: 'POST',
+                url: `${apiPath}/api/upload-file`,
+                data: {
+                    formData
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then((response) => {
+                res(response)
+            }).catch((err) => {
+                rej(err)
             })
-
         });
     },
 

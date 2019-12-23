@@ -138,6 +138,17 @@ $app->group('/api', function (App $app) use ($basic) {
 
     });
 
+    $app->post('/upload-file', function (Request $request, Response $response) use ($basic) {
+
+        // request params
+        $params = json_decode($request->getBody());
+
+        echo '<pre>';
+        print_r($params);
+        echo '</pre>';
+
+    });
+
 });
 
 $app->run();
