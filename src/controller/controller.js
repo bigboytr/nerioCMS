@@ -124,17 +124,32 @@ export default {
     },
 
     uploadFile(file) {
-        console.log(file);
+
         return new Promise((res, rej) => {
+
+            const apiPath = store.getters.getApiPath;
 
             let formData = new FormData();
             formData.append('file', file);
-            axios({
+
+            axios.post(`${apiPath}/api/upload-file`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then((response) => {
+                    console.log(response);
+                res(response)
+            }).catch((err) => {
+                console.log(err);
+                rej(err)
+            })
+
+            /*axios({
                 method: 'POST',
                 url: `${apiPath}/api/upload-file`,
-                data: {
-                    formData
-                },
+                formData,
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -142,11 +157,11 @@ export default {
                 res(response)
             }).catch((err) => {
                 rej(err)
-            })
+            })*/
         });
     },
 
-    async moveToTrash (ids, module) {
+    async moveToTrash(ids, module) {
 
         const res = await swal.fire({
             title: 'Emin misiniz ?',

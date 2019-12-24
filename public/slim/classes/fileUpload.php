@@ -8,17 +8,18 @@
 
 namespace fileUpload;
 
-
-
-class fileUpload
-{
+class fileUpload {
 
     private $watermark = false;
-    private $thumb_creating = true;
+    private $thumb_creating = false;
+    private $messages = array(
+        'uploadTargetUndefined' => 'Upload hedefi tanımsız',
+        'fileTypeError' => 'Yüklenmek istenen dosya tipi uyumsuz !'
+    );
 
     function __construct($upload_target, $watermark_text = NULL, $fitTo = NULL)
     {
-        if (is_null($upload_target)) exit("Upload hedefi tanımsız.");
+        if (is_null($upload_target)) exit($this->messages['uploadTargetUndefined']);
 
         define('upload_target', $upload_target);
 
@@ -38,8 +39,8 @@ class fileUpload
     }
 
     /*
-	Upload yapılacak directory
-	$_FILES global değişkeni ile gelen veriler => $files = $_FILES
+	Upload directory
+	$_FILES => $files = $_FILES
 	*/
     public function upload_file($files = NULL, $new_name = true) {
 
@@ -47,65 +48,58 @@ class fileUpload
 
             $return = array();
 
-            foreach($files as $root => $file) {
+            foreach ($files as $root => $file) {
 
                 //foreach($file['name'] as $key => $value) {
 
-                    if ($file['error'] != 4) {
+                if ($file->getError() != 4) {
 
-                        //if ($this->max_file_size($file['size'][$key])) {
+                    //if ($this->max_file_size($file['size'][$key])) {
 
-                            $ext = $this->allowed_file_types($file['type']);
+                    $ext = $this->allowed_file_types($file->getClientMediaType());
 
-                            if ($ext !== false) {
+                    if ($ext !== false) {
 
-                                $new_name_of_image = ($new_name == true) ?
-                                    $this->create_file_name(upload_target,$ext) :
-                                    $this->check_file_exists(upload_target,$file['name']);
+                        $new_name_of_image = ($new_name == true) ?
+                            $this->create_file_name(upload_target, $ext) :
+                            $this->check_file_exists(upload_target, $file->getClientFilename);
 
 
-                                /* Watermark codes start */
-                                if ($this->watermark)
-                                    $result = $this->addWatermark($file, watermark_text, $new_name_of_image);
-                                /* Watermark codes end */
-                                else
-                                    $result = move_uploaded_file($file['tmp_name'],upload_target.$new_name_of_image);
+                        /* Watermark codes start */
+                        if ($this->watermark)
+                            $result = $this->addWatermark($file, watermark_text, $new_name_of_image);
+                        /* Watermark codes end */
+                        else
+                            $result = $file->moveTo(upload_target . $new_name_of_image);
 
-                                if ($result === true) {
+                        /*$result = move_uploaded_file(
+                            $file['tmp_name'],
+                            upload_target . $new_name_of_image);*/
 
-                                    // thumb creating
-                                    /*if ($this->thumb_creating) {
+                        if ($result === true) {
 
-                                        list($sw,$sh, $type) = getimagesize(upload_target.$new_name_of_image);
-                                        $this->createThumb(upload_target.$new_name_of_image,$sw,$sh,$new_name_of_image,$type);
+                            // thumb creating
+                            if ($this->thumb_creating) {
 
-                                    }*/
+                                list($sw, $sh, $type) = getimagesize(upload_target . $new_name_of_image);
+                                $this->createThumb(
+                                    upload_target . $new_name_of_image,
+                                    $sw,
+                                    $sh,
+                                    $new_name_of_image, $type);
 
-                                    $return = array(
-                                        true,
-                                        $new_name_of_image
-                                    );
-                                }
-
-                                //if (move_uploaded_file($file['tmp_name'],upload_target.$new_name_of_image)) {
-                                /*if (move_uploaded_file($file['tmp_name'],upload_target.$new_name_of_image)) {
-
-                                    $return = array(
-                                        true,
-                                        $new_name_of_image
-                                    );
-                                }*/
-
-                            } else {
-                                $return = "Yüklemek istediğiniz <strong>".$file['name']."</strong> dosyasının tipi uygun değil.";
                             }
 
-                        /*} else {
+                            $return = array(
+                                true,
+                                $new_name_of_image
+                            );
+                        }
 
-                            $return[$key] = "Yükleme istediðiniz <strong>".$file['name'][$key]."</strong> dosyasý 2mb`tan büyük.";
-                        }*/
+                    } else {
+                        $return = $this->messages['fileTypeError'];
                     }
-                //}
+                }
             }
 
             return $return;
@@ -117,49 +111,53 @@ class fileUpload
     }
 
     /*
+     * Create a new file name
     */
-    private function create_file_name($target,$ext) {
+    private function create_file_name($target, $ext)
+    {
 
-        $new_name = $this->random_name(10).$ext;
+        $new_name = $this->random_name(10) . $ext;
 
-        if (!file_exists($target.$new_name)) {
+        if (!file_exists($target . $new_name)) {
 
             return $new_name;
 
         } else
-            $this->create_file_name($target,$ext);
+            $this->create_file_name($target, $ext);
     }
 
     /*
     Check file name if exists add datetime before file name
     */
-    private function check_file_exists($target,$dosya) {
+    private function check_file_exists($target, $dosya)
+    {
 
-        if (!file_exists($target.$dosya)) {
+        if (!file_exists($target . $dosya)) {
 
             return $dosya;
         } else
-            return date("YmdHis").$dosya;
+            return date("YmdHis") . $dosya;
     }
 
     /*
-    izinli dosya türleri
+    Allowed file types
     */
-    private function allowed_file_types($type){
+    private function allowed_file_types($type)
+    {
 
         $allowed_types = array(
             "image/jpeg" => ".jpg",
-            "image/png" => ".png",
-            "image/gif" => ".gif",
-            "image/bmp" => ".bmp",
-            "application/msword" => ".doc",
-            "application/vnd.ms-excel" => ".xls",
-            "application/pdf" => ".pdf",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => ".docx",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => ".xlsx"
+            "image/png" => ".png"
+            /*            "image/gif" => ".gif",
+                        "image/bmp" => ".bmp",
+                        "application/msword" => ".doc",
+                        "application/vnd.ms-excel" => ".xls",
+                        "application/pdf" => ".pdf",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => ".docx",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => ".xlsx"*/
         );
 
-        if (array_key_exists($type,$allowed_types)) {
+        if (array_key_exists($type, $allowed_types)) {
             return $allowed_types[$type];
         } else {
             return false;
@@ -167,9 +165,10 @@ class fileUpload
     }
 
     /*
-    Ýzin verilen max file size kontrolü
+    Allowed max file size
     */
-    private function max_file_size($size) {
+    private function max_file_size($size)
+    {
         $max = 5242880; // 5mb max
 
         if ($size <= $max)
@@ -179,38 +178,41 @@ class fileUpload
     }
 
     /*
-    Random isim, þifre gibi þeyleri üretmek için kullanýyoruz.
+    Random string
     */
-    private function random_name($max) {
+    private function random_name($max)
+    {
         $i = 0; //Reset the counter.
         $possible_keys = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $keys_length = strlen($possible_keys);
         $str = ""; //Let's declare the string, to add later.
-        while($i<$max) {
-            $rand = mt_rand(1,$keys_length-1);
-            $str.= $possible_keys[$rand];
+        while ($i < $max) {
+            $rand = mt_rand(1, $keys_length - 1);
+            $str .= $possible_keys[$rand];
             $i++;
         }
         return $str;
     }
 
     /*
-    Dosya türüne göre icon döndürüyoruz.
+    Return an icon by mime type
     */
-    private function file_type_icon($file){
+    private function file_type_icon($file)
+    {
 
         $type = mime_content_type($file);
 
         $types = array(
             "image/jpeg" => "jpg",
-            "image/png" => "png",
-            "application/msword" => "doc",
+            "image/png" => "png"
+            /*"application/msword" => "doc",
             "application/vnd.ms-excel" => "xls",
             "application/pdf" => "pdf",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "doc",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "xls");
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "xls"*/
+        );
 
-        if (array_key_exists($type,$types)) {
+        if (array_key_exists($type, $types)) {
             return $types[$type];
         } else {
             return "tmp";
@@ -219,7 +221,7 @@ class fileUpload
 
 
     /*
-    Resime transparan watermark ekleme
+    Append transparent watermark to the image
     */
     private function addWatermark($img, $watermark, $new_name)
     {
@@ -228,17 +230,24 @@ class fileUpload
 
         $old_image_tmp = $img['tmp_name'];
 
-        list($owidth,$oheight, $type) = getimagesize($old_image_tmp);
+        list($owidth, $oheight, $type) = getimagesize($old_image_tmp);
 
         $aspect = $this->aspectRatio($owidth, $oheight);
         $width = $aspect["width"];
         $height = $aspect["height"];
 
-        switch($type){
-            case IMAGETYPE_JPEG: $image_src = imagecreatefromjpeg($old_image_tmp); break;
-            case IMAGETYPE_PNG: $image_src = imagecreatefrompng($old_image_tmp); break;
-            case IMAGETYPE_GIF: $image_src = imagecreatefromgif($old_image_tmp); break;
-            default: exit("Bilinmeyen format");
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $image_src = imagecreatefromjpeg($old_image_tmp);
+                break;
+            case IMAGETYPE_PNG:
+                $image_src = imagecreatefrompng($old_image_tmp);
+                break;
+            case IMAGETYPE_GIF:
+                $image_src = imagecreatefromgif($old_image_tmp);
+                break;
+            default:
+                exit("Bilinmeyen format");
         }
 
         $image = imagecreatetruecolor($width, $height);
@@ -260,11 +269,18 @@ class fileUpload
 
         imagettftext($image, font_size, $angle, $wmX, $wmY, $color, $font_path, $watermark);
 
-        switch($type){
-            case IMAGETYPE_JPEG: imagejpeg($image, upload_target.$new_name, 100); break;
-            case IMAGETYPE_PNG: imagepng($image, upload_target.$new_name, 2); break;
-            case IMAGETYPE_GIF: imagegif($image, upload_target.$new_name, 100); break;
-            default: exit("Bilinmeyen format");
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($image, upload_target . $new_name, 100);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($image, upload_target . $new_name, 2);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($image, upload_target . $new_name, 100);
+                break;
+            default:
+                exit("Bilinmeyen format");
         }
 
         $this->createThumb($image, $width, $height, $new_name, $type);
@@ -276,7 +292,7 @@ class fileUpload
     }
 
     /*
-    Aspect ratio image resize olayımız
+    Aspect ratio image resize
     */
     private function aspectRatio($sw, $sh)
     {
@@ -338,11 +354,18 @@ class fileUpload
 
         $image = imagecrop($im_first, $last_crop);
 
-        switch($type){
-            case IMAGETYPE_JPEG: imagejpeg($image, upload_target.'t_'.$name, 100); break;
-            case IMAGETYPE_PNG: imagepng($image, upload_target.'t_'.$name, 2); break;
-            case IMAGETYPE_GIF: imagegif($image, upload_target.'t_'.$name, 100); break;
-            default: exit("Bilinmeyen format");
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($image, upload_target . 't_' . $name, 100);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($image, upload_target . 't_' . $name, 2);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($image, upload_target . 't_' . $name, 100);
+                break;
+            default:
+                exit("Bilinmeyen format");
         }
 
         imagedestroy($image);

@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="form-group col-3">
                             <label class="form-label">Kategori</label>
-                            <select class="form-control" v-model="dto.categoryID">
+                            <select class="form-control" v-model.number="dto.categoryID">
                                 <option value="0" selected>----</option>
                                 <option v-for="i in categories" :value="i.id">{{i.title}}</option>
                             </select>
@@ -19,23 +19,23 @@
 
                         <div class="form-group col-2">
                             <label class="form-label">Slider Sırası</label>
-                            <input type="number" class="form-control" v-model="dto.queue">
+                            <input type="number" class="form-control" v-model.number="dto.queue" min="1">
                         </div>
 
                         <div class="form-group col-7">
                             <label class="form-label">Link (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model="dto.href">
+                            <input type="text" class="form-control" v-model.trim="dto.href">
                         </div>
 
 
                         <div class="form-group col-12">
                             <label class="form-label">Başlık (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model="dto.title">
+                            <input type="text" class="form-control" v-model.trim="dto.title">
                         </div>
 
                         <div class="form-group col-12">
                             <label class="form-label">Alt Yazı (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model="dto.caption">
+                            <input type="text" class="form-control" v-model.trim="dto.caption">
                         </div>
 
                         <div class="form-group col-12">
@@ -63,7 +63,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <router-link to="/content" tag="button" class="btn btn-warning">
+                        <router-link to="/slider" tag="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
                             Vazgeç
                         </router-link>
@@ -106,7 +106,8 @@
                     title: '',
                     caption: '',
                     queue: 1,
-                    href: ''
+                    href: '',
+                    path: ''
                 }
             }
         },
@@ -116,23 +117,30 @@
                 if (this.file !== null) {
 
                     controller.uploadFile(this.file).then((response) => {
-                        this.uploadedFileName = response;
-                        this.dto.fileName = response;
-                        NotifyMe.notifier("success", "Dosya yüklendi...")
+
+                        console.log(response);
+                        this.dto.path = response.data.filename;
+
+                        NotifyMe.notifier("success", "Dosya yüklendi...");
+
+                        controller.save(this.dto, module).then((response) => {
+
+                            router.push(path.substring(0, path.length - 1))
+
+                        }).catch((error) => {
+
+                            console.log(error);
+                        });
+
+                        this.removeSelectedFile();
 
                     }).catch((errors) => {
-                        NotifyMe.notifier("error", errors)
+                        NotifyMe.notifier("error", errors.data.error)
 
                     });
                 }
 
-                /*controller.save(this.dto, module).then(function (response) {
 
-                    router.push(path.substring(-1))
-
-                }).catch((error) => {
-                    console.log(error);
-                });*/
             },
             removeSelectedFile() {
                 this.file = null;

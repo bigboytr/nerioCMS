@@ -14,10 +14,10 @@
 
                     <div class="row div-thead" v-if="showTable">
                         <div class="col-1"></div>
-                        <div class="col-1">Erişilebilir</div>
-                        <div class="col-8 col-sm-4">Banner</div>
-                        <div class="col-3 col-sm-4 d-none d-sm-block">Kategori</div>
-                        <div class="col-2 d-none d-sm-block">Son İşlem</div>
+                        <div class="col-2">Erişim</div>
+                        <div class="col-5 col-sm-4">Banner</div>
+                        <div class="col-2 col-sm-3 d-none d-sm-block">Kategori</div>
+                        <div class="col-2 d-none d-sm-block">Sıra</div>
                     </div>
 
                     <div class="row div-tr"
@@ -26,17 +26,18 @@
                         <div class="col-1">
                             <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
                         </div>
-                        <div class="col-1">
+                        <div class="col-2">
                             <Status :param="item.active"></Status>
                         </div>
-                        <div class="col-8 col-sm-4">
+                        <div class="col-5 col-sm-4">
                             <a href="javascript:void(0)" @click="editMe(item)">
                                 {{item.title}}
                             </a>
                         </div>
-                        <div class="col-3 col-sm-4 d-none d-sm-block">{{item.keyw}}</div>
-                        <div class="col-2 d-none d-sm-block">{{item.modifiedDate}}</div>
+                        <div class="col-2 col-sm-3 d-none d-sm-block">{{item.keyw}}</div>
+                        <div class="col-2 col-sm-2 d-none d-sm-block">{{item.queue}}</div>
                     </div>
+
                     <EmptyList :list="list"></EmptyList>
                 </div>
             </div>
@@ -59,6 +60,7 @@
     import SliderCategories from '@/components/SliderCategories'
 
     const module = "table_sliders";
+    const path = 'sliders'; // vuex path
 
 
     export default {
@@ -79,14 +81,14 @@
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            controller.fetchData('sliders', module);
+            controller.fetchData(path, module);
         },
         methods: {
             editMe(item) {
                 event.stopPropagation();
                 alert('link');
                 this.item = item;
-                router.push('/content-form');
+                //router.push('/content-form');
                 //$("#modal").modal("show");
             },
 
@@ -110,7 +112,7 @@
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
 
-                        controller.fetchData('contents', module);
+                        controller.fetchData(path, module);
                     }
                 });
             },
@@ -126,7 +128,7 @@
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
-                        controller.fetchData('contents', module);
+                        controller.fetchData(path, module);
                     }
                 });
 
@@ -134,7 +136,7 @@
         },
         computed: {
             list() {
-                return store.getters.getList('sliders');
+                return store.getters.getList(path);
             },
             showTable() {
                 return this.list.length > 0
