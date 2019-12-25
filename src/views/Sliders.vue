@@ -30,11 +30,11 @@
                             <Status :param="item.active"></Status>
                         </div>
                         <div class="col-5 col-sm-4">
-                            <a href="javascript:void(0)" @click="editMe(item)">
-                                {{item.title}}
+                            <a :href="'./uploads/sliders/' + item.path" target="_blank">
+                                {{ (item.title) ? item.title : item.path }}
                             </a>
                         </div>
-                        <div class="col-2 col-sm-3 d-none d-sm-block">{{item.keyw}}</div>
+                        <div class="col-2 col-sm-3 d-none d-sm-block">{{findCategoryName(item.categoryID)}}</div>
                         <div class="col-2 col-sm-2 d-none d-sm-block">{{item.queue}}</div>
                     </div>
 
@@ -53,7 +53,6 @@
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
     import Status from '@/components/Status'
-    import router from '@/router'
     import EmptyList from '@/components/EmptyList'
     import ActionButtons from '@/components/ActionButtons'
     import NotifyMe from '@/controller/notifier'
@@ -62,12 +61,14 @@
     const module = "table_sliders";
     const path = 'sliders'; // vuex path
 
+    const moduleCategories = 'table_slidersCategories';
+    const pathCategories = 'slidersCategories'; // vuex path
+
 
     export default {
         name: 'Sliders',
         data() {
             return {
-                //list: null,
                 item: null,
                 selectedRows: []
             }
@@ -82,6 +83,7 @@
         mounted() {
             //contents.getAll(); // get content list from firebase
             controller.fetchData(path, module);
+            controller.fetchData(pathCategories, moduleCategories);
         },
         methods: {
             editMe(item) {
@@ -132,6 +134,11 @@
                     }
                 });
 
+            },
+            findCategoryName(catId) {
+
+                const item = store.getters.getListOfItem(pathCategories, parseInt(catId, 10), 'id');
+                return item.title;
             }
         },
         computed: {

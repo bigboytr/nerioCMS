@@ -177,6 +177,14 @@ const store = new Vuex.Store({
         getList: (state) => (id) => {
             return state[id].list
         },
+        getListOfItem: (state) => (path, id, field) => {
+
+            const list = state[path].list;
+
+            return list.find((item) => {
+                return parseInt(item[field], 10) === id
+            })
+        },
         getUrlTypes: (state) => (i) => {
             if (!isNaN(i) && i !== undefined) {
                 return state.navigation.urlTypes[i];
