@@ -52,7 +52,7 @@
                             <label class="form-label">Üst Öğe</label>
                             <select size="7" class="form-control" v-model="dto.parent">
                                 <option value="0" selected>Üst öğe yok</option>
-                                <option v-for="(n, k) in navList" :value="k">{{n.title}}</option>
+                                <option v-for="(n, k) in navList" :value="n.id">{{n.title}}</option>
                             </select>
                         </div>
 

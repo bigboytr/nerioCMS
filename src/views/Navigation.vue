@@ -22,24 +22,10 @@
                         <div class="col-2 d-none d-sm-block">Link Tip</div>
                     </div>
 
-                    <div class="row div-tr"
-                         v-if="showTable"
-                         v-for="(item, key) in list" :for="'chk_+(key)'">
-                        <div class="col-1">
-                            <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
-                        </div>
-                        <div class="col-1">
-                            <Status :param="item.active"></Status>
-                        </div>
-                        <div class="col-8 col-sm-3">
-                            <a href="javascript:void(0)" @click="editMe(item)">
-                                {{item.title}}
-                            </a>
-                        </div>
-                        <div class="col-3 d-none d-sm-block">{{item.href}}</div>
-                        <div class="col-2 d-none d-sm-block">{{item.target}}</div>
-                        <div class="col-2 d-none d-sm-block">{{typeOfLink(item.type)}}</div>
-                    </div>
+                    <NavigationList
+                            v-if="showTable"
+                            v-for="(item, key) in list" :for="'chk_+(key)'"
+                            :item="item" :depth="0" ></NavigationList>
 
                     <EmptyList :list="list"></EmptyList>
                 </div>
@@ -58,6 +44,8 @@
     import Status from '@/components/Status'
     import NotifyMe from '@/controller/notifier'
     import ActionButtons from '@/components/ActionButtons'
+    import NavigationList from '@/components/NavigationList'
+
     const module = "table_navigation";
 
     export default {
@@ -73,6 +61,7 @@
             Status,
             EmptyList,
             ActionButtons,
+            NavigationList,
             modal
         },
         mounted() {
@@ -84,9 +73,6 @@
             editMe(item) {
                 this.item = item;
                 //$("#modal").modal("show");
-            },
-            typeOfLink(type) {
-                return store.getters.getUrlTypes(type);
             },
             activeToggle() {
                 if (this.selectedRows.length === 0) {
