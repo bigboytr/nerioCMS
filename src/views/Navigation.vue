@@ -108,7 +108,7 @@
         computed: {
             list() {
                 const fullList = store.getters.getList('navigation'); // full list
-                const topLevel = store.getters.getNavigationList(0); // level 0
+                const topLevel = store.getters.getNavigationList(); // level 0
 
                 return topLevel
 

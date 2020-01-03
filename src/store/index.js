@@ -156,7 +156,7 @@ const store = new Vuex.Store({
         getSelectedSite(state) {
             return state.selectedSite;
         },
-        getNavigationList: (state) => (parent) => {
+        getNavigationList: (state) => () => {
 
             //const obj = Object.assign({}, ...state.navigation.list);
             const obj = Object.values(state.navigation.list);
@@ -172,12 +172,11 @@ const store = new Vuex.Store({
 
                     const child = obj.filter((childItem) => {
 
-                        debugger
                         const childParentID = parseInt(childItem.parent, 10);
                         return rootID === childParentID;
                     })
 
-                    console.log(child);
+                    //console.log(child);
                     item.children = [...item.children, ...child];
                     //item.children = [...item.children, {...item.children, ...child}];
 
@@ -198,13 +197,15 @@ const store = new Vuex.Store({
                 item.children = [...item, {...item.children, ...child}];
             })
 */
-            console.log(list);
+            //console.log(list);
 
 
-            return obj.filter((item) => {
+            /*return obj.filter((item) => {
                 return parseInt(item.parent, 10) === parent
-            })
+            })*/
 
+            console.log(list);
+            return list;
             /*return Object.keys(state.navigation.list).filter((idx) => {
                 idx = parseInt(idx, 10);
                 const item = state.navigation.list[idx];
