@@ -24,7 +24,7 @@
 
                     <NavigationList
                             v-if="showTable"
-                            v-for="(item, key) in list" :for="'chk_+(key)'"
+                            v-for="(item, key) in list" :for="key"
                             :item="item" :depth="0" ></NavigationList>
 
                     <EmptyList :list="list"></EmptyList>
@@ -47,6 +47,7 @@
     import NavigationList from '@/components/NavigationList'
 
     const module = "table_navigation";
+    const path = 'navigation';
 
     export default {
         name: 'Navigation',
@@ -66,7 +67,7 @@
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            controller.fetchData('navigation', module);
+            controller.fetchData(path, module);
         },
         methods: {
 
@@ -85,7 +86,7 @@
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
 
-                        controller.fetchData('navigation', module);
+                        controller.fetchData(path, module);
                     }
                 });
             },
@@ -100,14 +101,14 @@
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
-                        controller.fetchData('navigation', module);
+                        controller.fetchData(path, module);
                     }
                 });
             },
         },
         computed: {
             list() {
-                const fullList = store.getters.getList('navigation'); // full list
+                const fullList = store.getters.getList(path); // full list
                 const topLevel = store.getters.getNavigationList(); // level 0
 
                 return topLevel

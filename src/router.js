@@ -12,6 +12,8 @@ import Contents from './views/Contents'
 import ContentForm from './views/ContentForm'
 import Sliders from './views/Sliders'
 import SlidersForm from './views/SlidersForm'
+import Products from './views/Products'
+
 import SiteSelection from './views/SiteSelection'
 
 Vue.use(Router);
@@ -64,6 +66,12 @@ export default new Router({
         {
             path: '/slider-form', component: SlidersForm, beforeEnter: (to, from, next) => {
                 routerSetter("Slider");
+                next()
+            }
+        },
+        {
+            path: '/products', component: Products, beforeEnter: (to, from, next) => {
+                routerSetter("Ürünler");
                 next()
             }
         }

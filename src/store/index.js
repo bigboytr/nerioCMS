@@ -38,6 +38,9 @@ const store = new Vuex.Store({
         },
         slidersCategories: {
             list: {}
+        },
+        products: {
+            list: {}
         }
     },
     mutations: {
@@ -161,9 +164,8 @@ const store = new Vuex.Store({
             //const obj = Object.assign({}, ...state.navigation.list);
             const obj = Object.values(state.navigation.list);
 
-            const list = obj.filter((item) => {
+            return obj.filter((item) => {
                 item['children'] = [];
-                //return parseInt(item.parent, 10) === 0
 
                 if (parseInt(item.parent, 10) === 0) {
                     // root item
@@ -182,38 +184,7 @@ const store = new Vuex.Store({
 
                     return item;
                 }
-
             });
-
-            /*parents.forEach((item) => {
-
-                const parentID = parseInt(item.id, 10);
-
-                const child = obj.find((objItem) => {
-                    const parent = parseInt(objItem.parent, 10);
-                    return parent > 0 ?  parentID === parent : null;
-                })
-
-                item.children = [...item, {...item.children, ...child}];
-            })
-*/
-            //console.log(list);
-
-
-            /*return obj.filter((item) => {
-                return parseInt(item.parent, 10) === parent
-            })*/
-
-            console.log(list);
-            return list;
-            /*return Object.keys(state.navigation.list).filter((idx) => {
-                idx = parseInt(idx, 10);
-                const item = state.navigation.list[idx];
-
-                return parseInt(item.parent, 10) === parent
-                ? item : continue
-
-            })*/
         },
         getList: (state) => (id) => {
             return state[id].list

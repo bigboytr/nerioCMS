@@ -31,7 +31,7 @@ class basic
         $tables = [
             "table_contents" => "contents",
             "table_navigation" => "navigation",
-            "table_productsCategories" => "products_categories",
+            "table_products" => "products",
             "table_productsMedia" => "products_media",
             "table_productsContents" => "products_contents",
             "table_productsPricing" => "products_pricing",
