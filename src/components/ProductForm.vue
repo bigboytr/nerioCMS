@@ -24,7 +24,10 @@
                     <label class="form-label">Üst Öğe</label>
                     <select class="form-control" v-model="dto.parent" size="6">
                         <option value="0" selected>----</option>
-                        <option v-if="list.length > 0" v-for="i in list" :value="i.id">{{i.title}}</option>
+                        <option v-for="i in list"
+                                :value="i.id"
+                                v-if="list.length > 0 && parseInt(i.parent, 10) === 0">
+                            {{i.title}}</option>
                     </select>
                 </div>
 

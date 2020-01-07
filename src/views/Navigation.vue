@@ -109,7 +109,7 @@
         computed: {
             list() {
                 const fullList = store.getters.getList(path); // full list
-                const topLevel = store.getters.getNavigationList(); // level 0
+                const topLevel = store.getters.getRecursiveList(path); // level 0
 
                 return topLevel
 

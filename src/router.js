@@ -13,6 +13,7 @@ import ContentForm from './views/ContentForm'
 import Sliders from './views/Sliders'
 import SlidersForm from './views/SlidersForm'
 import Products from './views/Products'
+import ProductDetails from './views/ProductDetails'
 
 import SiteSelection from './views/SiteSelection'
 
@@ -72,6 +73,16 @@ export default new Router({
         {
             path: '/products', component: Products, beforeEnter: (to, from, next) => {
                 routerSetter("Ürünler");
+                next()
+            }
+        },
+        {
+            path: '/product-details',
+            name: 'product-details',
+            component: ProductDetails,
+            props: true,
+            beforeEnter: (to, from, next) => {
+                routerSetter("Ürün Detayları");
                 next()
             }
         }

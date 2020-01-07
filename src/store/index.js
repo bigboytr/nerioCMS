@@ -41,6 +41,9 @@ const store = new Vuex.Store({
         },
         products: {
             list: {}
+        },
+        productsPrice: {
+            list: {}
         }
     },
     mutations: {
@@ -159,10 +162,10 @@ const store = new Vuex.Store({
         getSelectedSite(state) {
             return state.selectedSite;
         },
-        getNavigationList: (state) => () => {
+        getRecursiveList: (state) => (path) => {
 
             //const obj = Object.assign({}, ...state.navigation.list);
-            const obj = Object.values(state.navigation.list);
+            const obj = Object.values(state[path].list);
 
             return obj.filter((item) => {
                 item['children'] = [];

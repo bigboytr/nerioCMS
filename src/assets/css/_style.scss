@@ -25,6 +25,12 @@ body {
   @include no-radius;
 }
 
+a {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 /*
 * Customize Div Table
 */

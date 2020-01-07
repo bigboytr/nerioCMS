@@ -100,7 +100,7 @@
         },
         computed: {
             list() {
-                return store.getters.getList(path)
+                return store.getters.getRecursiveList(path)
             },
             showTable() {
                 return this.list.length > 0

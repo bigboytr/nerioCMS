@@ -14,11 +14,11 @@
             </div>
             <div class="col-1">
                 <router-link
-                        v-if="item.parent !== 0"
-                        to="/product-details"
-                             tag="button"
-                             class="btn btn-sm btn-primary">
-                    <i class="fas fa-arrow-right"></i>
+                        v-if="parseInt(item.parent, 10) > 0"
+                        :to="{name: 'product-details', params: {prodId: parseInt(item.id, 10)} }"
+                             tag="a"
+                             class="btn- btn-sm btn-primary">
+                    <i class="fas fa-file-alt"></i>
                 </router-link>
             </div>
         </div>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-    import store from '@/store'
-    import router from '@/router'
     import Status from '@/components/Status'
     import ProductList from '@/components/ProductList'
 
