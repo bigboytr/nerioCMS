@@ -103,7 +103,8 @@
                     price_campaing: 0.00,
                     showcase: false,
                     productID: this.$props.prodId
-                }
+                },
+                dtoBackup: {}
             }
         },
         components: {
@@ -112,15 +113,28 @@
         mounted() {
             //contents.getAll(); // get content list from firebase
             controller.fetchData(path, module);
+            this.dtoBackup = {...this.dto};
         },
         methods: {
             save() {
                 controller.save(this.dto, module).then(() => {
                     NotifyMe.notifier('success', `Fiyat eklendi...`);
                     controller.fetchData(path, module);
+                    this.dto = this.dtoBackup;
                 }).catch((error) => {
                     console.log(error);
                     NotifyMe.notifier('error', `Hata oluştu !`);
+                });
+            },
+            trash(id) {
+
+                controller.moveToTrash([...id], module).then((res) => {
+
+                    if (res !== undefined) {
+                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
+
+                        controller.fetchData(path, module);
+                    }
                 });
             }
         },
