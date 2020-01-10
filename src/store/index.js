@@ -44,6 +44,9 @@ const store = new Vuex.Store({
         },
         productsPrice: {
             list: {}
+        },
+        productsContents: {
+            list: {}
         }
     },
     mutations: {

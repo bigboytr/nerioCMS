@@ -40,6 +40,7 @@
                         </div>
                         <div class="tab-pane fade" id="intro" role="tabpanel">
                             <!-- Intro Component-->
+                            <ProductContent class="mt-3" :prodId="$route.params.prodId"></ProductContent>
                         </div>
                         <div class="tab-pane fade" id="images" role="tabpanel">
                             <!-- Images Component-->
@@ -60,6 +61,7 @@
     import EmptyList from '@/components/EmptyList'
     import MainTitle from '@/components/MainTitle'
     import ProductPriceList from '@/components/ProductPriceList'
+    import ProductContent from '@/components/ProductContent'
 
     const module = "table_products";
     const path = 'products'; // store path
@@ -69,7 +71,8 @@
         components: {
             EmptyList,
             MainTitle,
-            ProductPriceList
+            ProductPriceList,
+            ProductContent
         },
         mounted() {
 

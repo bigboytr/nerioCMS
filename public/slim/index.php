@@ -67,17 +67,22 @@ $app->group('/api', function (App $app) use ($basic) {
 
     $app->post('/save', function (Request $request, Response $response) use ($basic) {
 
+        $exclude = ['update', 'id'];
+
         // request params
         $params = json_decode($request->getBody());
+        $update = intval($params->dto->id) !== 0 ? true : false;
 
-        $item = ORM::for_table($basic->resolveTableName($params->table))->create();
-
-        if ($params->update) {
+        if ($update) {
             // find the item which will update
-            $item = ORM::for_table($params->table)->find_one(intval($params->id));
+            $item = ORM::for_table($basic->resolveTableName($params->table))->find_one(intval($params->dto->id));
+        } else {
+            $item = ORM::for_table($basic->resolveTableName($params->table))->create();
         }
 
         foreach ($params->dto as $key => $value){
+
+            if (in_array($key, $exclude)) continue;
 
             if ($key === "createdDate" || $key === "modifiedDate") {
                 $value = date("Y-m-d H:i:s");
