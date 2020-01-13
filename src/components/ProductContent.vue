@@ -59,7 +59,7 @@
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            controller.fetchData(path, module);
+            //controller.fetchData(path, module);
             /*this.item = store.getters.getListOfItem(path, this.$props.prodId, 'productID');
 
             if (this.item) {

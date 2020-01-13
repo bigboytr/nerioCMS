@@ -112,7 +112,7 @@
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            controller.fetchData(path, module);
+            //controller.fetchData(path, module);
             this.dtoBackup = {...this.dto};
         },
         methods: {

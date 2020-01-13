@@ -38,7 +38,7 @@ export default {
                     // Fill the lists
                     //store.dispatch('setList', 'navigation');
                     //store.dispatch('setList', 'contents');
-                    store.dispatch('setListMysql', {
+                    /*store.dispatch('setListMysql', {
                         path: "contents",
                         table: "table_contents"
                     });
@@ -46,7 +46,7 @@ export default {
                     store.dispatch('setListMysql', {
                         path: "navigation",
                         table: "table_navigation"
-                    });
+                    });*/
                 }
 
                 res(true);

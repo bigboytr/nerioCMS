@@ -67,7 +67,7 @@
         },
         mounted() {
 
-            controller.fetchData(path, module);
+            //controller.fetchData(path, module);
         },
         methods: {
             save() {

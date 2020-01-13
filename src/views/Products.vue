@@ -49,6 +49,12 @@
     const module = "table_products";
     const path = 'products'; // store path
 
+    const modulePrice = "table_productsPricing";
+    const pathPrice = "productsPrice";
+
+    const moduleContent = "table_productsContents";
+    const pathContent = "productsContents";
+
     export default {
         name: 'Products',
         components: {
@@ -62,6 +68,12 @@
             return {
                 selectedRows: []
             }
+        },
+        mounted() {
+            controller.fetchData(path, module);
+            controller.fetchData(pathPrice, modulePrice);
+            controller.fetchData(pathContent, moduleContent);
+
         },
         methods: {
             getId(id) {
