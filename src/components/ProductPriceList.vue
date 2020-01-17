@@ -33,9 +33,12 @@
             <div class="col-1">
 
                 <button type="button" v-show="parseInt(item.showcase, 10) === 0"
-                        class="btn btn-light btn-sm" @click="showcase(item.id)">
-                    <i class="fas fa-eye"></i>
+                        class="btn btn-primary btn-sm" @click="showcase(item.id)">
+                    <i class="fas fa-eye fa-fw"></i>
                 </button>
+                <buton class="btn btn-success btn-sm disabled" v-show="parseInt(item.showcase, 10) === 1">
+                    <i class="fas fa-check fa-fw"></i>
+                </buton>
             </div>
 
             <!--<div class="col-1">
@@ -43,7 +46,7 @@
             </div>-->
             <div class="col-1">
                 <button type="button" class="btn btn-danger btn-sm" @click="trash(item.id)">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-times fa-fw"></i>
                 </button>
 
             </div>
@@ -63,7 +66,9 @@
                 <input type="number" class="form-control form-control-sm" v-model="dto.price_campaing">
             </div>-->
             <div class="col-1">
-                <input type="checkbox" v-model="dto.showcase">
+                <ToggleSwitch :id="'showc'"
+                              @get-toggle="setShowcase"
+                              :value="dto.showcase"></ToggleSwitch>
             </div>
             <div class="col-2">
                 <button type="button" class="btn btn-sm btn-primary btn-block" @click="save()">
@@ -82,6 +87,7 @@
     import controller from '@/controller/controller'
     import Status from '@/components/Status'
     import NotifyMe from '@/controller/notifier'
+    import ToggleSwitch from '@/components/ToggleSwitch'
 
     const module = "table_productsPricing";
     const path = "productsPrice";
@@ -108,7 +114,8 @@
             }
         },
         components: {
-            Status
+            Status,
+            ToggleSwitch
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
@@ -126,15 +133,21 @@
                     NotifyMe.notifier('error', `Hata oluştu !`);
                 });
             },
+            setShowcase(val) {
+                this.dto.showcase = val;
+            },
             trash(id) {
 
-                controller.moveToTrash([...id], module).then((res) => {
+                controller.moveToTrash([...[], id], module).then((res) => {
 
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
                         controller.fetchData(path, module);
                     }
+                }).catch((err) => {
+                    NotifyMe.notifier('error', err);
+
                 });
             }
         },
