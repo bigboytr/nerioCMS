@@ -25,6 +25,9 @@ const store = new Vuex.Store({
             key: undefined,
             title: undefined
         },
+        selectedRows: {
+            ids: []
+        },
         mainTitle: "Dashboard",
         navigation: {
             list: {},
@@ -63,6 +66,19 @@ const store = new Vuex.Store({
         SET_MAIN_TITLE(state, value) {
             state.mainTitle = value;
         },
+        SET_SELECTEDROW_ID(state, value) {
+            if (!state.selectedRows.ids.includes(value))
+                state.selectedRows.ids = [...state.selectedRows.ids, value];
+            else
+                state.selectedRows.ids = state.selectedRows.ids.filter((item) => {
+                    return item !== value
+                })
+
+            //state.selectedRows.ids.push(value);
+        },
+        SET_SELECTEDROWS_EMPTY(state) {
+            state.selectedRows.ids = [];
+        },
         SET_CONTENTS(state, value) {
             state.contents.list = value;
         },
@@ -85,6 +101,12 @@ const store = new Vuex.Store({
         },
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
+        },
+        setSelectedRowId({commit}, value) {
+            commit('SET_SELECTEDROW_ID', value)
+        },
+        setSelectedRowsEmpty({commit}) {
+            commit('SET_SELECTEDROWS_EMPTY')
         },
         setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
@@ -164,6 +186,9 @@ const store = new Vuex.Store({
         },
         getSelectedSite(state) {
             return state.selectedSite;
+        },
+        getSelectedRows(state) {
+            return state.selectedRows.ids;
         },
         getRecursiveList: (state) => (path) => {
 

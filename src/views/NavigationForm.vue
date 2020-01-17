@@ -48,12 +48,26 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-12">
+                        <div class="form-group col-6">
                             <label class="form-label">Üst Öğe</label>
                             <select size="7" class="form-control" v-model="dto.parent">
                                 <option value="0" selected>Üst öğe yok</option>
-                                <option v-for="(n, k) in navList" :value="n.id">{{n.title}}</option>
+                                <option v-for="(n, k) in navList" v-if="parseInt(n.parent, 10) === 0" :value="n.id">{{n.title}}</option>
                             </select>
+                        </div>
+
+                        <div class="form-group col-2">
+                            <label class="form-label">
+                                Yeni pencerede açılsın
+                            </label>
+                            <ToggleSwitch :id="'target'"
+                                          @get-toggle="setTarget"
+                                          :value="targetInput"></ToggleSwitch>
+                        </div>
+
+                        <div class="form-group col-1">
+                            <label class="form-label">Sıra</label>
+                            <input type="number" class="form-control" v-model="dto.menuOrder">
                         </div>
 
                         <div class="form-group col-6">
@@ -65,20 +79,6 @@
                             <label class="form-label">Meta Kelimeler</label>
                             <input type="text" class="form-control" v-model="dto.keyw">
                         </div>
-
-                        <div class="form-group col-2">
-                            <input class="form-control" type="checkbox" id="yeni_p" v-model="targetInput">
-                            <label class="form-label" for="yeni_p">
-                                Yeni pencerede açılsın
-                            </label>
-                        </div>
-
-                        <div class="form-group col-1">
-                            <label class="form-label">Sıra</label>
-                            <input type="number" class="form-control" v-model="dto.menuOrder">
-                        </div>
-
-
                     </div>
 
                 </div>
@@ -94,15 +94,8 @@
                         </button>
                     </div>
                 </div>
-
-
-
             </div>
-
         </div>
-
-
-
     </div>
 </template>
 
@@ -112,14 +105,20 @@
     import router from '@/router'
     import MainTitle from '@/components/MainTitle'
     import NotifyMe from '@/controller/notifier'
+    import ToggleSwitch from '@/components/ToggleSwitch'
 
     const module = "table_navigation";
+    const path = 'navigation';
+
+    const moduleContents = 'table_contents';
+    const pathContents = 'contents';
 
     export default {
         name: 'NavigationForm',
         props: ['item'],
         components: {
-            MainTitle
+            MainTitle,
+            ToggleSwitch
         },
         data() {
             return {
@@ -139,11 +138,16 @@
                 reference: 0
             }
         },
+        mounted(){
+            controller.fetchData(pathContents, moduleContents);
+        },
         methods: {
             save() {
 
-                controller.save(this.dto, module).then(function (response) {
-                    router.push("/navigation")
+                controller.save(this.dto, module).then(() => {
+
+                    router.push(`/${path}`)
+
                 }).catch((error) => {
                     console.log(error);
                     NotifyMe.notifier('error', `Hata oluştu !`);
@@ -151,6 +155,9 @@
             },
             setUrlType(type) {
                 this.dto.type = type;
+            },
+            setTarget(val) {
+                this.targetInput = val;
             },
             updateURL(){
                 this.dto.title = this.reference.title;
@@ -163,10 +170,10 @@
         computed: {
             navList() {
                 // üst öğe seçerken kullanılacak
-                return store.getters.getList('navigation')
+                return store.getters.getList(path);
             },
             contentList() {
-                return store.getters.getList('contents')
+                return store.getters.getList(pathContents)
             },
             targetInputF() {
                 this.dto.target = this.targetInput ? "_blank" : "_self"

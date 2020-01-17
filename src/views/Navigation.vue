@@ -25,7 +25,7 @@
                     <NavigationList
                             v-if="showTable"
                             v-for="(item, key) in list" :for="key"
-                            :item="item" :depth="0" ></NavigationList>
+                            :item="item" :depth="0"></NavigationList>
 
                     <EmptyList :list="list"></EmptyList>
                 </div>
@@ -53,7 +53,7 @@
         name: 'Navigation',
         data() {
             return {
-                selectedRows: [],
+                //selectedRows: [],
                 item: null
             }
         },
@@ -75,6 +75,10 @@
                 this.item = item;
                 //$("#modal").modal("show");
             },
+            /*getId(id) {
+                alert(id);
+                this.selectedRows.push(parseInt(id, 10));
+            },*/
             activeToggle() {
                 if (this.selectedRows.length === 0) {
                     NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
@@ -82,7 +86,7 @@
                 }
 
                 controller.toggleActive(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
+                    //this.selectedRows = [];
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
 
@@ -97,18 +101,19 @@
                 }
 
                 controller.moveToTrash(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
+                    //this.selectedRows = [];
                     if (res !== undefined) {
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
                         controller.fetchData(path, module);
+                        store.dispatch('setSelectedRowsEmpty');
                     }
                 });
             },
         },
         computed: {
             list() {
-                const fullList = store.getters.getList(path); // full list
+                //const fullList = store.getters.getList(path); // full list
                 const topLevel = store.getters.getRecursiveList(path); // level 0
 
                 return topLevel
@@ -117,6 +122,9 @@
             },
             showTable() {
                 return this.list.length > 0
+            },
+            selectedRows() {
+                return store.getters.getSelectedRows;
             }
         }
     };

@@ -2,7 +2,7 @@
     <div>
         <div class="row div-tr" :style="indent">
             <div class="col-1">
-                <input type="checkbox" :id="'chk_'+(item.id)" :value="item.id">
+                <input type="checkbox" :key="item.id" @click="addIdToList(item.id)">
             </div>
             <div class="col-1">
                 <Status :param="item.active"></Status>
@@ -18,8 +18,9 @@
         </div>
 
         <NavigationList
-                v-for="(i, key) in item.children" :for="'chk_+(key)'"
-                :item="i" :depth="depth + 1" ></NavigationList>
+                v-for="(i, key) in item.children"
+                :item="i" :depth="depth + 1"
+               ></NavigationList>
 
     </div>
 
@@ -46,6 +47,9 @@
             NavigationList
         },
         methods: {
+            addIdToList(id) {
+                store.dispatch('setSelectedRowId', id);
+            },
             typeOfLink(type) {
                 return store.getters.getUrlTypes(type);
             },
