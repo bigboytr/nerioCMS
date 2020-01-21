@@ -50,6 +50,12 @@ const store = new Vuex.Store({
         },
         productsContents: {
             list: {}
+        },
+        contacts: {
+            list: {}
+        },
+        contactDetails: {
+            list: {}
         }
     },
     mutations: {

@@ -15,6 +15,7 @@ import SlidersForm from './views/SlidersForm'
 import Products from './views/Products'
 import ProductDetails from './views/ProductDetails'
 import Contacts from './views/Contacts'
+import ContactForm from './views/ContactForm'
 
 import SiteSelection from './views/SiteSelection'
 
@@ -73,6 +74,12 @@ export default new Router({
         },
         {
             path: '/contact', component: Contacts, beforeEnter: (to, from, next) => {
+                routerSetter("İletişim Bilgileri");
+                next()
+            }
+        },
+        {
+            path: '/contact-form', component: ContactForm, beforeEnter: (to, from, next) => {
                 routerSetter("İletişim Bilgileri");
                 next()
             }

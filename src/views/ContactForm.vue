@@ -15,27 +15,19 @@
                         </div>
 
                         <div class="form-group col-12">
-                            <vue-editor v-model="dto.contents"></vue-editor>
+                            <label class="form-label">Adres</label>
+                            <input type="text" class="form-control" v-model="dto.address">
                         </div>
 
                         <div class="form-group col-12">
-                            <label class="form-label">Sayfa Tanımı</label>
-                            <input type="text" class="form-control" v-model="dto.desci">
-                        </div>
-
-                        <div class="form-group col-12">
-                            <label class="form-label">Anahtar Kelimeler</label>
-                            <input type="text" class="form-control" v-model="dto.keyw">
+                            <label class="form-label">Harita Kodu</label>
+                            <textarea class="form-control" v-model="dto.map_embed" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <!--<button type="button" class="btn btn-warning">
-                            <i class="fas fa-times fa-fw"></i>
-                            Vazgeç
-                        </button>-->
-                        <router-link to="/content" tag="button" class="btn btn-warning">
+                        <router-link to="/contact" tag="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
                             Vazgeç
                         </router-link>
@@ -54,56 +46,51 @@
     import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
     import router from '@/router'
-    import {VueEditor} from "vue2-editor";
+    import NotifyMe from '@/controller/notifier'
 
-    const module = "table_contents";
+
+    const module = "table_contacts";
+    const path = "contacts";
 
     export default {
         name: 'ContentForm',
         props: ['item'],
         components: {
             MainTitle,
-            VueEditor
         },
         data() {
             return {
-                targetInput: false,
                 update: false,
                 dto: {
                     // this should only handle form elements which want to add to db
                     title: '',
-                    contents: '',
-                    desci: '',
-                    keyw: '',
-                    area: 1,
+                    address: '',
+                    map_embed: ''
                 }
-                /*
-                Firebase structure
-                dto: {
-                    sefLink: '',
-                    title: '',
-                    content: '',
-                    metaDesc: '',
-                    metaKeyw: '',
-                    update: false
-                }*/
-
             }
         },
         methods: {
             save() {
-                controller.save(this.dto, 'table_contents').then(() => {
-                    router.push("/content")
-                }).catch((error) => {
-                    console.log(error);
-                });
+                if (!this.hasErrorInData()) {
+                    controller.save(this.dto, module).then((response) => {
+                        NotifyMe.notifier('success', `Adres kayıt edildi.`);
+
+                        router.push("/contact")
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                } else {
+                    NotifyMe.notifier('error', `Tüm alanlar doldurulmalıdır. `);
+                }
+            },
+            hasErrorInData() {
+                return Object.keys(this.dto).some((key) => {
+                    return this.dto[key] === ''
+                })
             }
         },
         computed: {
-            sefTitle() {
-                // this will use for sef links
-                //this.dto.sefLink = controller.sefTitleCreator(this.dto.title);
-            }
+
         }
     };
 </script>
