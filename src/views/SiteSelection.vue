@@ -17,9 +17,9 @@
                         </div>
                         <div class="col-xs-4 col-sm-5 col-md-4 text-right">
                             <button class="btn btn-primary" title="Profile oluştur"
-                                    data-toggle="collapse"
-                                    data-target="profile">
-                                <i class="fas fa-plus"></i>
+                                    @click="profileForm = !profileForm">
+                                <i class="fas fa-plus" v-show="!profileForm"></i>
+                                <i class="fas fa-minus" v-show="profileForm"></i>
                             </button>
 
                             <button class="btn btn-danger" @click="logout()" title="Çıkış yap !">
@@ -28,29 +28,36 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-info">
-                        Yönetmek istediğiniz sitenizi seçiniz.
-                    </div>
-
-                    <div class="row" v-for="(title, key) in list">
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <button class="btn btn-block btn-light text-l" @click="selectProfile(key, title)">
-                                <i class="fas fa-arrow-right"></i>
-                                {{title}}
-                            </button>
+                    <div v-show="!profileForm">
+                        <div class="alert alert-primary">
+                            Yönetmek istediğiniz sitenizi seçiniz.
                         </div>
-                        <hr>
+
+                        <div class="row" v-for="(title, key) in list">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <button class="btn btn-block btn-light text-l" @click="selectProfile(key, title)">
+                                    <i class="fas fa-arrow-right"></i>
+                                    {{title}}
+                                </button>
+                            </div>
+                            <hr>
+                        </div>
                     </div>
 
 
-                    <div class="collapse" id="profile">
+                    <div v-show="profileForm">
 
-                        <div class="alert alert-info">
+                        <div class="alert alert-primary">
                             Yeni bir profil yaratmak için alttaki kutuyu kullanabilirsiniz.
                         </div>
 
                         <div class="form-group">
+                            <label for="">Site ismi :</label>
                             <input type="text" class="form-control input-sm" v-model="dto.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="">MySQL DB :</label>
+                            <input type="text" class="form-control input-sm" v-model="dto.dbName">
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-block" @click="createProfile()">
@@ -82,8 +89,10 @@
                 thisYear: new Date().getFullYear(),
                 list: null,
                 dto: {
-                    title: ""
-                }
+                    title: "",
+                    dbName: ''
+                },
+                profileForm: false
             }
         },
         beforeMount() {
