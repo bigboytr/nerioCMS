@@ -32,9 +32,10 @@
         },
         methods: {
             fullHeight() {
-                const path = this.$route.path;
-                return (path.substring(1) === 'login' || 'site-selection')
-                    ? 'h-100'
+                const path = (this.$route.path).substring(1);
+                return (path === 'login') ||
+                    (path === 'site-selection')
+                    ? 'h-100 login-bg'
                     : '';
             }
         },
@@ -49,3 +50,11 @@
         },
     };
 </script>
+
+<style scoped>
+    .login-bg {
+        background: url('../src/assets/images/login_bg.png') no-repeat fixed center;
+        background-size: contain;
+
+    }
+</style>
