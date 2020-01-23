@@ -32,18 +32,12 @@
             <!--<div class="col-2">{{item.price_campaing}}</div>-->
             <div class="col-1">
 
-                <button type="button" v-show="parseInt(item.showcase, 10) === 0"
+                <button type="button" v-show="+item.showcase === 0"
                         class="btn btn-primary btn-sm" @click="showcase(item.id)">
                     <i class="fas fa-eye fa-fw"></i>
                 </button>
-                <buton class="btn btn-success btn-sm disabled" v-show="parseInt(item.showcase, 10) === 1">
-                    <i class="fas fa-check fa-fw"></i>
-                </buton>
+                <i class="fas fa-check fa-fw" v-show="+item.showcase === 1"></i>
             </div>
-
-            <!--<div class="col-1">
-                <Status :param="item.active"></Status>
-            </div>-->
             <div class="col-1">
                 <button type="button" class="btn btn-danger btn-sm" @click="trash(item.id)">
                     <i class="fas fa-times fa-fw"></i>

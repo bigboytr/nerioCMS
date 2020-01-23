@@ -24,14 +24,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-6" v-show="dto.type != 1">
+                        <div class="form-group col-6">
                             <label class="form-label">Referans</label>
-                            <select class="form-control" v-model="reference" @change="updateURL()">
+                            <select class="form-control"
+                                    v-model="reference"
+                                    @change="updateURL()">
                                 <option value="0" selected>----</option>
-                                <option v-show="dto.type == 0"
-                                        v-for="i in contentList" :value="i">{{i.title}}</option>
-                                <!--<option v-show="dto.type == 2"
-                                        v-for="i in productList" :value="i.id">{{i.title}}</option>-->
+                                <option v-for="i in referenceList" :value="i">{{i.title}}</option>
                             </select>
                         </div>
 
@@ -113,6 +112,12 @@
     const moduleContents = 'table_contents';
     const pathContents = 'contents';
 
+    const moduleProducts = "table_products";
+    const pathProducts = 'products'; // store path
+
+    const moduleContacts = "table_contacts";
+    const pathContacts = 'contacts'; // store path
+
     export default {
         name: 'NavigationForm',
         props: ['item'],
@@ -140,6 +145,8 @@
         },
         mounted(){
             controller.fetchData(pathContents, moduleContents);
+            controller.fetchData(pathProducts, moduleProducts);
+            controller.fetchData(pathContacts, moduleContacts);
         },
         methods: {
             save() {
@@ -154,7 +161,7 @@
                 });
             },
             setUrlType(type) {
-                this.dto.type = type;
+                this.dto.type = +type;
             },
             setTarget(val) {
                 this.targetInput = val;
@@ -172,8 +179,18 @@
                 // üst öğe seçerken kullanılacak
                 return store.getters.getList(path);
             },
-            contentList() {
-                return store.getters.getList(pathContents)
+            referenceList() {
+                switch (this.dto.type) {
+                    case 0: return store.getters.getList(pathContents);
+                    case 2: {
+                        const r = store.getters.getList(pathProducts);
+                        return r.filter((item) => {
+                            return +item.parent === 0
+                        })
+                    }
+                    case 3: return store.getters.getList(pathContacts);
+                    default: return store.getters.getList(pathContents);
+                }
             },
             targetInputF() {
                 this.dto.target = this.targetInput ? "_blank" : "_self"

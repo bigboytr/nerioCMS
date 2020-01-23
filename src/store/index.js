@@ -204,15 +204,10 @@ const store = new Vuex.Store({
             return obj.filter((item) => {
                 item['children'] = [];
 
-                if (parseInt(item.parent, 10) === 0) {
+                if (+item.parent === 0) {
                     // root item
-
-                    const rootID = parseInt(item.id, 10);
-
                     const child = obj.filter((childItem) => {
-
-                        const childParentID = parseInt(childItem.parent, 10);
-                        return rootID === childParentID;
+                        return +item.id === +childItem.parent;
                     })
 
                     //console.log(child);
@@ -224,7 +219,13 @@ const store = new Vuex.Store({
             });
         },
         getList: (state) => (id) => {
-            return state[id].list
+            //return state[id].list;
+            const obj = Object.values(state[id].list);
+
+            return obj.filter((item) => {
+                return +item.deleted === 0
+            })
+
         },
         getListOfItem: (state) => (path, id, field) => {
 
