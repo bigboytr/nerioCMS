@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import store from '@/store/index';
 import auth from '@/controller/authentication';
 import swal from 'sweetalert2'
+import axios from 'axios'
 
 export default {
 
@@ -22,8 +23,6 @@ export default {
                     return snap.key
 
                 }).then((id) => {
-
-                    console.log(id);
 
                     firebase.database().ref(`${path}/${id}/dbConfig`).set({
 
@@ -58,6 +57,28 @@ export default {
                     store.dispatch('setToken', true);
                     store.dispatch("setSelectedSite", {key, title});
 
+                    const apiPath = store.getters.getApiPath;
+
+                    axios({
+                        method: 'POST',
+                        data: {
+                            dbN: 'gencproc_neriocms',
+                            dbU: 'gencproc_nerioad',
+                            dbP: '/*96321nerio'
+                        },
+                        url: `${apiPath}/api/connect`,
+
+                    }).then(() => {
+
+                        console.log('Connected');
+                        res(true);
+                    }).catch((err) => {
+
+                        console.log('Not connected');
+                        console.log(err);
+
+                    });
+
                     // Fill the lists
                     //store.dispatch('setList', 'navigation');
                     //store.dispatch('setList', 'contents');
@@ -72,7 +93,7 @@ export default {
                     });*/
                 }
 
-                res(true);
+
             } else {
 
                 rej(true);
@@ -80,26 +101,31 @@ export default {
         })
     },
 
-    getProfiles(vm) {
+    getProfiles() {
 
         return new Promise((res, rej) => {
 
-            let authId = store.getters.getAuthUser.uid;
-            let returnList = {};
+            const authId = store.getters.getAuthUser.uid;
+            //let returnList = null;
 
-            firebase.database().ref("/profiles/"+authId+"/sites").on("value",(val) => {
+            try {
+                firebase.database().ref("/profiles/" + authId + "/sites").on("value", (val) => {
 
-                let response = val.val();
+                    //let response = val.val();
+                    /*if (response !== null) {
+                        Object.keys(response).map((key) => {
+                            //const {title, dbConfig} = response[key];
+                            vm.$set(returnList, key, response[key]);
+                            //vm.$set(returnList, key, {title, dbConfig});
+                        });
+                    }*/
+                    //res(returnList);
+                    res(val.val());
+                });
+            } catch (e) {
+                rej(e)
+            }
 
-                if (response !== null) {
-                    Object.keys(response).map((key) => {
-                        const {title, dbConfig} = response[key];
-                        vm.$set(returnList, key, response[key]);
-                        //vm.$set(returnList, key, {title, dbConfig});
-                    });
-                    res(returnList);
-                }
-            });
 
 
             /*firebase.database().ref("/profiles/"+authId+"/sites").once("value").then((val) => {
@@ -139,7 +165,7 @@ export default {
                 cancelButtonText: 'Vazgeç'
             }).then((confirm) => {
 
-                if (confirm) {
+                if (confirm.value === true) {
 
                     let authId = store.getters.getAuthUser.uid;
 

@@ -37,7 +37,7 @@
                             <div class="col-12" v-for="(item, key) in profileList">
                                 <div class="btn-group">
                                     <button class="btn btn-light text-l btn-block"
-                                            @click="selectProfile(key, title)">
+                                            @click="selectProfile(key, item.title)">
                                         <i class="fas fa-arrow-right"></i>
                                         {{item.title}}
                                     </button>
