@@ -7,17 +7,6 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        firebase: {
-            config: {
-                apiKey: 'AIzaSyB-1f7dzkVgIyDOdEHiUgT-1mlsjXL_5VU',
-                authDomain: 'neriocms.firebaseapp.com',
-                databaseURL: 'https://neriocms.firebaseio.com',
-                projectId: 'ner2iocms',
-                storageBucket: 'neriocms.appspot.com',
-                messagingSenderId: '355445654956',
-            },
-            refCMS: "nerioCMS" // unused
-        },
         apiPath: 'http://gencpro.com/nerio/slim',
         token: false,
         authUser: {},
@@ -92,7 +81,8 @@ const store = new Vuex.Store({
             state.navigation.list = value;
         },
         SET_LIST(state, payload) {
-            state[payload.path].list = payload.value
+            const {path, list} = payload;
+            state[path].list = list;
         }
     },
     actions: {
@@ -117,9 +107,11 @@ const store = new Vuex.Store({
         setContentList({commit}, value) {
             commit('SET_CONTENTS', value)
         },
-        setList({commit}, path) {
+        setList({commit}, payload) {
 
-            let user = this.getters.getAuthUser;
+            commit('SET_LIST', payload);
+
+            /*let user = this.getters.getAuthUser;
             let selectedSites = this.getters.getSelectedSite;
 
             let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/${path}/`;
@@ -139,7 +131,7 @@ const store = new Vuex.Store({
                 setLoad.value = errors;
                 commit('SET_LIST', setLoad);
 
-            })
+            })*/
         },
 
         setListMysql({commit}, payload) {

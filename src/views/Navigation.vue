@@ -1,10 +1,12 @@
 <template>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
 
             <div class="card">
                 <div class="card-header">
                     <MainTitle class="mb-2"></MainTitle>
+
+                    <button type="button" @click="load()">Load</button>
 
                     <ActionButtons :url="'/navigation-form'"
                                    @trash="trash"
@@ -46,6 +48,8 @@
     import ActionButtons from '@/components/ActionButtons'
     import NavigationList from '@/components/NavigationList'
 
+    import firebase from 'firebase';
+
     const module = "table_navigation";
     const path = 'navigation';
 
@@ -67,10 +71,33 @@
         },
         mounted() {
             //contents.getAll(); // get content list from firebase
-            controller.fetchData(path, module);
+            //controller.fetchData(path, module);
+
         },
         methods: {
 
+            load() {
+
+                /*const self = this;
+
+                let list = [];
+                firebase.firestore().collection('navigation').get().then((snapshot) => {
+
+                    snapshot.docs.map((item) => {
+                        list.push({
+                            title: item.data().title,
+                            path: item.data().path,
+                            queue: item.data().queue
+                        })
+                    })
+                }).then(() =>{
+
+                    this.$store.dispatch('setSelectedRowsEmpty', {
+                        path: 'navigation',
+                        list: list
+                    });
+                })*/
+            },
             editMe(item) {
                 this.item = item;
                 //$("#modal").modal("show");

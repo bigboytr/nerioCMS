@@ -1,7 +1,5 @@
 <template>
-    <div id="app" class="container-fluid" :class='fullHeight()'>
-
-        <Sidebar v-if="token"></Sidebar>
+    <div id="app" class="container-fluid h-100" :class='fullHeight()'>
 
         <div v-if="!token" class="row h-100 justify-content-center align-items-center">
             <div class="col-12">
@@ -9,21 +7,25 @@
             </div>
         </div>
 
-        <div class="content col-10 offset-2 mt-3 mb-3" v-if="token">
-            <router-view/>
+
+        <div v-if="token" class="row h-100">
+            <Sidebar />
+
+            <div class="content col-10 mt-3 mb-3">
+                <router-view/>
+            </div>
+
+            <!--Notify plugin template-->
+            <notifications position="right bottom"/>
         </div>
 
-        <!--Notify plugin template-->
-        <notifications position="right bottom"/>
     </div>
 </template>
 
 <script>
-    import store from '@/store/index'
     import Sidebar from '@/components/Sidebar'
     import Header from '@/components/Header'
     import auth from '@/controller/authentication'
-    import router from '@/router'
 
     export default {
         name: 'App',
@@ -33,15 +35,12 @@
         methods: {
             fullHeight() {
                 const path = (this.$route.path).substring(1);
-                return (path === 'login') ||
-                    (path === 'site-selection')
-                    ? 'h-100 login-bg'
-                    : '';
+                return (path === 'login') ? 'login-bg' : '';
             }
         },
         computed: {
             token() {
-                return store.getters.getToken;
+                return this.$store.getters.getToken;
             }
         },
         components: {

@@ -68,10 +68,11 @@ export default {
 
     fetchData(path, module) {
 
-        store.dispatch('setListMysql', {
+        // MYSQL Connection
+        /*store.dispatch('setListMysql', {
             path: path,
             table: module
-        });
+        });*/
     },
 
     save(dto, module) {

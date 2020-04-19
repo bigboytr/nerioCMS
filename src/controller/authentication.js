@@ -2,9 +2,9 @@
 import firebase from 'firebase';
 import store from '@/store/index';
 import router from '@/router';
+import firebaseConfig from '../firebaseConfig';
 
-const config = store.getters.getConfig;
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 
 export default {
 
@@ -15,13 +15,16 @@ export default {
         firebase.auth().signInWithEmailAndPassword(email, pass)
             .then(function (user) {
 
-                store.dispatch('setAuthUser', user.user);
-                router.push('/site-selection');
+                self.setAuthentication(user.user, true, {});
+
+                router.push('/');
+
             })
             .catch(function (error) {
                 // Handle Errors here.
-                //var errorCode = error.code;
-                //var errorMessage = error.message;
+                const {code, message} = error;
+
+                alert(code + " -- " + message);
 
                 self.setAuthentication({}, false, {});
             });
@@ -52,29 +55,10 @@ export default {
         firebase.auth().onAuthStateChanged(function (user) {
 
             if (!user) {
-
                 self.setAuthentication({}, false, {});
-                router.push('/login');
-
             } else {
-
-                store.dispatch('setAuthUser', user);
-
-                if (store.getters.getSelectedSite.key !== undefined) {
-
-                    localStorage.token = true;
-                    store.dispatch('setToken', true);
-
-                    router.push('/');
-                } else {
-
-                    localStorage.token = false;
-                    store.dispatch('setToken', false);
-                    router.push('/site-selection');
-                }
-
+                self.setAuthentication(user, true, {});
             }
-
         });
 
     },
@@ -89,10 +73,12 @@ export default {
             site => null / key (string)
          */
 
+        localStorage.setItem('user', user);
+        localStorage.setItem('token', token);
+
         store.dispatch('setAuthUser', user);
-        localStorage.token = token;
         store.dispatch('setToken', token);
-        store.dispatch('setSelectedSite', site);
+        //store.dispatch('setSelectedSite', site);
 
     }
 }

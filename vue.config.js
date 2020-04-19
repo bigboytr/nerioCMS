@@ -1,6 +1,6 @@
 module.exports = {
     lintOnSave: false,
-    baseUrl: '/nerio',
+    baseUrl: '/',
     outputDir: undefined,
     assetsDir: undefined,
     runtimeCompiler: undefined,

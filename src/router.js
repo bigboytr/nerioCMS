@@ -34,7 +34,7 @@ export default new Router({
                 next()
             }
         },
-        {path: '/login', component: Login, beforeEnter: auth.isLogged()},
+        {path: '/login', component: Login },
         {path: '/site-selection', component: SiteSelection},
         {
             path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => {

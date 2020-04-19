@@ -9,7 +9,7 @@ import './assets/css/_style.scss';
 Vue.use(Notifications);
 Vue.config.productionTip = false;
 
-let vm = new Vue({
+new Vue({
   store,
   router,
   render: h => h(App),
