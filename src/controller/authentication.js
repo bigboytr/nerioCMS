@@ -73,8 +73,14 @@ export default {
             site => null / key (string)
          */
 
-        localStorage.setItem('user', user);
-        localStorage.setItem('token', token);
+        if (token) {
+
+            localStorage.setItem('user', user.name);
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+        }
 
         store.dispatch('setAuthUser', user);
         store.dispatch('setToken', token);
