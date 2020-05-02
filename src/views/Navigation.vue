@@ -1,44 +1,38 @@
 <template>
-    <div class="row">
-        <div class="col-12">
 
-            <div class="card">
-                <div class="card-header">
-                    <MainTitle class="mb-2"></MainTitle>
+    <b-card no-body>
+        <b-card-header>
+            <MainTitle class="mb-2"></MainTitle>
 
-                    <button type="button" @click="load()">Load</button>
+            <ActionButtons :url="'/navigation-form'"
+                           :isActionsDisabled="isActionsDisabled"
+                           @trash="trash"
+                           @activeToggle="activeToggle"/>
+        </b-card-header>
+        <b-card-body>
+            <b-table v-if="showTable"
+                     selectable
+                     striped hover
+                     :fields="fields"
+                     :items="list"
+                     @row-selected="onRowSelected"
+            >
 
-                    <ActionButtons :url="'/navigation-form'"
-                                   @trash="trash"
-                                   @activeToggle="activeToggle"></ActionButtons>
-                </div>
-                <div class="card-body div-table dark">
+                <template v-slot:cell(selector)="row">
+                    <i class="fas fa-check" v-if="row.rowSelected"></i>
+                </template>
+                <template v-slot:cell(active)="row">
+                    <Status :param="row.item.active"></Status>
+                </template>
+            </b-table>
 
-
-                    <div class="row div-thead" v-if="showTable">
-                        <div class="col-1"></div>
-                        <div class="col-1">Erişilebilir</div>
-                        <div class="col-8 col-sm-3">Başlık</div>
-                        <div class="col-3 d-none d-sm-block">URL</div>
-                        <div class="col-2 d-none d-sm-block">Hedef</div>
-                        <div class="col-2 d-none d-sm-block">Link Tip</div>
-                    </div>
-
-                    <NavigationList
-                            v-if="showTable"
-                            v-for="(item, key) in list" :for="key"
-                            :item="item" :depth="0"></NavigationList>
-
-                    <EmptyList :list="list"></EmptyList>
-                </div>
-            </div>
-        </div>
-
-    </div>
+            <EmptyList :list="list"></EmptyList>
+        </b-card-body>
+    </b-card>
 </template>
 
 <script>
-    import controller from '@/controller/controller'
+    import controller from '@/controller/navigation'
     import store from '@/store'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
@@ -48,8 +42,6 @@
     import ActionButtons from '@/components/ActionButtons'
     import NavigationList from '@/components/NavigationList'
 
-    import firebase from 'firebase';
-
     const module = "table_navigation";
     const path = 'navigation';
 
@@ -57,8 +49,36 @@
         name: 'Navigation',
         data() {
             return {
-                //selectedRows: [],
-                item: null
+                fields: [
+                    {
+                        key: 'selector',
+                        label: ''
+                    },
+                    {
+                        key: 'title',
+                        label: 'Başlık'
+                    },
+                    {
+                        key: 'path',
+                        label: 'URL'
+                    },
+                    {
+                        key: 'queue',
+                        label: 'Sıra'
+                    },
+                    {
+                        key: 'active',
+                        label: 'Aktif'
+                    },
+                    {
+                        key: 'type',
+                        label: 'Tip',
+                        formatter: (value) => {
+                            return store.getters.getUrlTypes(value);
+                        }
+                    }
+                ],
+                selectedRows: []
             }
         },
         components: {
@@ -70,42 +90,17 @@
             modal
         },
         mounted() {
-            //contents.getAll(); // get content list from firebase
             //controller.fetchData(path, module);
-
+            controller.getAll();
         },
         methods: {
-
-            load() {
-
-                /*const self = this;
-
-                let list = [];
-                firebase.firestore().collection('navigation').get().then((snapshot) => {
-
-                    snapshot.docs.map((item) => {
-                        list.push({
-                            title: item.data().title,
-                            path: item.data().path,
-                            queue: item.data().queue
-                        })
-                    })
-                }).then(() =>{
-
-                    this.$store.dispatch('setSelectedRowsEmpty', {
-                        path: 'navigation',
-                        list: list
-                    });
-                })*/
-            },
             editMe(item) {
-                this.item = item;
+
                 //$("#modal").modal("show");
             },
-            /*getId(id) {
-                alert(id);
-                this.selectedRows.push(parseInt(id, 10));
-            },*/
+            onRowSelected(items) {
+                this.selectedRows = items;
+            },
             activeToggle() {
                 if (this.selectedRows.length === 0) {
                     NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
@@ -133,25 +128,27 @@
                         NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
 
                         controller.fetchData(path, module);
-                        store.dispatch('setSelectedRowsEmpty');
                     }
                 });
             },
         },
         computed: {
             list() {
-                //const fullList = store.getters.getList(path); // full list
-                const topLevel = store.getters.getRecursiveList(path); // level 0
+                return store.getters.getList('navigation');
+                //return []
 
-                return topLevel
+                /*const topLevel = store.getters.getRecursiveList(path); // level 0
+
+                return topLevel*/
 
                 //return
             },
             showTable() {
                 return this.list.length > 0
             },
-            selectedRows() {
-                return store.getters.getSelectedRows;
+            isActionsDisabled() {
+                // selected row yoksa actionlar disable edilecek
+                return !this.selectedRows.length > 0
             }
         }
     };

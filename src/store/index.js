@@ -74,12 +74,6 @@ const store = new Vuex.Store({
         SET_SELECTEDROWS_EMPTY(state) {
             state.selectedRows.ids = [];
         },
-        SET_CONTENTS(state, value) {
-            state.contents.list = value;
-        },
-        SET_NAVIGATION_LIST(state, value) {
-            state.navigation.list = value;
-        },
         SET_LIST(state, payload) {
             const {path, list} = payload;
             state[path].list = list;
@@ -108,30 +102,7 @@ const store = new Vuex.Store({
             commit('SET_CONTENTS', value)
         },
         setList({commit}, payload) {
-
             commit('SET_LIST', payload);
-
-            /*let user = this.getters.getAuthUser;
-            let selectedSites = this.getters.getSelectedSite;
-
-            let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/${path}/`;
-
-            const setLoad = {
-                path: path
-            };
-
-            firebase.database().ref(reference).once('value').then(function (response) {
-
-                setLoad.value = response.val();
-
-                commit('SET_LIST', setLoad);
-
-            }).catch((errors) => {
-
-                setLoad.value = errors;
-                commit('SET_LIST', setLoad);
-
-            })*/
         },
 
         setListMysql({commit}, payload) {
@@ -211,13 +182,12 @@ const store = new Vuex.Store({
             });
         },
         getList: (state) => (id) => {
-            //return state[id].list;
-            const obj = Object.values(state[id].list);
+            return state[id].list;
+            /*const obj = Object.values(state[id].list);
 
             return obj.filter((item) => {
                 return +item.deleted === 0
-            })
-
+            })*/
         },
         getListOfItem: (state) => (path, id, field) => {
 
@@ -228,8 +198,8 @@ const store = new Vuex.Store({
             })
         },
         getUrlTypes: (state) => (i) => {
-            if (!isNaN(i) && i !== undefined) {
-                return state.navigation.urlTypes[i];
+            if (i !== undefined) {
+                return state.navigation.urlTypes[+i];
             } else {
                 return state.navigation.urlTypes;
             }

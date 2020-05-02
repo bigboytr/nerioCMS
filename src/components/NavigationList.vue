@@ -12,7 +12,7 @@
                     {{item.title}}
                 </a>
             </div>
-            <div class="col-3 d-none d-sm-block">{{item.href}}</div>
+            <div class="col-3 d-none d-sm-block">{{item.path}}</div>
             <div class="col-2 d-none d-sm-block">{{item.target}}</div>
             <div class="col-2 d-none d-sm-block">{{typeOfLink(item.type)}}</div>
         </div>

@@ -5,24 +5,32 @@ export default {
 
     getAll() {
 
-        /*let user = store.getters.getAuthUser;
-        let selectedSites = store.getters.getSelectedSite;
+        let list = [];
 
-        let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/navigation/`;
+        firebase.firestore().collection('navigation').get().then((snapshot) => {
 
-        return new Promise((res, rej) => {
+            snapshot.docs.map((item) => {
 
-            firebase.database().ref(reference).once('value').then(function (response) {
-
-                res(response.val());
-
-            }).catch((errors) => {
-
-                rej(errors);
+                const {title, path, queue, target, type, active, deleted} = item.data();
+                list.push({
+                    id: item.id,
+                    title,
+                    path,
+                    queue,
+                    target,
+                    type,
+                    active,
+                    deleted
+                })
             })
 
+        }).then(() =>{
 
-        });*/
+            store.dispatch('setList', {
+                path: 'navigation',
+                list: list
+            });
+        })
 
     },
 
