@@ -1,18 +1,21 @@
 import firebase from 'firebase'
 import store from '@/store/index'
+import swal from 'sweetalert2'
 
-export default {
+
+class NavigationModule {
+
+    constructor() {
+
+        this.db = firebase.firestore().collection('navigation');
+    }
 
     getAll() {
+        this.db.get().then((snapshot) => {
 
-        let list = [];
-
-        firebase.firestore().collection('navigation').get().then((snapshot) => {
-
-            snapshot.docs.map((item) => {
-
+            return snapshot.docs.map((item) => {
                 const {title, path, queue, target, type, active, deleted} = item.data();
-                list.push({
+                return {
                     id: item.id,
                     title,
                     path,
@@ -21,37 +24,89 @@ export default {
                     type,
                     active,
                     deleted
-                })
+                };
             })
-
-        }).then(() =>{
+        }).then((list) => {
 
             store.dispatch('setList', {
                 path: 'navigation',
                 list: list
             });
         })
+    }
 
-    },
-
-    save(dto) {
-
-        let user = store.getters.getAuthUser;
-        let selectedSites = store.getters.getSelectedSite;
-
-        let reference = `/profiles/${user.uid}/sites/${selectedSites.key}/navigation/`;
+    save(isUpdate = false, dto) {
 
         return new Promise((res, rej) => {
 
-            firebase.database().ref(reference).push(dto).then(function (result) {
-                //console.log(result);
+            if (!isUpdate) {
 
-                store.dispatch('setList', 'navigation');
-                res(true);
-            }).catch((err) => {
-                rej(err);
-                console.log(err);
-            });
-        });
+                this.db.set(dto).then(() => {
+
+                    res(true)
+                }).catch((err) => {
+                    rej(err)
+                })
+            }
+
+            else if (isUpdate) {
+                const {id} = dto;
+                delete dto.id; // remove id key from dto
+                this.db.doc(id).update(dto).then(() => {
+                    this.getAll();
+                    res(true)
+                }).catch(err => rej(false))
+            }
+        })
     }
+
+    activeToggle(dto) {
+
+        let countS = 0;
+
+        return Promise.all(dto.map((item) => (
+            this.save(true, {
+                id: item.id,
+                active: !item.active
+            }).then(r => {
+                if (r) countS++
+            })
+        ))).then(() => countS);
+    }
+
+    async moveToTrash(dto) {
+
+        const res = await swal.fire({
+            title: 'Emin misiniz ?',
+            text: 'Seçilenler çöpe atılacak !',
+            icon: 'warning',
+            buttonsStyling: false,
+            reverseButtons: true,
+            showCancelButton: true,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-warning mr-3'
+            },
+            confirmButtonText: 'Çöpe at !',
+            cancelButtonText: 'Vazgeç'
+        }).then(async function (response) {
+            return response.value;
+        });
+
+        if (res === true) {
+
+            let countS = 0;
+            return Promise.all(dto.map((item) => (
+                this.save(true, {
+                    id: item.id,
+                    deleted: true
+                }).then(r => {
+                    if (r) countS++
+                })
+            ))).then(() => countS);
+        }
+    }
+
 }
+
+export default NavigationModule;

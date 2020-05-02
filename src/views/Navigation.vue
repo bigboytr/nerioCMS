@@ -24,6 +24,10 @@
                 <template v-slot:cell(active)="row">
                     <Status :param="row.item.active"></Status>
                 </template>
+                <template v-slot:cell(title)="row">
+                    {{row.item.title}}
+                    <b-icon-trash v-if="row.item.deleted"/>
+                </template>
             </b-table>
 
             <EmptyList :list="list"></EmptyList>
@@ -32,7 +36,7 @@
 </template>
 
 <script>
-    import controller from '@/controller/navigation'
+    //import controller from '@/controller/navigation'
     import store from '@/store'
     import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
@@ -42,6 +46,8 @@
     import ActionButtons from '@/components/ActionButtons'
     import NavigationList from '@/components/NavigationList'
 
+    import NavigationModule from "../controller/navigation";
+
     const module = "table_navigation";
     const path = 'navigation';
 
@@ -49,6 +55,7 @@
         name: 'Navigation',
         data() {
             return {
+                controller: new NavigationModule(),
                 fields: [
                     {
                         key: 'selector',
@@ -91,7 +98,7 @@
         },
         mounted() {
             //controller.fetchData(path, module);
-            controller.getAll();
+            this.controller.getAll();
         },
         methods: {
             editMe(item) {
@@ -101,35 +108,26 @@
             onRowSelected(items) {
                 this.selectedRows = items;
             },
-            activeToggle() {
+            checkSelectedRowCount() {
                 if (this.selectedRows.length === 0) {
                     NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
                     return;
                 }
+            },
+            activeToggle() {
 
-                controller.toggleActive(this.selectedRows, module).then((res) => {
-                    //this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
+                this.checkSelectedRowCount();
 
-                        controller.fetchData(path, module);
-                    }
-                });
+                this.controller.activeToggle(this.selectedRows).then(countS => {
+                    NotifyMe.notifier('success', `${countS} adet öğenin durumu değiştirildi !`);
+                })
             },
             trash() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
+                this.checkSelectedRowCount();
 
-                controller.moveToTrash(this.selectedRows, module).then((res) => {
-                    //this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
-
-                        controller.fetchData(path, module);
-                    }
-                });
+                this.controller.moveToTrash(this.selectedRows).then(countS => {
+                    NotifyMe.notifier('success', `${countS} adet öğe çöpe atıldı !`);
+                })
             },
         },
         computed: {
