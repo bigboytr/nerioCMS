@@ -20,11 +20,7 @@ require 'classes/recursiveList.php';
 $recursiveList = new \recursiveList\recursiveList();
 
 require 'classes/idiorm.php';
-ORM::configure(array(
-    'connection_string' => 'mysql:host=localhost;dbname='.dbN,
-    'username' => dbU,
-    'password' => dbP
-));
+
 
 // Slim framework
 require 'vendor/autoload.php';
@@ -46,6 +42,18 @@ $app->group('/api', function (App $app) use ($basic) {
             ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
             ->withHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
         //->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    });
+
+    $app->post('/connect', function (Request $request) {
+
+        // request params
+        $params = json_decode($request->getBody());
+
+        ORM::configure(array(
+            'connection_string' => 'mysql:host=localhost;dbname='.$params->dbN,
+            'username' => $params->dbU,
+            'password' => $params->dbP
+        ));
     });
 
     $app->post('/getAll', function(Request $request, Response $response) use ($basic) {

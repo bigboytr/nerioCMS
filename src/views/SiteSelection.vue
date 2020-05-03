@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-md-4 offset-md-4 margin-t-50">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-md-4 offset-md-4">
 
             <div class="card card-default login-panel-shadow">
                 <div class="card-body">
@@ -33,14 +33,22 @@
                             Yönetmek istediğiniz sitenizi seçiniz.
                         </div>
 
-                        <div class="row" v-for="(title, key) in list">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <button class="btn btn-block btn-light text-l" @click="selectProfile(key, title)">
-                                    <i class="fas fa-arrow-right"></i>
-                                    {{title}}
-                                </button>
+                        <div class="row">
+                            <div class="col-12" v-for="(item, key) in profileList">
+                                <div class="btn-group">
+                                    <button class="btn btn-light text-l btn-block"
+                                            @click="selectProfile(key, item.title)">
+                                        <i class="fas fa-arrow-right"></i>
+                                        {{item.title}}
+                                    </button>
+                                    <button class="btn btn-light" @click="setEdit(item)">
+                                        <i class="fas fa-pen fa-fw text-warning"></i>
+                                    </button>
+                                    <button class="btn btn-light" @click="removeProfile(key)">
+                                        <i class="fas fa-times fa-fw text-danger"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <hr>
                         </div>
                     </div>
 
@@ -52,12 +60,20 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="">Site ismi :</label>
-                            <input type="text" class="form-control input-sm" v-model="dto.title">
+                            <label for="title">Site ismi :</label>
+                            <input type="text" id="title" class="form-control input-sm" v-model="dto.title">
                         </div>
                         <div class="form-group">
-                            <label for="">MySQL DB :</label>
-                            <input type="text" class="form-control input-sm" v-model="dto.dbName">
+                            <label for="dbname">MySQL DB :</label>
+                            <input type="text" id="dbname" class="form-control input-sm" v-model="dto.dbName">
+                        </div>
+                        <div class="form-group">
+                            <label for="dbuser">MySQL Username :</label>
+                            <input type="text" id="dbuser" class="form-control input-sm" v-model="dto.dbUser">
+                        </div>
+                        <div class="form-group">
+                            <label for="dbpass">MySQL Password :</label>
+                            <input type="password" id="dbpass" class="form-control input-sm" v-model="dto.dbPass">
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-block" @click="createProfile()">
@@ -90,31 +106,39 @@
                 list: null,
                 dto: {
                     title: "",
-                    dbName: ''
+                    dbName: '',
+                    dbUser: '',
+                    dbPass: ''
                 },
                 profileForm: false
             }
         },
         beforeMount() {
-
-            siteSelection.getProfiles(this).then((response) => {
-                this.list = response;
-            })
+            this.getAllProfiles();
+        },
+        mounted() {
+            this.getAllProfiles();
 
         },
         methods: {
+            getAllProfiles() {
+                siteSelection.getProfiles(this)
+                    .then((response) => {
+                        this.list = response;
+                        this.profileForm = (this.list === null);
 
-            createProfile() {
-                siteSelection.createProfile(this.dto).then((response) => {
-
-                    siteSelection.siteSelected(response.key).then(() => {
-
-                        router.push('/');
-
-                    }).catch(() => {
-
-                        alert("Site seçilmedi.");
                     })
+            },
+            createProfile() {
+                siteSelection.createProfile(this.dto)
+                    .then(() => {
+
+                        this.getAllProfiles();
+                        this.profileForm = false;
+
+                    }).catch((err) => {
+                    // err => boolean = false
+                    // give info to user
                 });
             },
             selectProfile(key, title) {
@@ -122,13 +146,42 @@
                     router.push('/')
                 })
             },
+            removeProfile(id) {
+                siteSelection.removeProfile(id).then(() => {
+
+                    this.getAllProfiles();
+
+                }).catch((err) => {
+                    // err => boolean = false
+                    // give info to user
+                });
+            },
+            setEdit(item) {
+
+                /* this.dto = {...this.dto,
+                 {title: item.title,
+                         dbName: item.dbConfig.dbName, }}*/
+
+                this.dto.title = item.title
+                this.dto.dbName = item.dbConfig.dbName
+                this.dto.dbUser = item.dbConfig.dbUser
+                this.dto.dbPass = item.dbConfig.dbPass
+            },
             logout() {
                 auth.logout();
             },
+        },
+        computed: {
+            profileList() {
+                return this.list;
+            },
+
         }
     }
 </script>
 
 <style scoped>
-
+    .btn-group {
+        display: flex;
+    }
 </style>
