@@ -8,8 +8,8 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Navigation from './views/Navigation'
 import NavigationForm from './views/NavigationForm'
-import Contents from './views/Contents'
-import ContentForm from './views/ContentForm'
+import Pages from './views/Pages'
+import PagesForm from './views/PagesForm'
 import Sliders from './views/Sliders'
 import SlidersForm from './views/SlidersForm'
 import Products from './views/Products'
@@ -35,7 +35,7 @@ export default new Router({
             }
         },
         {path: '/login', component: Login },
-        {path: '/site-selection', component: SiteSelection},
+        //{path: '/site-selection', component: SiteSelection},
         {
             path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => {
                 routerSetter("Navigasyon");
@@ -49,14 +49,14 @@ export default new Router({
             }
         },
         {
-            path: '/content', component: Contents, beforeEnter: (to, form, next) => {
-                routerSetter("İçerik");
+            path: '/pages', component: Pages, beforeEnter: (to, form, next) => {
+                routerSetter("Sayfalar");
                 next()
             }
         },
         {
-            path: '/content-form', component: ContentForm, beforeEnter: (to, form, next) => {
-                routerSetter("İçerik Ekle");
+            path: '/pages-form', component: PagesForm, beforeEnter: (to, form, next) => {
+                routerSetter("Sayfa Ekle");
                 next()
             }
         },

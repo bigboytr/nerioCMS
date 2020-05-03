@@ -11,8 +11,8 @@ const nerioMenu = [
     },
     {
         "icon": "fa-file",
-        "path": "/content",
-        "title": "İçerik"
+        "path": "/pages",
+        "title": "Sayfalar"
     },
     {
         "icon": "fa-circle-notch",
