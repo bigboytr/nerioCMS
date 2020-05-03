@@ -23,10 +23,6 @@
 
 <script>
     import auth from '@/controller/authentication'
-    import controller from '@/controller/config'
-    import router from '@/router';
-    import store from '@/store/index'
-
     import nerioMenu from "../nerioMenu";
 
     export default {
@@ -37,21 +33,12 @@
             }
         },
         mounted() {
-            /*const self = this;
-            controller.getNerioMeu().then(function (response) {
-
-                self.list = response;
-            });*/
             this.list = nerioMenu;
         },
         methods: {
             logout() {
                 auth.logout();
-            },
-            /*siteSel() {
-                store.dispatch('setSelectedSite', {});
-                router.push('/site-selection');
-            }*/
+            }
         }
     };
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import firebase from 'firebase';
-import axios from 'axios';
+/*import firebase from 'firebase';
+import axios from 'axios';*/
 
 Vue.use(Vuex);
 
@@ -22,7 +22,7 @@ const store = new Vuex.Store({
             list: {},
             urlTypes: ["Sayfa", "Link", "Ürün","İletişim"]
         },
-        contents: {
+        pages: {
             list: {}
         },
         sliders: {
@@ -54,14 +54,14 @@ const store = new Vuex.Store({
         SET_TOKEN(state, value) {
             state.token = value;
         },
-        SET_SELECTED_SITE(state, payload) {
+        /*SET_SELECTED_SITE(state, payload) {
             state.selectedSite.key = payload.key;
             state.selectedSite.title = payload.title;
-        },
+        },*/
         SET_MAIN_TITLE(state, value) {
             state.mainTitle = value;
         },
-        SET_SELECTEDROW_ID(state, value) {
+        /*SET_SELECTEDROW_ID(state, value) {
             if (!state.selectedRows.ids.includes(value))
                 state.selectedRows.ids = [...state.selectedRows.ids, value];
             else
@@ -70,10 +70,10 @@ const store = new Vuex.Store({
                 })
 
             //state.selectedRows.ids.push(value);
-        },
-        SET_SELECTEDROWS_EMPTY(state) {
+        },*/
+        /*SET_SELECTEDROWS_EMPTY(state) {
             state.selectedRows.ids = [];
-        },
+        },*/
         SET_LIST(state, payload) {
             const {path, list} = payload;
             state[path].list = list;
@@ -86,26 +86,23 @@ const store = new Vuex.Store({
         setToken({commit}, value) {
             commit('SET_TOKEN', value);
         },
-        setSelectedSite({commit}, payload) {
+        /*setSelectedSite({commit}, payload) {
             commit('SET_SELECTED_SITE', payload);
-        },
+        },*/
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
         },
-        setSelectedRowId({commit}, value) {
+        /*setSelectedRowId({commit}, value) {
             commit('SET_SELECTEDROW_ID', value)
         },
         setSelectedRowsEmpty({commit}) {
             commit('SET_SELECTEDROWS_EMPTY')
-        },
-        setContentList({commit}, value) {
-            commit('SET_CONTENTS', value)
-        },
+        },*/
         setList({commit}, payload) {
             commit('SET_LIST', payload);
         },
 
-        setListMysql({commit}, payload) {
+        /*setListMysql({commit}, payload) {
 
             const apiPath = store.getters.getApiPath;
 
@@ -131,34 +128,31 @@ const store = new Vuex.Store({
                     value: err
                 });
             });
-        }
+        }*/
     },
 
     getters: {
-        getApiPath(state) {
+        /*getApiPath(state) {
            return state.apiPath;
-        },
+        },*/
         getToken(state) {
             return state.token;
         },
-        getConfig(state) {
+        /*getConfig(state) {
             return state.firebase.config;
-        },
-        getRefCMS(state) {
-            return state.firebase.refCMS;
-        },
+        },*/
         getAuthUser(state) {
             return state.authUser;
         },
         getMainTitle(state) {
             return state.mainTitle;
         },
-        getSelectedSite(state) {
+        /*getSelectedSite(state) {
             return state.selectedSite;
         },
         getSelectedRows(state) {
             return state.selectedRows.ids;
-        },
+        },*/
         getRecursiveList: (state) => (path) => {
 
             //const obj = Object.assign({}, ...state.navigation.list);

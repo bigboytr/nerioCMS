@@ -1,35 +1,31 @@
 import firebase from 'firebase'
 import store from '@/store/index'
 import swal from 'sweetalert2'
+import NotifyMe from '@/controller/notifier'
 
 
-class NavigationModule {
+class CommonModule {
 
-    constructor() {
+    constructor(collection) {
 
-        this.db = firebase.firestore().collection('navigation');
+        this.collection = collection
+        this.db = firebase.firestore().collection(collection);
     }
 
-    getAll() {
+    getAll(dtoMap) {
+
         this.db.get().then((snapshot) => {
 
             return snapshot.docs.map((item) => {
-                const {title, path, queue, target, type, active, deleted} = item.data();
-                return {
-                    id: item.id,
-                    title,
-                    path,
-                    queue,
-                    target,
-                    type,
-                    active,
-                    deleted
-                };
+                const extracted = {...dtoMap} = item.data();
+
+                return {...extracted, id: item.id}
             })
         }).then((list) => {
 
+            //console.log(list)
             store.dispatch('setList', {
-                path: 'navigation',
+                path: this.collection,
                 list: list
             });
         })
@@ -62,19 +58,28 @@ class NavigationModule {
 
     activeToggle(dto) {
 
+        const isDtoHasRows = this.checkSelectedRowCount(dto);
+        if (!isDtoHasRows) return;
+
         let countS = 0;
 
-        return Promise.all(dto.map((item) => (
+        Promise.all(dto.map((item) => (
             this.save(true, {
                 id: item.id,
                 active: !item.active
             }).then(r => {
                 if (r) countS++
             })
-        ))).then(() => countS);
+        ))).then(() => {
+            const message = `${countS} adet öğenin durumu değiştirildi !`
+            this.showNotifier('success', message);
+        });
     }
 
     async moveToTrash(dto) {
+
+        const isDtoHasRows = this.checkSelectedRowCount(dto);
+        if (!isDtoHasRows) return;
 
         const res = await swal.fire({
             title: 'Emin misiniz ?',
@@ -96,17 +101,35 @@ class NavigationModule {
         if (res === true) {
 
             let countS = 0;
-            return Promise.all(dto.map((item) => (
+            Promise.all(dto.map((item) => (
                 this.save(true, {
                     id: item.id,
                     deleted: true
                 }).then(r => {
                     if (r) countS++
                 })
-            ))).then(() => countS);
+            ))).then(() => {
+                const message = `${countS} adet öğe çöpe atıldı !`
+                this.showNotifier('success', message);
+
+            });
         }
+    }
+
+    checkSelectedRowCount(selectedRows) {
+        const result = selectedRows.length > 0;
+
+        if (!result) {
+            NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
+        }
+
+        return result;
+    }
+
+    showNotifier(type, txt) {
+        NotifyMe.notifier(type, txt);
     }
 
 }
 
-export default NavigationModule;
+export default CommonModule;

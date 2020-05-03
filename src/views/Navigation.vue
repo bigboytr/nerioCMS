@@ -36,26 +36,18 @@
 </template>
 
 <script>
-    //import controller from '@/controller/navigation'
     import store from '@/store'
-    import modal from '@/components/Modal'
     import MainTitle from '@/components/MainTitle'
     import EmptyList from '@/components/EmptyList'
     import Status from '@/components/Status'
-    import NotifyMe from '@/controller/notifier'
     import ActionButtons from '@/components/ActionButtons'
-    import NavigationList from '@/components/NavigationList'
-
-    import NavigationModule from "../controller/navigation";
-
-    const module = "table_navigation";
-    const path = 'navigation';
+    import CommonModule from "../controller/commonModule";
 
     export default {
         name: 'Navigation',
         data() {
             return {
-                controller: new NavigationModule(),
+                controller: new CommonModule('navigation'),
                 fields: [
                     {
                         key: 'selector',
@@ -93,41 +85,32 @@
             Status,
             EmptyList,
             ActionButtons,
-            NavigationList,
-            modal
         },
         mounted() {
             //controller.fetchData(path, module);
-            this.controller.getAll();
+            const dtoMap = [
+                "title",
+                "path",
+                "queue",
+                "target",
+                "type",
+                "active",
+                "deleted"
+            ]
+            this.controller.getAll(dtoMap);
         },
         methods: {
             editMe(item) {
 
-                //$("#modal").modal("show");
             },
             onRowSelected(items) {
                 this.selectedRows = items;
             },
-            checkSelectedRowCount() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
-            },
             activeToggle() {
-
-                this.checkSelectedRowCount();
-
-                this.controller.activeToggle(this.selectedRows).then(countS => {
-                    NotifyMe.notifier('success', `${countS} adet öğenin durumu değiştirildi !`);
-                })
+                this.controller.activeToggle(this.selectedRows)
             },
             trash() {
-                this.checkSelectedRowCount();
-
-                this.controller.moveToTrash(this.selectedRows).then(countS => {
-                    NotifyMe.notifier('success', `${countS} adet öğe çöpe atıldı !`);
-                })
+                this.controller.moveToTrash(this.selectedRows)
             },
         },
         computed: {
