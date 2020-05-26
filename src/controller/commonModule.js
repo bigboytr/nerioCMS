@@ -33,21 +33,22 @@ class CommonModule {
 
     save(isUpdate = false, dto) {
 
+        const {id} = dto;
+        if (id) delete dto.id; // remove id key from dto
+
         return new Promise((res, rej) => {
 
             if (!isUpdate) {
+                // new item
 
-                this.db.set(dto).then(() => {
-
-                    res(true)
-                }).catch((err) => {
-                    rej(err)
-                })
+                if (id) {
+                    this.db.doc(id).set(dto).then(() => res(true)).catch(err => rej(err))
+                } else {
+                    this.db.add(dto).then(() => res(true)).catch(err => rej(err))
+                }
             }
 
             else if (isUpdate) {
-                const {id} = dto;
-                delete dto.id; // remove id key from dto
                 this.db.doc(id).update(dto).then(() => {
                     this.getAll();
                     res(true)

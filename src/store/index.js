@@ -20,7 +20,23 @@ const store = new Vuex.Store({
         mainTitle: "Dashboard",
         navigation: {
             list: {},
-            urlTypes: ["Sayfa", "Link", "Ürün","İletişim"]
+            urlTypes: [
+                {
+                    text: "Sayfa",
+                    value: 0
+                },
+                {
+                    text: "Link",
+                    value: 1
+                },
+                {
+                    text: "Ürün",
+                    value: 2
+                },
+                {
+                    text: "İletişim",
+                    value: 3
+                }]
         },
         pages: {
             list: {}
@@ -193,7 +209,7 @@ const store = new Vuex.Store({
         },
         getUrlTypes: (state) => (i) => {
             if (i !== undefined) {
-                return state.navigation.urlTypes[+i];
+                return state.navigation.urlTypes[+i].text;
             } else {
                 return state.navigation.urlTypes;
             }
