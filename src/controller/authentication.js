@@ -80,6 +80,7 @@ export default {
         } else {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
+            router.push('/login')
         }
 
         store.dispatch('setAuthUser', user);

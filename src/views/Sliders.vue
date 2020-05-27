@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <b-row>
         <div class="col-md-8">
 
             <div class="card">
@@ -45,7 +45,7 @@
 
         <SliderCategories></SliderCategories>
 
-    </div>
+    </b-row>
 </template>
 
 <script>

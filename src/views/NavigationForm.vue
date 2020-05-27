@@ -189,7 +189,11 @@
                     metaDescription: '',
                     metaKeyword: '',
                     queue: 0,
-                    referenceId: ""
+                    referenceId: "",
+                    active: 1,
+                    deleted: 0,
+                    created: new Date().toLocaleString(),
+                    modified: null
                 },
                 update: false,
                 reference: 0,

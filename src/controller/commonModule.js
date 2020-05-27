@@ -6,18 +6,19 @@ import NotifyMe from '@/controller/notifier'
 
 class CommonModule {
 
-    constructor(collection) {
+    constructor(collection, dataMap) {
 
-        this.collection = collection
+        this.collection = collection;
+        this.dataMap = dataMap; // this is using for getAll method to get data from Firestore
         this.db = firebase.firestore().collection(collection);
     }
 
-    getAll(dtoMap) {
+    getAll() {
 
         this.db.get().then((snapshot) => {
 
             return snapshot.docs.map((item) => {
-                const extracted = {...dtoMap} = item.data();
+                const extracted = {...this.dataMap} = item.data();
 
                 return {...extracted, id: item.id}
             })
@@ -42,9 +43,15 @@ class CommonModule {
                 // new item
 
                 if (id) {
-                    this.db.doc(id).set(dto).then(() => res(true)).catch(err => rej(err))
+                    this.db.doc(id).set(dto).then(() => {
+                        this.getAll()
+                        res(true)
+                    }).catch(err => rej(err))
                 } else {
-                    this.db.add(dto).then(() => res(true)).catch(err => rej(err))
+                    this.db.add(dto).then(() => {
+                        this.getAll()
+                        res(true)
+                    }).catch(err => rej(err))
                 }
             }
 

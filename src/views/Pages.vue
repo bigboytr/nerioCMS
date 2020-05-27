@@ -43,11 +43,24 @@
     import ActionButtons from '@/components/ActionButtons'
     import CommonModule from "../controller/commonModule";
 
+    const collection = "pages"
+    const dataMap = [
+        "title",
+        "spot",
+        "fulltext",
+        "created",
+        "modified",
+        "metaDescription",
+        "metaKeyword",
+        "active",
+        "deleted"
+    ];
+
     export default {
         name: 'Contents',
         data() {
             return {
-                controller: new CommonModule('pages'),
+                controller: new CommonModule(collection, dataMap),
                 fields: [
                     {
                         key: 'selector',
@@ -80,18 +93,7 @@
             ActionButtons
         },
         mounted() {
-            this.controller.getAll([
-                "title",
-                "spot",
-                "fulltext",
-                "created",
-                "modified",
-                "metaDescription",
-                "metaKeyword",
-                "active",
-                "deleted"
-            ]); // get content list from firebase
-            //controller.fetchData('contents', module);
+            this.controller.getAll(); // get content list from firebase
         },
         methods: {
             editMe() {

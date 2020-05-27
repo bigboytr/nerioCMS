@@ -1,53 +1,60 @@
 <template>
-    <div class="col-4">
-        <div class="card">
-            <div class="card-header">
+    <b-col cols="4" class="p-0">
+
+        <b-card no-body>
+            <b-card-header>
                 <h5 class="mb-2">
                     <i class="fas fa-angle-double-right"></i>
                     Slider Kategorileri
                 </h5>
 
-                <ActionButtons :showAdd="false"
-                               @trash="trash"
-                               @activeToggle="activeToggle"></ActionButtons>
-            </div>
-            <div class="card-body div-table dark">
-                <div class="row div-thead" v-if="showTable">
-                    <div class="col-1"></div>
-                    <div class="col-3">Aktif</div>
-                    <div class="col-8 col-sm-4">Başlık</div>
-                </div>
+                <ActionButtons
+                        :showAdd="false"
+                        :isActionsDisabled="isActionsDisabled"
+                        @trash="trash"
+                        @activeToggle="activeToggle"/>
 
-                <div class="row div-tr"
-                     v-if="showTable"
-                     v-for="(item, key) in list" :for="'chk_+(key)'">
-                    <div class="col-1">
-                        <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
-                    </div>
-                    <div class="col-3">
-                        <Status :param="item.active"></Status>
-                    </div>
-                    <div class="col-8 col-sm-4">
-                        <a href="javascript:void(0)" >
-                            {{item.title}}
-                        </a>
-                    </div>
-                </div>
+            </b-card-header>
+            <b-card-body>
+                <b-table
+                        v-if="showTable"
+                        selectable
+                        striped hover
+                        :fields="fields"
+                        :items="list"
+                        @row-selected="onRowSelected">
 
-                <div class="form-row mt-3">
-                    <div class="col-8">
-                        <input type="text" class="form-control form-control-sm" v-model="dto.title">
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-sm btn-primary" @click="save()">
+
+                    <template v-slot:cell(selector)="row">
+                        <i class="fas fa-check" v-if="row.rowSelected"></i>
+                    </template>
+                    <template v-slot:cell(active)="row">
+                        <Status :param="row.item.active"></Status>
+                    </template>
+                    <template v-slot:cell(title)="row">
+                        {{row.item.title}}
+                        <b-icon-trash v-if="row.item.deleted" title="Silinmiş !"/>
+                    </template>
+                </b-table>
+
+                <EmptyList :list="list"></EmptyList>
+            </b-card-body>
+            <b-card-footer>
+
+                <b-label>Başlık</b-label>
+                <b-input-group>
+                    <b-form-input type="text" v-model="dto.title"></b-form-input>
+                    <b-input-group-append>
+                        <b-button variant="primary" size="sm" @click="save()">
                             <i class="fas fa-arrow-right"></i>
                             Kaydet
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        </b-button>
+                    </b-input-group-append>
+                </b-input-group>
+
+            </b-card-footer>
+        </b-card>
+    </b-col>
 </template>
 <script>
     import ActionButtons from '@/components/ActionButtons'
@@ -56,8 +63,16 @@
     import Status from '@/components/Status'
     import NotifyMe from '@/controller/notifier'
 
+    import CommonModule from "../controller/commonModule";
     const module = 'table_slidersCategories';
-    const path = 'slidersCategories';
+    const collection = 'sliderCategories';
+    const dataMap = [
+        "title",
+        "created",
+        "modified",
+        "active",
+        "deleted"
+    ];
 
     export default {
         name: "SliderCategories",
@@ -67,66 +82,69 @@
         },
         data() {
             return {
+                controller: new CommonModule(collection, dataMap),
                 selectedRows: [],
                 dto: {
-                    title: ""
-                }
+                    title: "",
+                    active: true,
+                    deleted: false,
+                    created: new Date().toLocaleString(),
+                    modified: null
+                },
+                fields: [
+                    {
+                        key: 'selector',
+                        label: ''
+                    },
+                    {
+                        key: "title",
+                        label: "Kategori"
+                    },
+                    {
+                        key: 'active',
+                        label: 'Aktif'
+                    }
+                ]
             }
         },
         mounted() {
-
-            controller.fetchData(path, module);
+            this.controller.getAll();
         },
         methods: {
             save() {
-                controller.save(this.dto, module).then((response) => {
+                this.controller.save(false, this.dto).then((response) => {
 
-                    controller.fetchData(path, module);
-                    this.dto.title = "";
+                    if (response) {
+                        this.dto.title = "";
+                        this.dto.active = true;
+                        this.dto.deleted = false;
+                        this.dto.created = new Date().toLocaleString();
+                    }
 
                 }).catch((error) => {
                     console.log(error);
                 });
             },
-            activeToggle() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
-
-                controller.toggleActive(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
-
-                        controller.fetchData(path, module);
-                    }
-                });
+            onRowSelected(items) {
+                this.selectedRows = items;
             },
-
+            activeToggle() {
+                this.controller.activeToggle(this.selectedRows)
+            },
             trash() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
-
-                controller.moveToTrash(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
-
-                        controller.fetchData(path, module);
-                    }
-                });
-
+                this.controller.moveToTrash(this.selectedRows)
             }
         },
         computed: {
             list() {
-                return store.getters.getList(path)
+                return store.getters.getList(collection)
             },
             showTable() {
                 return this.list.length > 0
+            },
+            isActionsDisabled() {
+                // selected row yoksa actionlar disable edilecek
+                return !this.selectedRows.length > 0
             }
         }
     }

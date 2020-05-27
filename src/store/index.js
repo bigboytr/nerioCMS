@@ -44,7 +44,7 @@ const store = new Vuex.Store({
         sliders: {
             list: {}
         },
-        slidersCategories: {
+        sliderCategories: {
             list: {}
         },
         products: {
@@ -192,7 +192,10 @@ const store = new Vuex.Store({
             });
         },
         getList: (state) => (id) => {
-            return state[id].list;
+            if (state[id])
+                return state[id].list;
+            else
+                return {}
             /*const obj = Object.values(state[id].list);
 
             return obj.filter((item) => {

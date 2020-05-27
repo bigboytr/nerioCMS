@@ -43,11 +43,21 @@
     import ActionButtons from '@/components/ActionButtons'
     import CommonModule from "../controller/commonModule";
 
+    const collection = "navigation"
+    const dataMap = [
+        "title",
+        "path",
+        "queue",
+        "target",
+        "type",
+        "active",
+        "deleted"
+    ]
     export default {
         name: 'Navigation',
         data() {
             return {
-                controller: new CommonModule('navigation'),
+                controller: new CommonModule(collection, dataMap),
                 fields: [
                     {
                         key: 'selector',
@@ -87,17 +97,7 @@
             ActionButtons,
         },
         mounted() {
-            //controller.fetchData(path, module);
-            const dtoMap = [
-                "title",
-                "path",
-                "queue",
-                "target",
-                "type",
-                "active",
-                "deleted"
-            ]
-            this.controller.getAll(dtoMap);
+            this.controller.getAll();
         },
         methods: {
             editMe(item) {
