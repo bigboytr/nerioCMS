@@ -1,76 +1,104 @@
 <template>
     <b-row>
-        <div class="col-md-8">
-
-            <div class="card">
-                <div class="card-header">
+        <b-col cols="8">
+            <b-card no-body>
+                <b-card-header>
                     <MainTitle class="mb-2"></MainTitle>
 
-                    <ActionButtons :url="'/slider-form'"
-                                   @trash="trash"
-                                   @activeToggle="activeToggle"></ActionButtons>
-                </div>
-                <div class="card-body div-table dark">
+                    <ActionButtons
+                            :url="'/slider-form'"
+                            :isActionsDisabled="isActionsDisabled"
+                            @trash="trash"
+                            @activeToggle="activeToggle"/>
+                </b-card-header>
+                <b-card-body>
+                    <b-table
+                            v-if="showTable"
+                            selectable
+                            striped hover
+                            :fields="fields"
+                            :items="list"
+                            @row-selected="onRowSelected">
 
-                    <div class="row div-thead" v-if="showTable">
-                        <div class="col-1"></div>
-                        <div class="col-2">Erişim</div>
-                        <div class="col-5 col-sm-4">Banner</div>
-                        <div class="col-2 col-sm-3 d-none d-sm-block">Kategori</div>
-                        <div class="col-2 d-none d-sm-block">Sıra</div>
-                    </div>
 
-                    <div class="row div-tr"
-                         v-if="showTable"
-                         v-for="(item, key) in list" :for="'chk_+(key)'">
-                        <div class="col-1">
-                            <input type="checkbox" :id="'chk_'+(key)" :value="item.id" v-model="selectedRows">
-                        </div>
-                        <div class="col-2">
-                            <Status :param="item.active"></Status>
-                        </div>
-                        <div class="col-5 col-sm-4">
-                            <a :href="'./uploads/sliders/' + item.path" target="_blank">
-                                {{ (item.title) ? item.title : item.path }}
-                            </a>
-                        </div>
-                        <div class="col-2 col-sm-3 d-none d-sm-block">{{findCategoryName(item.categoryID)}}</div>
-                        <div class="col-2 col-sm-2 d-none d-sm-block">{{item.queue}}</div>
-                    </div>
+                        <template v-slot:cell(path)="row">
+                            <a :href="row.item.path" target="_blank">Slider</a>
+                        </template>
+                        <template v-slot:cell(selector)="row">
+                            <i class="fas fa-check" v-if="row.rowSelected"></i>
+                        </template>
+                        <template v-slot:cell(active)="row">
+                            <Status :param="row.item.active"></Status>
+                        </template>
+                    </b-table>
 
                     <EmptyList :list="list"></EmptyList>
-                </div>
-            </div>
-        </div>
+                </b-card-body>
+            </b-card>
+        </b-col>
 
-        <SliderCategories></SliderCategories>
+        <SliderCategories />
 
     </b-row>
 </template>
 
 <script>
-    import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
     import store from '@/store/index'
     import Status from '@/components/Status'
     import EmptyList from '@/components/EmptyList'
     import ActionButtons from '@/components/ActionButtons'
-    import NotifyMe from '@/controller/notifier'
     import SliderCategories from '@/components/SliderCategories'
+    import CommonModule from "../controller/commonModule";
 
-    const module = "table_sliders";
-    const path = 'sliders'; // vuex path
+    const collection = 'sliders'; // vuex path
+    const collectionCategories = 'sliderCategories'; // vuex path
 
-    const moduleCategories = 'table_slidersCategories';
-    const pathCategories = 'slidersCategories'; // vuex path
-
-
+    const dataMap = [
+        "active",
+        "deleted",
+        "created",
+        "modified",
+        "caption",
+        "link",
+        "slider",
+        "category",
+        "queue",
+        "title"
+    ];
     export default {
         name: 'Sliders',
         data() {
             return {
+                controller: new CommonModule(collection, dataMap),
                 item: null,
-                selectedRows: []
+                selectedRows: [],
+                fields: [
+                    {
+                        key: 'selector',
+                        label: ''
+                    },
+                    {
+                        key: "title",
+                        label: "Başlık"
+                    },
+                    {
+                        key: "category",
+                        label: "Kategori"
+                    },
+                    {
+                        key: "path",
+                        label: "Slider Resim"
+                    },
+                    {
+                        key: "queue",
+                        label: "Sıra"
+                    },
+                    {
+                        key: 'active',
+                        label: 'Aktif'
+                    }
+                ]
             }
         },
         components: {
@@ -81,72 +109,29 @@
             SliderCategories
         },
         mounted() {
-            //contents.getAll(); // get content list from firebase
-            controller.fetchData(path, module);
-            controller.fetchData(pathCategories, moduleCategories);
+            this.controller.getAll();
         },
         methods: {
-            editMe(item) {
-                event.stopPropagation();
-                alert('link');
-                this.item = item;
-                //router.push('/content-form');
-                //$("#modal").modal("show");
+            onRowSelected(items) {
+                this.selectedRows = items;
             },
-
-            selectRow(id) {
-                if (this.selectedRows.indexOf(id)) {
-                    // delete
-                } else {
-                    this.selectedRows.push(id);
-                    console.log(id);
-                }
-            },
-
             activeToggle() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
-
-                controller.toggleActive(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğenin durumu değiştirildi !`);
-
-                        controller.fetchData(path, module);
-                    }
-                });
+                this.controller.activeToggle(this.selectedRows)
             },
-
             trash() {
-                if (this.selectedRows.length === 0) {
-                    NotifyMe.notifier("warn", "Lütfen en az bir öğe seçin...")
-                    return;
-                }
-
-                controller.moveToTrash(this.selectedRows, module).then((res) => {
-                    this.selectedRows = [];
-                    if (res !== undefined) {
-                        NotifyMe.notifier('success', `${res} adet öğe çöpe atıldı !`);
-
-                        controller.fetchData(path, module);
-                    }
-                });
-
-            },
-            findCategoryName(catId) {
-
-                const item = store.getters.getListOfItem(pathCategories, parseInt(catId, 10), 'id');
-                return item.title;
+                this.controller.moveToTrash(this.selectedRows)
             }
         },
         computed: {
             list() {
-                return store.getters.getList(path);
+                return store.getters.getList(collection);
             },
             showTable() {
                 return this.list.length > 0
+            },
+            isActionsDisabled() {
+                // selected row yoksa actionlar disable edilecek
+                return !this.selectedRows.length > 0
             }
         }
     };

@@ -1,12 +1,10 @@
 <template>
-    <div class="row" v-if="showMe">
-        <div class="col-md-12 text-center">
-            <h1 style="font-size: 100px;">
-                <i class="far fa-comment"></i>
-            </h1>
+    <b-row v-if="showMe">
+        <b-col class="text-center">
+            <h1><i class="far fa-comment"></i></h1>
             <h3>Gösterilecek veri bulunamadı !</h3>
-        </div>
-    </div>
+        </b-col>
+    </b-row>
 </template>
 
 <script>

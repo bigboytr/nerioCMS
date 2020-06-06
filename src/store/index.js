@@ -42,7 +42,8 @@ const store = new Vuex.Store({
             list: {}
         },
         sliders: {
-            list: {}
+            list: {},
+            uploadProgress: 0
         },
         sliderCategories: {
             list: {}
@@ -70,29 +71,16 @@ const store = new Vuex.Store({
         SET_TOKEN(state, value) {
             state.token = value;
         },
-        /*SET_SELECTED_SITE(state, payload) {
-            state.selectedSite.key = payload.key;
-            state.selectedSite.title = payload.title;
-        },*/
         SET_MAIN_TITLE(state, value) {
             state.mainTitle = value;
         },
-        /*SET_SELECTEDROW_ID(state, value) {
-            if (!state.selectedRows.ids.includes(value))
-                state.selectedRows.ids = [...state.selectedRows.ids, value];
-            else
-                state.selectedRows.ids = state.selectedRows.ids.filter((item) => {
-                    return item !== value
-                })
-
-            //state.selectedRows.ids.push(value);
-        },*/
-        /*SET_SELECTEDROWS_EMPTY(state) {
-            state.selectedRows.ids = [];
-        },*/
         SET_LIST(state, payload) {
             const {path, list} = payload;
             state[path].list = list;
+        },
+        SET_PROPERTY(state, payload) {
+            const {path, prop, value} = payload;
+            state[path][prop] = value
         }
     },
     actions: {
@@ -102,73 +90,27 @@ const store = new Vuex.Store({
         setToken({commit}, value) {
             commit('SET_TOKEN', value);
         },
-        /*setSelectedSite({commit}, payload) {
-            commit('SET_SELECTED_SITE', payload);
-        },*/
         setMainTitle({commit}, value) {
             commit('SET_MAIN_TITLE', value)
         },
-        /*setSelectedRowId({commit}, value) {
-            commit('SET_SELECTEDROW_ID', value)
-        },
-        setSelectedRowsEmpty({commit}) {
-            commit('SET_SELECTEDROWS_EMPTY')
-        },*/
         setList({commit}, payload) {
             commit('SET_LIST', payload);
         },
-
-        /*setListMysql({commit}, payload) {
-
-            const apiPath = store.getters.getApiPath;
-
-            axios({
-                method: 'POST',
-                data: {
-                    dto: payload.dto,
-                    table: payload.table
-                },
-                url: `${apiPath}/api/getAll`,
-
-            }).then((response) => {
-
-                commit('SET_LIST', {
-                    path: payload.path,
-                    value: response.data
-                });
-
-            }).catch((err) => {
-
-                commit('SET_LIST', {
-                    path: payload.path,
-                    value: err
-                });
-            });
-        }*/
+        setProperty({commit}, payload) {
+            commit('SET_PROPERTY', payload)
+        }
     },
 
     getters: {
-        /*getApiPath(state) {
-           return state.apiPath;
-        },*/
         getToken(state) {
             return state.token;
         },
-        /*getConfig(state) {
-            return state.firebase.config;
-        },*/
         getAuthUser(state) {
             return state.authUser;
         },
         getMainTitle(state) {
             return state.mainTitle;
         },
-        /*getSelectedSite(state) {
-            return state.selectedSite;
-        },
-        getSelectedRows(state) {
-            return state.selectedRows.ids;
-        },*/
         getRecursiveList: (state) => (path) => {
 
             //const obj = Object.assign({}, ...state.navigation.list);

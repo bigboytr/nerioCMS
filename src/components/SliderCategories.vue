@@ -41,7 +41,7 @@
             </b-card-body>
             <b-card-footer>
 
-                <b-label>Başlık</b-label>
+                <label>Başlık</label>
                 <b-input-group>
                     <b-form-input type="text" v-model="dto.title"></b-form-input>
                     <b-input-group-append>
@@ -58,10 +58,9 @@
 </template>
 <script>
     import ActionButtons from '@/components/ActionButtons'
-    import controller from '@/controller/controller'
     import store from '@/store'
     import Status from '@/components/Status'
-    import NotifyMe from '@/controller/notifier'
+    import EmptyList from "./EmptyList";
 
     import CommonModule from "../controller/commonModule";
     const module = 'table_slidersCategories';
@@ -78,7 +77,8 @@
         name: "SliderCategories",
         components: {
             ActionButtons,
-            Status
+            Status,
+            EmptyList
         },
         data() {
             return {

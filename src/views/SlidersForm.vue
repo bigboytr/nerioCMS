@@ -1,49 +1,63 @@
 <template>
-    <div class="row">
-        <div class="col-md-12">
+    <b-row>
+        <b-col>
+            <b-card no-body variant="light">
+                <b-card-header>
+                    <MainTitle />
+                </b-card-header>
 
-            <div class="card card-light">
-                <div class="card-header">
-                    <MainTitle></MainTitle>
-                </div>
+                <b-card-body>
+                    <b-form-row>
+                        <b-col cols="4">
+                            <b-form-group label="Kategori">
+                                <b-form-select
+                                        :options="categories"
+                                        text-field="title"
+                                        value-field="title"
+                                        v-model="dto.category"
+                                >
+                                    <template v-slot:first>
+                                        <b-form-select-option :value="0">
+                                            -- Kategori Seçiniz --
+                                        </b-form-select-option>
+                                    </template>
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-3">
-                            <label class="form-label">Kategori</label>
-                            <select class="form-control" v-model.number="dto.categoryID">
-                                <option value="0" selected>----</option>
-                                <option v-for="i in categories" :value="i.id">{{i.title}}</option>
-                            </select>
-                        </div>
+                                </b-form-select>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="2">
+                            <b-form-group label="Slider Sırası">
+                                <b-input type="number" v-model.number="dto.queue" min="1" />
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="6">
+                            <b-form-group label="Link (Opsiyonel)">
+                                <b-input type="text" v-model.trim="dto.link" />
+                            </b-form-group>
+                        </b-col>
+                    </b-form-row>
 
-                        <div class="form-group col-2">
-                            <label class="form-label">Slider Sırası</label>
-                            <input type="number" class="form-control" v-model.number="dto.queue" min="1">
-                        </div>
+                    <b-form-row>
+                        <b-col cols="6">
+                            <b-form-group label="Başlık (Opsiyonel)">
+                                <b-input type="text" v-model.trim="dto.title" />
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="6">
+                            <b-form-group label="Alt Yazı (Opsiyonel)">
+                                <b-input type="text" v-model.trim="dto.caption" />
+                            </b-form-group>
+                        </b-col>
+                    </b-form-row>
 
-                        <div class="form-group col-7">
-                            <label class="form-label">Link (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model.trim="dto.href">
-                        </div>
-
-
-                        <div class="form-group col-12">
-                            <label class="form-label">Başlık (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model.trim="dto.title">
-                        </div>
-
-                        <div class="form-group col-12">
-                            <label class="form-label">Alt Yazı (opsiyonel)</label>
-                            <input type="text" class="form-control" v-model.trim="dto.caption">
-                        </div>
-
-                        <div class="form-group col-12">
-                            <label class="form-label">Slider Resmi</label><br>
-                            <label class="btn btn-sm btn-secondary" v-show="!file" for="file">
-                                <i class="fas fa-image mr-3"></i>
-                                Slider resmi seç
-                            </label>
+                    <b-form-row>
+                        <b-col>
+                            <b-form-group label="Slider Resmi">
+                                <label class="btn btn-sm btn-secondary" v-show="!file" for="file">
+                                    <i class="fas fa-image mr-3"></i>
+                                    Slider resmi seç
+                                </label>
+                            </b-form-group>
 
                             <div v-if="file">
                                 <button class="btn btn-sm btn-danger"
@@ -56,12 +70,15 @@
                                 </div>
                             </div>
 
-                            <input type="file" id="file" accept="application/png, application/jpeg" class="hidden"
+                            <input type="file" id="file"
+                                   accept="application/png, application/jpeg"
+                                   class="hidden"
                                    ref="file" v-on:change="handleFileUpload()"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
+                        </b-col>
+                    </b-form-row>
+
+                </b-card-body>
+                <b-card-footer>
                     <div class="form-group">
                         <router-link to="/slider" tag="button" class="btn btn-warning">
                             <i class="fas fa-times fa-fw"></i>
@@ -72,23 +89,22 @@
                             Kaydet
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                </b-card-footer>
+            </b-card>
+        </b-col>
+    </b-row>
 </template>
 
 <script>
-    import controller from '@/controller/controller'
     import MainTitle from '@/components/MainTitle'
     import router from '@/router'
     import store from '@/store'
     import NotifyMe from '@/controller/notifier'
+    import CommonModule from "../controller/commonModule";
 
 
-    const module = "table_sliders";
-    const path = 'sliders';
-    const path_categories = "slidersCategories";
+    const collection = 'sliders';
+    const collection_categories = "sliderCategories";
 
     export default {
         name: 'SlidersForm',
@@ -98,15 +114,16 @@
         },
         data() {
             return {
+                controller: new CommonModule(collection),
                 file: false,
                 update: false,
                 dto: {
                     // this should only handle form elements which want to add to db
-                    categoryID: 0,
+                    category: '',
                     title: '',
                     caption: '',
                     queue: 1,
-                    href: '',
+                    link: '',
                     path: ''
                 }
             }
@@ -116,31 +133,20 @@
 
                 if (this.file !== null) {
 
-                    controller.uploadFile(this.file).then((response) => {
+                    this.controller.uploadFile(this.file).then((path) => {
 
-                        console.log(response);
-                        this.dto.path = response.data.filename;
+                        this.dto.path = path
 
-                        NotifyMe.notifier("success", "Dosya yüklendi...");
+                        this.controller.save(false, this.dto).then(() => {
 
-                        controller.save(this.dto, module).then((response) => {
-
-                            router.push(path.substring(0, path.length - 1))
+                            router.push("/slider")
 
                         }).catch((error) => {
-
                             console.log(error);
+                            NotifyMe.notifier('error', `Hata oluştu !`);
                         });
-
-                        this.removeSelectedFile();
-
-                    }).catch((errors) => {
-                        NotifyMe.notifier("error", errors.data.error)
-
                     });
                 }
-
-
             },
             removeSelectedFile() {
                 this.file = null;
@@ -159,7 +165,7 @@
         },
         computed: {
             categories() {
-                return store.getters.getList(path_categories)
+                return store.getters.getList(collection_categories)
             }
         }
     };

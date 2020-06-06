@@ -14,8 +14,9 @@ class CommonModule {
     }
 
     getAll() {
+        // this method retrieved data from Firebase then store it vuex
 
-        this.db.get().then((snapshot) => {
+        this.db.where("deleted", "==", false).get().then((snapshot) => {
 
             return snapshot.docs.map((item) => {
                 const extracted = {...this.dataMap} = item.data();
@@ -24,7 +25,6 @@ class CommonModule {
             })
         }).then((list) => {
 
-            //console.log(list)
             store.dispatch('setList', {
                 path: this.collection,
                 list: list
@@ -32,10 +32,27 @@ class CommonModule {
         })
     }
 
+    getList() {
+        // this method return list from vuex
+        return store.getters.getList(this.collection);
+    }
+
     save(isUpdate = false, dto) {
 
-        const {id} = dto;
-        if (id) delete dto.id; // remove id key from dto
+        const {id, created, modified, active, deleted} = dto;
+        if (id) {
+            delete dto.id;
+            if (modified === undefined) dto.modified = new Date().toLocaleString();
+
+        } // remove id key from dto
+        else {
+
+            if (created === undefined) dto.created = new Date().toLocaleString();
+            if (active === undefined) dto.active = true;
+            if (deleted === undefined) dto.deleted = false;
+            dto.modified = null
+        }
+
 
         return new Promise((res, rej) => {
 
@@ -62,6 +79,38 @@ class CommonModule {
                 }).catch(err => rej(false))
             }
         })
+    }
+
+    uploadFile(file) {
+
+        return new Promise((res, rej) => {
+
+            const ref = firebase.storage().ref();
+
+            // Upload the file and metadata
+            let uploadTask = ref.child(`sliders/${file.name}`).put(file);
+
+            uploadTask.on("state_changed", (snapshot) => {
+
+                    let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+                    store.dispatch('setProperty', {
+                        path: this.collection,
+                        prop: "uploadProgress",
+                        value: progress
+                    });
+                },
+                (error) => {
+                    rej(error)
+                },
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                        res(downloadURL)
+                    });
+                }
+            )
+        })
+
     }
 
     activeToggle(dto) {
