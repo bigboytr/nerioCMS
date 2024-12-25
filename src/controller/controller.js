@@ -1,5 +1,4 @@
-import firebase from 'firebase'
-import store from '@/store/index'
+import store from '@/store'
 import axios from 'axios'
 import swal from 'sweetalert2'
 

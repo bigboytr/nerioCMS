@@ -1,6 +1,6 @@
 {
   "name": "nerio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --host localhost",
@@ -11,25 +11,25 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.8",
     "@fortawesome/free-solid-svg-icons": "^5.5.0",
     "@fortawesome/vue-fontawesome": "^0.1.3",
-    "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.12.0",
-    "firebase": "^7.14.0",
+    "axios": "1.7.9",
+    "bootstrap": "4.6.2",
+    "bootstrap-vue": "2.23.1",
+    "firebase": "11.1.0",
     "jquery": "^3.4.1",
-    "sweetalert2": "^9.10.10",
-    "vue": "^2.6.11",
+    "sweetalert2": "11.15.3",
+    "vue": "2.7.16",
     "vue-notification": "^1.3.20",
     "vue-router": "^3.1.6",
     "vue2-editor": "^2.10.2",
     "vuex": "^3.1.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.2.0",
-    "@vue/cli-plugin-eslint": "^3.2.0",
-    "@vue/cli-service": "^3.2.0",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.6.11"
+    "@vue/cli-plugin-babel": "5.0.8",
+    "@vue/cli-plugin-eslint": "5.0.8",
+    "@vue/cli-service": "5.0.8",
+    "node-sass": "9.0.0",
+    "sass-loader": "16.0.4",
+    "vue-template-compiler": "2.7.16"
   },
   "eslintConfig": {
     "root": true,

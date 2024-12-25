@@ -1,8 +1,8 @@
-import firebase from 'firebase';
+import {initializeApp} from 'firebase/app';
 import store from '@/store/index';
-import auth from '@/controller/authentication';
-import swal from 'sweetalert2'
-import axios from 'axios'
+import swal from 'sweetalert2';
+import axios from 'axios';
+import {firebase} from "../services/firebaseService";
 
 export default {
 

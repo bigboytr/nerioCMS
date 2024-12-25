@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import auth from '@/controller/authentication';
 import store from '@/store/index'
 
 // views
@@ -17,88 +16,89 @@ import ProductDetails from './views/ProductDetails'
 import Contacts from './views/Contacts'
 import ContactForm from './views/ContactForm'
 
-import SiteSelection from './views/SiteSelection'
-
 Vue.use(Router);
 
 function routerSetter(title) {
-    store.dispatch('setMainTitle', title);
+  store.dispatch('setMainTitle', title);
 }
 
 export default new Router({
-    mode: 'history',
-    routes: [
-        {
-            path: '/', component: Home, beforeEnter: (to, from, next) => {
-                routerSetter("Dashboard");
-                next()
-            }
-        },
-        {path: '/login', component: Login },
-        //{path: '/site-selection', component: SiteSelection},
-        {
-            path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => {
-                routerSetter("Navigasyon");
-                next()
-            }
-        },
-        {
-            path: '/navigation-form', component: NavigationForm, beforeEnter: (to, form, next) => {
-                routerSetter("Navigasyon Form");
-                next()
-            }
-        },
-        {
-            path: '/pages', component: Pages, beforeEnter: (to, form, next) => {
-                routerSetter("Sayfalar");
-                next()
-            }
-        },
-        {
-            path: '/pages-form', component: PagesForm, beforeEnter: (to, form, next) => {
-                routerSetter("Sayfa Ekle");
-                next()
-            }
-        },
-        {
-            path: '/slider', component: Sliders, beforeEnter: (to, from, next) => {
-                routerSetter("Slider");
-                next()
-            }
-        },
-        {
-            path: '/slider-form', component: SlidersForm, beforeEnter: (to, from, next) => {
-                routerSetter("Slider");
-                next()
-            }
-        },
-        {
-            path: '/contact', component: Contacts, beforeEnter: (to, from, next) => {
-                routerSetter("İletişim Bilgileri");
-                next()
-            }
-        },
-        {
-            path: '/contact-form', component: ContactForm, beforeEnter: (to, from, next) => {
-                routerSetter("İletişim Bilgileri");
-                next()
-            }
-        },
-        {
-            path: '/products', component: Products, beforeEnter: (to, from, next) => {
-                routerSetter("Ürünler");
-                next()
-            }
-        },
-        {
-            path: '/product-details',
-            name: 'product-details',
-            component: ProductDetails,
-            props: true,
-            beforeEnter: (to, from, next) => {
-                routerSetter("Ürün Detayları");
-                next()
-            }
-        }
-    ],
+  mode: 'history',
+  routes: [
+    {
+      path: '/', component: Home, beforeEnter: (to, from, next) => {
+        routerSetter("Dashboard");
+        next()
+      }
+    },
+    {
+      path: '/login', component: Login, beforeEnter: (to, from, next) => {
+        if (from !== 'login') next();
+      }
+    },
+    {
+      path: '/navigation', component: Navigation, beforeEnter: (to, form, next) => {
+        routerSetter("Navigasyon");
+        next()
+      }
+    },
+    {
+      path: '/navigation-form', component: NavigationForm, beforeEnter: (to, form, next) => {
+        routerSetter("Navigasyon Form");
+        next()
+      }
+    },
+    {
+      path: '/pages', component: Pages, beforeEnter: (to, form, next) => {
+        routerSetter("Sayfalar");
+        next()
+      }
+    },
+    {
+      path: '/pages-form', component: PagesForm, beforeEnter: (to, form, next) => {
+        routerSetter("Sayfa Ekle");
+        next()
+      }
+    },
+    {
+      path: '/slider', component: Sliders, beforeEnter: (to, from, next) => {
+        routerSetter("Slider");
+        next()
+      }
+    },
+    {
+      path: '/slider-form', component: SlidersForm, beforeEnter: (to, from, next) => {
+        routerSetter("Slider");
+        next()
+      }
+    },
+    {
+      path: '/contact', component: Contacts, beforeEnter: (to, from, next) => {
+        routerSetter("İletişim Bilgileri");
+        next()
+      }
+    },
+    {
+      path: '/contact-form', component: ContactForm, beforeEnter: (to, from, next) => {
+        routerSetter("İletişim Bilgileri");
+        next()
+      }
+    },
+    {
+      path: '/products', component: Products, beforeEnter: (to, from, next) => {
+        routerSetter("Ürünler");
+        next()
+      }
+    },
+    {
+      path: '/product-details',
+      name: 'product-details',
+      component: ProductDetails,
+      props: true,
+      beforeEnter: (to, from, next) => {
+        routerSetter("Ürün Detayları");
+        next()
+      }
+    }
+  ],
 });

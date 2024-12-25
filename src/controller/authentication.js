@@ -1,91 +1,50 @@
 /*  eslint-disable */
-import firebase from 'firebase';
-import store from '@/store/index';
+import {firebaseService} from "../services/firebaseService";
+import store from '@/store';
 import router from '@/router';
-import firebaseConfig from '../firebaseConfig';
 
-firebase.initializeApp(firebaseConfig);
 
-export default {
+export class AuthenticationController {
 
-    login(email, pass) {
-
-        let self = this;
-
-        firebase.auth().signInWithEmailAndPassword(email, pass)
-            .then(function (user) {
-
-                self.setAuthentication(user.user, true, {});
-
-                router.push('/');
-
-            })
-            .catch(function (error) {
-                // Handle Errors here.
-                const {code, message} = error;
-
-                alert(code + " -- " + message);
-
-                self.setAuthentication({}, false, {});
-            });
-    },
-
-    logout() {
-
-        let self = this;
-
-        firebase.auth().signOut().then(() => {
-            // Sign-out successful.
-            self.setAuthentication({}, false, {});
-            router.push('/login');
-
-        }).catch((errors) => {
-
-            console.log(errors);
-
-        });
-
-    },
-
-    isLogged() {
-
-        // refresh page function
-        let self = this;
-
-        firebase.auth().onAuthStateChanged(function (user) {
-
-            if (!user) {
-                self.setAuthentication({}, false, {});
-            } else {
-                self.setAuthentication(user, true, {});
-            }
-        });
-
-    },
-
-    setAuthentication(user, token, site) {
-
-        /*
-        * parameters values should be
-        *
-            user => object
-            token => boolean
-            site => null / key (string)
-         */
-
-        if (token) {
-
-            localStorage.setItem('user', user.name);
-            localStorage.setItem('token', token);
-        } else {
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
-            router.push('/login')
-        }
-
-        store.dispatch('setAuthUser', user);
-        store.dispatch('setToken', token);
-        //store.dispatch('setSelectedSite', site);
-
+  async login(email, pass) {
+    try {
+      await firebaseService.fb_signIn(email, pass);
+    } catch (error) {
+      // Handle Errors here.
+      const {code, message} = error;
+      alert(code + " -- " + message);
     }
+  }
+
+  async logout() {
+    try {
+      await firebaseService.fb_signOut();
+    } catch (error) {
+      const {code, message} = error;
+      alert(code + " -- " + message);
+    }
+  }
+
+  async getAuthenticatedUser() {
+    // if (!this._checkIsTokenExists()) {
+      await firebaseService.fb_getAuthenticatedUser();
+    // }
+  }
+
+
+  _checkIsTokenExists() {
+    return localStorage.getItem('token');
+  }
+
+/*  () {
+    const email = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('token');
+
+    const user = {
+      email,
+      accessToken,
+    }
+  }*/
 }
+
+export const authentication = new AuthenticationController();
