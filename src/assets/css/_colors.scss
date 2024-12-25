@@ -1,17 +1,32 @@
 
 $bg: #EDEBE8;
 $fontColor: #323642;
-$header: #E5E3Da;
-$sidebar: #CFCDC4;
+$header: #F4A15E; //#E5E3Da;
 
 $a: #323642;
-$logo: #81BD4A;
-$logoHover: #6DB160;
+$logo: #F07E22;
+$logoHover: #F2954A;
 
 $white: #fff;
 $black: #000;
 
-//$sidebarBg: #38454E;
-//$headerBg: #F07E22;
-//$headerBg2: #424F58;
-//$orange: #F07E22;
+$headerBg: #F07E22;
+$headerBg2: #424F58;
+$orange: #F07E22;
+
+/*
+Sidebar Colors
+*/
+$sidebarBg: #38454E;
+$sidebarA: #efefef;
+$sidebarAinverted: #333;
+$sidebarAhoverBg: #424F58;
+
+
+/*
+Div Table Colors
+*/
+$div-table-header-dark: #343a40;
+
+$div-tr-hover: rgba(0,0,0,.075);
+$div-tr-hover-txt: #212529;

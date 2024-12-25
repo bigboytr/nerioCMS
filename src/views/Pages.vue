@@ -4,7 +4,7 @@
         <b-card-header>
             <MainTitle class="mb-2"></MainTitle>
 
-            <ActionButtons :url="'/navigation-form'"
+            <ActionButtons :url="'/content-form'"
                            :isActionsDisabled="isActionsDisabled"
                            @trash="trash"
                            @activeToggle="activeToggle"/>
@@ -36,25 +36,28 @@
 </template>
 
 <script>
-    import store from '@/store'
     import MainTitle from '@/components/MainTitle'
-    import EmptyList from '@/components/EmptyList'
+    import store from '@/store/index'
     import Status from '@/components/Status'
+    import EmptyList from '@/components/EmptyList'
     import ActionButtons from '@/components/ActionButtons'
     import CommonModule from "../controller/commonModule";
 
-    const collection = "navigation"
+    const collection = "pages"
     const dataMap = [
         "title",
-        "path",
-        "queue",
-        "target",
-        "type",
+        "spot",
+        "fulltext",
+        "created",
+        "modified",
+        "metaDescription",
+        "metaKeyword",
         "active",
         "deleted"
-    ]
+    ];
+
     export default {
-        name: 'Navigation',
+        name: 'Contents',
         data() {
             return {
                 controller: new CommonModule(collection, dataMap),
@@ -68,23 +71,16 @@
                         label: 'Başlık'
                     },
                     {
-                        key: 'path',
-                        label: 'URL'
+                        key: 'metaKeyword',
+                        label: 'Kelimeler'
                     },
                     {
-                        key: 'queue',
-                        label: 'Sıra'
+                        key: 'metaDescription',
+                        label: 'Sayfa Tanımı'
                     },
                     {
                         key: 'active',
                         label: 'Aktif'
-                    },
-                    {
-                        key: 'type',
-                        label: 'Tip',
-                        formatter: (value) => {
-                            return store.getters.getUrlTypes(value);
-                        }
                     }
                 ],
                 selectedRows: []
@@ -92,16 +88,17 @@
         },
         components: {
             MainTitle,
-            Status,
             EmptyList,
-            ActionButtons,
+            Status,
+            ActionButtons
         },
         mounted() {
-            this.controller.getAll();
+            this.controller.getAll(); // get content list from firebase
         },
         methods: {
-            editMe(item) {
-
+            editMe() {
+                //this.item = item;
+                this.$router.push('/content-form');
             },
             onRowSelected(items) {
                 this.selectedRows = items;
@@ -111,18 +108,11 @@
             },
             trash() {
                 this.controller.moveToTrash(this.selectedRows)
-            },
+            }
         },
         computed: {
             list() {
-                return store.getters.getList('navigation');
-                //return []
-
-                /*const topLevel = store.getters.getRecursiveList(path); // level 0
-
-                return topLevel*/
-
-                //return
+                return store.getters.getList('pages');
             },
             showTable() {
                 return this.list.length > 0

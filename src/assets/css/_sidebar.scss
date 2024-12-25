@@ -2,20 +2,33 @@
 Sidebar
 ================================================================================= */
 .sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding-top: 18px;
-  z-index: 2;
-  //background: $sidebar;
-  height: 100%;
+  //position: fixed;
+  //left: 0;
+  //top: 0;
+  //z-index: 2;
+  background: $sidebarBg;
+
+  .logo {
+    background: $logo;
+    color: $white;
+    font-size: 20px;
+    padding: 5px;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    -o-transition: all 0.7s;
+    transition: all 0.7s;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $logoHover;
+    }
+  }
 
   .nav {
     margin-top: 25px;
 
     a {
-      color: $a;
-      border-right: 2px $logo solid;
+      color: $sidebarA;
 
       -webkit-transition: all .5s;
       -moz-transition: all .5s;
@@ -23,16 +36,19 @@ Sidebar
       -o-transition: all .5s;
       transition: all .5s;
 
+
       &:hover {
         color: $logo;
-        background: $header;
+        background: $sidebarAhoverBg;
         padding-left: 25px;
+      }
+
+      &:active, &:visited {
+        background: $sidebarAhoverBg;
       }
     }
 
     li {
-
-      margin-bottom: 2px;
 
       i {
         margin-right: 10px;
@@ -41,14 +57,7 @@ Sidebar
   }
 
   .logout {
-    position: fixed;
+    position: absolute;
     bottom: 0;
-    width: 220px;
-    background: #1D2226;
-    padding: 15px;
-
-    a {
-      margin-right: 10px;
-    }
   }
 }

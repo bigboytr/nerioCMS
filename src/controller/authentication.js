@@ -1,70 +1,50 @@
 /*  eslint-disable */
-import firebase from 'firebase';
-import store from '@/store/index';
+import {firebaseService} from "../services/firebaseService";
+import store from '@/store';
 import router from '@/router';
 
-const config = store.getters.getConfig;
-firebase.initializeApp(config);
 
-export default {
+export class AuthenticationController {
 
-  login(email, pass) {
-
-        firebase.auth().signInWithEmailAndPassword(email, pass)
-          .then(function (user) {
-            localStorage.token = true;
-            store.dispatch('setAuthUser', user);
-            store.dispatch('setToken', true);
-
-            router.push('/');
-          })
-          .catch(function (error) {
-            // Handle Errors here.
-            //var errorCode = error.code;
-            //var errorMessage = error.message;
-            localStorage.token = false;
-            store.dispatch('setAuthUser', {});
-            store.dispatch('setToken', false);
-          });
-  },
-
-  logout() {
-
-    firebase.auth().signOut().then(() => {
-      // Sign-out successful.
-      store.dispatch('setToken', false);
-      store.dispatch('setAuthUser', null);
-
-      router.push('/login');
-    }).catch((errors) => {
-
-      console.log(errors);
-
-    });
-
-  },
-
-  isLogged() {
-
-    firebase.auth().onAuthStateChanged(function(user) {
-
-      if (!user) {
-
-        localStorage.token = false;
-        store.dispatch('setAuthUser', {});
-        store.dispatch('setToken', false);
-
-        router.push('/login');
-
-      } else {
-
-        localStorage.token = true;
-        store.dispatch('setAuthUser', user);
-        store.dispatch('setToken', true);
-
-        router.push('/');
-      }
-    });
-
+  async login(email, pass) {
+    try {
+      await firebaseService.fb_signIn(email, pass);
+    } catch (error) {
+      // Handle Errors here.
+      const {code, message} = error;
+      alert(code + " -- " + message);
+    }
   }
+
+  async logout() {
+    try {
+      await firebaseService.fb_signOut();
+    } catch (error) {
+      const {code, message} = error;
+      alert(code + " -- " + message);
+    }
+  }
+
+  async getAuthenticatedUser() {
+    // if (!this._checkIsTokenExists()) {
+      await firebaseService.fb_getAuthenticatedUser();
+    // }
+  }
+
+
+  _checkIsTokenExists() {
+    return localStorage.getItem('token');
+  }
+
+/*  () {
+    const email = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('token');
+
+    const user = {
+      email,
+      accessToken,
+    }
+  }*/
 }
+
+export const authentication = new AuthenticationController();
